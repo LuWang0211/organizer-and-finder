@@ -3,9 +3,11 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+
 export async function GET() {
   try {
     const items = await prisma.item.findMany();
+    
     return new Response(JSON.stringify(items), {
       headers: { 'Content-Type': 'application/json' },
     });
