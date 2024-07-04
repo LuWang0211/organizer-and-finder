@@ -1,20 +1,25 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling, init was "DATABASE_URL"
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model Item {
+model item {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  locationid    Int?
+  quantity      Int?      @default(0)
+  inotherobject Boolean?  @default(false)
+  otherobjectid Int?
+  location      location? @relation(fields: [locationid], references: [id], onUpdate: NoAction, map: "fk_location")
+}
+
+model location {
   id   Int    @id @default(autoincrement())
-  name String
+  name String @db.VarChar(255)
+  item item[]
 }
