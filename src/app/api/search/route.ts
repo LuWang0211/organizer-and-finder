@@ -1,17 +1,18 @@
 import OpenAI from 'openai';
-import { GET as fetchItemsFunction } from '../items/route'; // Import the GET function
 import { NextRequest, NextResponse } from 'next/server';
+import { fetchItems } from '../../../services/itemService'; // Import the service
 
 const openai = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
 });
 
 const ALLOWED_IP = process.env.ALLOWED_IP;
+const DEV_IP = process.env.DEV_IP;
 
 // Function to get the client IP address
 const getClientIp = (req: NextRequest) => {
   const xForwardedFor = req.headers.get('x-forwarded-for');
-  console.log(`xForwardedFor: ${JSON.stringify(req.headers)}`);
+  // console.log(`xForwardedFor: ${JSON.stringify(req.headers)}`);
   if (xForwardedFor) {
     const ips = xForwardedFor.split(',').map(ip => ip.trim());
     return ips[0]; // Return the first IP in the list
@@ -21,24 +22,21 @@ const getClientIp = (req: NextRequest) => {
 
 export async function POST(request: NextRequest) {
   const clientIp = getClientIp(request);
-  console.log(`Client IP: ${clientIp}`);
+  // console.log(`Client IP: ${clientIp}`);
 
   // Validate the client IP address
-  if (clientIp !== ALLOWED_IP) {
+  if (clientIp !== ALLOWED_IP && clientIp !== DEV_IP) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
 
   try {
     const { query } = await request.json();
-
-    // console.log(`Searching for item: ${query}`);
-
-    // Fetch items using the imported fetchItemsFunction directly
-    const itemsResponse = await fetchItemsFunction();
-    const items = await itemsResponse.json();
-    // console.log(`itemsResponse from dataset: ${JSON.stringify(items)}`);
-
-    const prompt = `Find the item "${query}" in the following dataset:\n\n${JSON.stringify(items)}\n\nIf found, include its details including location.`;
+    
+    // Fetch items using the service
+    const items = await fetchItems();
+    const itemsString = JSON.stringify(items);
+    // console.log(`items from dataset: ${itemsString}`); // test response [{"id":1,"name":"TestItem","locationid":1,"quantity":0,"inotherobject":false,"otherobjectid":0},{"id":2,"name":"addItem","locationid":null,"quantity":0,"inotherobject":false,"otherobjectid":null}]
+    const prompt = `Find the item "${query}" in the following dataset:\n\n${itemsString}\n\nIf found, include its details including location.`;
 
     const aiResponse = await openai.chat.completions.create({
       model: 'gpt-4',
@@ -47,7 +45,8 @@ export async function POST(request: NextRequest) {
     });
 
     const result = aiResponse.choices[0].message.content;
-    // const result = {1:1}; // test
+    // const result = {1:1}; // skip call openai to test
+    console.log(`Result: ${result}`);
 
     return new NextResponse(JSON.stringify({ result }), {
       headers: { 'Content-Type': 'application/json' },
