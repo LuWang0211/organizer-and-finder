@@ -9,7 +9,7 @@ const config = {
     type: Phaser.AUTO,
     width: 1024,
     height: 768,
-    backgroundColor: '#028af8',
+    transparent: true,
     scene: [
         Scene1,
     ]

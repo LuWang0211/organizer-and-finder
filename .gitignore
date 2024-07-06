@@ -41,6 +41,8 @@ prisma/migrations/
 prisma/dev.db
 .vercel
 
+design/**/*.psd
+
 
 public/assets
 scripts/symbollink.js
