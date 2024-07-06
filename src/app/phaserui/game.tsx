@@ -12,7 +12,16 @@ const config = {
     transparent: true,
     scene: [
         Scene1,
-    ]
+    ],
+    scale: {
+        mode: Phaser.Scale.NONE,
+    },
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false
+        }
+    },
 };
 
 export default function PhaserGame() {
@@ -26,6 +35,18 @@ export default function PhaserGame() {
         {
             game.current = new Game({...config, parent: container.current!});
         }
+
+        const resize = () => {
+            const aspectRatio = container.current!.clientWidth / container.current!.clientHeight;
+            const fitWidth = 768 * aspectRatio;
+
+            game.current?.scale.resize(Math.max(1024, fitWidth), 768);
+        };
+
+
+        window.addEventListener("resize", resize);
+        resize();
+
     
         return () => {
 
@@ -35,8 +56,9 @@ export default function PhaserGame() {
                 game.current = undefined;
             }
 
+            window.removeEventListener("resize", resize);
         }
     }, []);
     
-    return <div ref={container} />;
+    return <div ref={container} className="w-full h-full flex items-center overflow-x-hidden [&>canvas]:h-full" />;
 }
