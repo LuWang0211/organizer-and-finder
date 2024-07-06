@@ -11,12 +11,23 @@
         {
             "type": "Image",
             "id": "7d3a6812-9a37-4c87-a4c5-ca1445061b6e",
-            "label": "image_1",
+            "label": "wawa",
+            "useGameObjectName": true,
+            "scope": "CLASS",
             "texture": {
                 "key": "wawa"
             },
             "x": 606,
-            "y": 187
+            "y": 187,
+            "ArcadeComponent.active": true,
+            "allowGravity": false,
+            "body.bounce.x": 1,
+            "body.bounce.y": 1,
+            "collideWorldBounds": true,
+            "allowDrag": false,
+            "allowRotation": false,
+            "body.width": 352,
+            "body.height": 352
         }
     ],
     "plainObjects": [],

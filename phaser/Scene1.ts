@@ -16,11 +16,24 @@ class Scene1 extends Phaser.Scene {
 
 	editorCreate(): void {
 
-		// image_1
-		this.add.image(606, 187, "wawa");
+		// wawa
+		const wawa = this.add.image(606, 187, "wawa") as Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
+		wawa.name = "wawa";
+		this.physics.add.existing(wawa, false);
+		wawa.body.bounce.x = 1;
+		wawa.body.bounce.y = 1;
+		wawa.body.allowGravity = false;
+		wawa.body.allowDrag = false;
+		wawa.body.allowRotation = false;
+		wawa.body.collideWorldBounds = true;
+		wawa.body.setSize(352, 352, false);
+
+		this.wawa = wawa;
 
 		this.events.emit("scene-awake");
 	}
+
+	private wawa!: Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
 
 	/* START-USER-CODE */
 
@@ -29,6 +42,8 @@ class Scene1 extends Phaser.Scene {
 	create() {
 
 		this.editorCreate();
+
+		this.wawa.body.setVelocity(Phaser.Math.Between(-50, 50), Phaser.Math.Between(-50, 50));
 	}
 
 	preload() {

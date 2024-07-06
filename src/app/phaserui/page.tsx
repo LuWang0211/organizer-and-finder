@@ -9,7 +9,5 @@ const DynamicComponentWithNoSSR = dynamic(
 
 
 export default function Page() {
-    return <div>
-        <DynamicComponentWithNoSSR />
-    </div>;
+    return <DynamicComponentWithNoSSR />;
 }
