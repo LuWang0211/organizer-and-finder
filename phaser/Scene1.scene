@@ -5,7 +5,9 @@
         "preloadPackFiles": [],
         "createMethodName": "editorCreate",
         "sceneKey": "Scene1",
-        "compilerOutputLanguage": "TYPE_SCRIPT"
+        "compilerOutputLanguage": "TYPE_SCRIPT",
+        "borderWidth": 1024,
+        "borderHeight": 768
     },
     "displayList": [
         {
@@ -28,6 +30,22 @@
             "allowRotation": false,
             "body.width": 352,
             "body.height": 352
+        },
+        {
+            "type": "Container",
+            "id": "2be80eb1-494f-4042-bc4a-65a58f09dceb",
+            "label": "InputBoxContainer",
+            "scope": "CLASS",
+            "list": [
+                {
+                    "type": "Image",
+                    "id": "fc558941-a2ab-4053-8fb4-029761ec6c6f",
+                    "label": "image_1",
+                    "texture": {
+                        "key": "search_bar"
+                    }
+                }
+            ]
         }
     ],
     "plainObjects": [],
