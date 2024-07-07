@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
+import { PreloadResources } from "./PreloadResources";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,10 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <link rel="preload" href="/assets/texture/background.png" as="image" />
-        <link rel="preload" href="/assets/texture/grid.png" as="image" />
-      </Head>
+      <PreloadResources />
       <body className={`${inter.className}`} style={{
         backgroundImage: "url(/assets/texture/background.png)",
         backgroundSize: "100vw 100vh"
