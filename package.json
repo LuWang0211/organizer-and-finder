@@ -8,7 +8,8 @@
     "build": "npm run symbol-link && next build",
     "start": "next start",
     "lint": "next lint",
-    "symbol-link": "npx tsx scripts/symbollink.ts"
+    "symbol-link": "npx tsx scripts/symbollink.ts",
+    "game": "pushd \"../gameengine/source/editor\" && npm run localrun && popd"
   },
   "dependencies": {
     "@prisma/client": "^5.16.1",
