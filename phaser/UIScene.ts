@@ -1,13 +1,11 @@
 
 // You can write more code here
-
 import { createLetterFall } from "@/app/phaserui/letterfall";
-import AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 
 export
-	/* START OF COMPILED CODE */
+/* START OF COMPILED CODE */
 
-class Scene1 extends Phaser.Scene {
+class UIScene extends Phaser.Scene {
 
 	constructor() {
 		super("Scene1");
@@ -31,21 +29,17 @@ class Scene1 extends Phaser.Scene {
 		wawa.body.collideWorldBounds = true;
 		wawa.body.setSize(352, 352, false);
 
-		// InputBoxContainer
-		const inputBoxContainer = this.add.container(0, 0);
-
-		// image_1
-		const image_1 = this.add.image(0, 0, "search_bar");
-		inputBoxContainer.add(image_1);
+		// InputBoxBg
+		const inputBoxBg = this.add.nineslice(0, 0, "search_bar", undefined, 596, 0, 78, 115, 0, 0);
 
 		this.wawa = wawa;
-		this.inputBoxContainer = inputBoxContainer;
+		this.inputBoxBg = inputBoxBg;
 
 		this.events.emit("scene-awake");
 	}
 
 	private wawa!: Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
-	private inputBoxContainer!: Phaser.GameObjects.Container;
+	private inputBoxBg!: Phaser.GameObjects.NineSlice;
 
 	/* START-USER-CODE */
 
@@ -59,22 +53,48 @@ class Scene1 extends Phaser.Scene {
 			text: 'hello wawa',
 			fontSize: '24px',
 			color: '#000000',
+			align: 'center',
 		}).on('textchange', (inputText: {text: string} ) => {
 			createLetterFall(this, inputText.text)
 		});;
 
-		// Anchor positioning
-		(this.plugins.get('rexAnchor') as AnchorPlugin).add(this.inputBoxContainer, {
-			top: 'top+100',
-			centerX: 'center',
+
+		const sizer = this.rexUI.add.overlapSizer({
+			x: 0,
+			y: 0,
+			height : 117,
+			anchor: {
+				top: 'top+50',
+				centerX: 'center',
+				width: '90%',
+			},
+
+		})
+
+		this.inputBoxBg.depth = 1;
+
+		sizer.add(this.inputBoxBg, {
+			minWidth: 30,
+			minHeight: 5.8,
+			align: 'center',
+			key: 'inputBoxBg',
+			expand: { width: true},
+			aspectRatio: 0
 		});
+		
+		sizer.add(inputText, {
+			minWidth: 30,
+			minHeight: 5.8,
+			align: 'top',
+			key: 'input',
+			expand: { width: true},
+			padding: { top: 35, left: 65, right: 115},
+			aspectRatio: 0
+		})
 
-
-		this.inputBoxContainer.add(inputText);
-
+		sizer.layout()
 
 		this.wawa.body.setVelocity(Phaser.Math.Between(-50, 50), Phaser.Math.Between(-50, 50));
-
 	}
 
 	preload() {
