@@ -2,6 +2,46 @@
     "section1": {
         "files": [
             {
+                "url": "assets/texture/Blueprint1.png",
+                "type": "image",
+                "key": "Blueprint1"
+            },
+            {
+                "url": "assets/texture/Blueprint2.png",
+                "type": "image",
+                "key": "Blueprint2"
+            },
+            {
+                "url": "assets/texture/Blueprint3.png",
+                "type": "image",
+                "key": "Blueprint3"
+            },
+            {
+                "url": "assets/texture/Blueprint4.png",
+                "type": "image",
+                "key": "Blueprint4"
+            },
+            {
+                "url": "assets/texture/BPICON1.png",
+                "type": "image",
+                "key": "BPICON1"
+            },
+            {
+                "url": "assets/texture/BPICON2.png",
+                "type": "image",
+                "key": "BPICON2"
+            },
+            {
+                "url": "assets/texture/BPICON3.png",
+                "type": "image",
+                "key": "BPICON3"
+            },
+            {
+                "url": "assets/texture/Decoration1.png",
+                "type": "image",
+                "key": "Decoration1"
+            },
+            {
                 "url": "assets/texture/search_bar.png",
                 "type": "image",
                 "key": "search_bar"
