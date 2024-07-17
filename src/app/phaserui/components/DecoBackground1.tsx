@@ -42,6 +42,14 @@ export class DecoBackground1 {
         });
 
         sizer.layout();
+
+        this.scene.tweens.add({
+            targets: this.deco1,
+            alpha: 1,
+            duration: 1000,
+            ease: 'quart.out',
+            persist: false
+        });
     }
 }
  

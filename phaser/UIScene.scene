@@ -31,6 +31,7 @@
             "texture": {
                 "key": "Decoration1"
             },
+            "alpha": 0,
             "width": 1379,
             "height": 308,
             "leftWidth": 736,

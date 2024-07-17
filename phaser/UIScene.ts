@@ -24,6 +24,7 @@ class UIScene extends Phaser.Scene {
 
 		// deco1
 		const deco1 = this.add.nineslice(0, 0, "Decoration1", undefined, 1379, 0, 736, 559, 0, 0);
+		deco1.alpha = 0;
 
 		// wawa
 		const wawa = this.add.image(606, 187, "wawa") as Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
