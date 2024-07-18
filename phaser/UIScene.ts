@@ -1,5 +1,8 @@
 
 // You can write more code here
+import { DecoBackground1 } from "@/app/phaserui/components/DecoBackground1";
+import { MarqueeSearch } from "@/app/phaserui/components/MarqueeSearch";
+import { SketchBackground } from "@/app/phaserui/components/SketchBackground";
 import { createLetterFall } from "@/app/phaserui/letterfall";
 
 export
@@ -17,29 +20,21 @@ class UIScene extends Phaser.Scene {
 
 	editorCreate(): void {
 
-		// wawa
-		const wawa = this.add.image(606, 187, "wawa") as Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
-		wawa.name = "wawa";
-		this.physics.add.existing(wawa, false);
-		wawa.body.bounce.x = 1;
-		wawa.body.bounce.y = 1;
-		wawa.body.allowGravity = false;
-		wawa.body.allowDrag = false;
-		wawa.body.allowRotation = false;
-		wawa.body.collideWorldBounds = true;
-		wawa.body.setSize(352, 352, false);
-
 		// InputBoxBg
-		const inputBoxBg = this.add.nineslice(0, 0, "search_bar", undefined, 596, 0, 78, 115, 0, 0);
+		const inputBoxBg = this.add.nineslice(0, 0, "search_bar", undefined, 596, 0, 72, 111, 0, 0);
 
-		this.wawa = wawa;
+		// deco1
+		const deco1 = this.add.nineslice(0, 0, "Decoration1", undefined, 1379, 0, 736, 559, 0, 0);
+		deco1.alpha = 0;
+
 		this.inputBoxBg = inputBoxBg;
+		this.deco1 = deco1;
 
 		this.events.emit("scene-awake");
 	}
 
-	private wawa!: Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
 	private inputBoxBg!: Phaser.GameObjects.NineSlice;
+	private deco1!: Phaser.GameObjects.NineSlice;
 
 	/* START-USER-CODE */
 
@@ -47,7 +42,13 @@ class UIScene extends Phaser.Scene {
 
 	create() {
 
+		new SketchBackground(this);
+
 		this.editorCreate();
+
+		new DecoBackground1(this, this.deco1);
+
+		new MarqueeSearch(this);
 
 		const inputText = this.add.rexInputText(0, -12, 200, 20, {
 			text: 'hello wawa',
@@ -81,24 +82,23 @@ class UIScene extends Phaser.Scene {
 			expand: { width: true},
 			aspectRatio: 0
 		});
-		
+
 		sizer.add(inputText, {
 			minWidth: 30,
 			minHeight: 5.8,
-			align: 'top',
+			align: 'center-center',
 			key: 'input',
 			expand: { width: true},
-			padding: { top: 35, left: 65, right: 115},
+			padding: { left: 65, right: 115, bottom: 25},
 			aspectRatio: 0
 		})
 
 		sizer.layout()
-
-		this.wawa.body.setVelocity(Phaser.Math.Between(-50, 50), Phaser.Math.Between(-50, 50));
 	}
 
 	preload() {
 		this.load.pack("all", "assets/asset-pack.json");
+		this.load.atlas("items", "assets/texture/items.png", "assets/texture/items.json");
 	}
 
 	/* END-USER-CODE */

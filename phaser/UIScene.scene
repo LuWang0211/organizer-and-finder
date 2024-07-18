@@ -11,27 +11,6 @@
     },
     "displayList": [
         {
-            "type": "Image",
-            "id": "7d3a6812-9a37-4c87-a4c5-ca1445061b6e",
-            "label": "wawa",
-            "useGameObjectName": true,
-            "scope": "CLASS",
-            "texture": {
-                "key": "wawa"
-            },
-            "x": 606,
-            "y": 187,
-            "ArcadeComponent.active": true,
-            "allowGravity": false,
-            "body.bounce.x": 1,
-            "body.bounce.y": 1,
-            "collideWorldBounds": true,
-            "allowDrag": false,
-            "allowRotation": false,
-            "body.width": 352,
-            "body.height": 352
-        },
-        {
             "type": "ThreeSlice",
             "id": "e020b940-1be8-447e-9822-498b6f328f37",
             "label": "InputBoxBg",
@@ -41,8 +20,22 @@
             },
             "width": 596,
             "height": 117,
-            "leftWidth": 78,
-            "rightWidth": 115
+            "leftWidth": 72,
+            "rightWidth": 111
+        },
+        {
+            "type": "ThreeSlice",
+            "id": "0f90d60d-bee0-4061-b253-7a7cd8c67618",
+            "label": "deco1",
+            "scope": "CLASS",
+            "texture": {
+                "key": "Decoration1"
+            },
+            "alpha": 0,
+            "width": 1379,
+            "height": 308,
+            "leftWidth": 736,
+            "rightWidth": 559
         }
     ],
     "plainObjects": [],
