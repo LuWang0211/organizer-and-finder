@@ -56,6 +56,7 @@ export class MarqueeSearch  {
         this.scene.input.on("pointermove", debounce(this.onPointerMove, 25, { leading: true}), this);
 
         this.scene.scale.on("resize", this.onResize, this);
+        this.onResize(this.scene.scale.gameSize);
     }
 
     update(time: number, delta: number) {
