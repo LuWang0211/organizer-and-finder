@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
 
 import { Game } from "phaser";
-import { Scene1 } from "@phaser/Scene1";
+import { UIScene } from "@phaser/UIScene";
 
-import InputTextPlugin  from 'phaser3-rex-plugins/plugins/inputtext-plugin';
-import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin.js';
+import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
+import InputTextPlugin from 'phaser3-rex-plugins/plugins/inputtext-plugin';
 
 import { useMeasure } from "react-use";
 
@@ -16,7 +16,7 @@ const config = {
     height: 768,
     transparent: true,
     scene: [
-        Scene1,
+        UIScene,
     ],
     dom: {
         createContainer: true
@@ -33,13 +33,17 @@ const config = {
     },
     // ...
     plugins: {
-        global: [{
+        scene: [
+            {
+            key: 'rexUI',
+            plugin: UIPlugin,
+            mapping: 'rexUI'
+        }],
+
+        global: [
+        {
             key: 'rexInputTextPlugin',
             plugin: InputTextPlugin ,
-            start: true
-        }, {
-            key: 'rexAnchor',
-            plugin: AnchorPlugin,
             start: true
         }]
     }
@@ -83,7 +87,6 @@ export default function PhaserGame() {
             if (game.current) {
 
                 game.current.plugins.removeGlobalPlugin("rexInputTextPlugin");
-                game.current.plugins.removeGlobalPlugin("rexAnchor");
                 game.current.destroy(true);
                 game.current = undefined;
             }
@@ -97,9 +100,7 @@ export default function PhaserGame() {
             const containerAspectRatio = containerWidth / containerHeight;
             const fitWidth = 768 * containerAspectRatio;
 
-            const width = Math.max(1024, fitWidth);
-
-            game.current?.scale.resize(width, 768);
+            game.current?.scale.resize(fitWidth, 768);
             game.current?.scale.setZoom(containerHeight / 768);
         }
     }, [containerWidth, containerHeight]);

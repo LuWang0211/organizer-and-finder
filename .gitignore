@@ -42,6 +42,16 @@ prisma/dev.db
 .vercel
 
 design/**/*.psd
+design/**/*.svg
+design/**/*.ai
+design/**/*.dwg
+design/**/*.pdf
+design/**/*.jpg
+design/**/*.png
+design/**/*.eps
+design/**/*.bak
+design/**/*.zip
+design/**/*.ftpp
 
 
 public/assets
