@@ -1,6 +1,7 @@
 
 // You can write more code here
 import { DecoBackground1 } from "@/app/phaserui/components/DecoBackground1";
+import { MarqueeSearch } from "@/app/phaserui/components/MarqueeSearch";
 import { SketchBackground } from "@/app/phaserui/components/SketchBackground";
 import { createLetterFall } from "@/app/phaserui/letterfall";
 
@@ -26,28 +27,14 @@ class UIScene extends Phaser.Scene {
 		const deco1 = this.add.nineslice(0, 0, "Decoration1", undefined, 1379, 0, 736, 559, 0, 0);
 		deco1.alpha = 0;
 
-		// wawa
-		const wawa = this.add.image(606, 187, "wawa") as Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
-		wawa.name = "wawa";
-		this.physics.add.existing(wawa, false);
-		wawa.body.bounce.x = 1;
-		wawa.body.bounce.y = 1;
-		wawa.body.allowGravity = false;
-		wawa.body.allowDrag = false;
-		wawa.body.allowRotation = false;
-		wawa.body.collideWorldBounds = true;
-		wawa.body.setSize(352, 352, false);
-
 		this.inputBoxBg = inputBoxBg;
 		this.deco1 = deco1;
-		this.wawa = wawa;
 
 		this.events.emit("scene-awake");
 	}
 
 	private inputBoxBg!: Phaser.GameObjects.NineSlice;
 	private deco1!: Phaser.GameObjects.NineSlice;
-	private wawa!: Phaser.GameObjects.Image & { body: Phaser.Physics.Arcade.Body };
 
 	/* START-USER-CODE */
 
@@ -60,6 +47,8 @@ class UIScene extends Phaser.Scene {
 		this.editorCreate();
 
 		new DecoBackground1(this, this.deco1);
+
+		new MarqueeSearch(this);
 
 		const inputText = this.add.rexInputText(0, -12, 200, 20, {
 			text: 'hello wawa',
@@ -105,12 +94,11 @@ class UIScene extends Phaser.Scene {
 		})
 
 		sizer.layout()
-
-		this.wawa.body.setVelocity(Phaser.Math.Between(-50, 50), Phaser.Math.Between(-50, 50));
 	}
 
 	preload() {
 		this.load.pack("all", "assets/asset-pack.json");
+		this.load.atlas("items", "assets/texture/items.png", "assets/texture/items.json");
 	}
 
 	/* END-USER-CODE */

@@ -45,11 +45,6 @@
                 "url": "assets/texture/search_bar.png",
                 "type": "image",
                 "key": "search_bar"
-            },
-            {
-                "url": "assets/texture/wawa.jpg",
-                "type": "image",
-                "key": "wawa"
             }
         ]
     },

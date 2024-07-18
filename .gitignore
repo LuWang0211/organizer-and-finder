@@ -51,6 +51,7 @@ design/**/*.png
 design/**/*.eps
 design/**/*.bak
 design/**/*.zip
+design/**/*.ftpp
 
 
 public/assets

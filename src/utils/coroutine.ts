@@ -10,8 +10,6 @@ export async function startCoroutine<T>(scene: Phaser.Scene, generatorFn: () => 
             scene.events.off("update", onUpdate);
             return;
         }
-
-        console.log("onUpdate", time, delta);
     };
     scene.events.on("update", onUpdate);
 }
