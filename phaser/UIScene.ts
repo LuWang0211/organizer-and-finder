@@ -11,7 +11,7 @@ export
 class UIScene extends Phaser.Scene {
 
 	constructor() {
-		super("Scene1");
+		super("UIScene");
 
 		/* START-USER-CTR-CODE */
 		// Write your code here.
@@ -40,8 +40,7 @@ class UIScene extends Phaser.Scene {
 
 	// Write your code here
 
-	create() {
-
+	public start() {
 		new SketchBackground(this);
 
 		this.editorCreate();
@@ -58,7 +57,6 @@ class UIScene extends Phaser.Scene {
 		}).on('textchange', (inputText: {text: string} ) => {
 			createLetterFall(this, inputText.text)
 		});;
-
 
 		const sizer = this.rexUI.add.overlapSizer({
 			x: 0,
