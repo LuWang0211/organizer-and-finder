@@ -7,8 +7,10 @@ import { UIScene } from "@phaser/UIScene";
 
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import InputTextPlugin from 'phaser3-rex-plugins/plugins/inputtext-plugin';
+import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin';
 
 import { useMeasure } from "react-use";
+import { LoaderScene } from "./scenes/LoaderScene";
 
 const config = {
     type: Phaser.AUTO,
@@ -16,6 +18,7 @@ const config = {
     height: 768,
     transparent: true,
     scene: [
+        LoaderScene,
         UIScene,
     ],
     dom: {
@@ -44,6 +47,11 @@ const config = {
         {
             key: 'rexInputTextPlugin',
             plugin: InputTextPlugin ,
+            start: true
+        },
+        {
+            key: 'rexAnchor',
+            plugin: AnchorPlugin,
             start: true
         }]
     }
