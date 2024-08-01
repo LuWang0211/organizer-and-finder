@@ -6,11 +6,15 @@ export class HeadlessLoaderScene extends Phaser.Scene {
 	}
 
     create() {
-        this.scene.manager.run("UIScene");
-
-        const uiScene: UIScene= this.scene.manager.getScene("UIScene") as UIScene;
+        // Find the second scene and start it
         
-        uiScene.load.on("complete", () => { uiScene.start(); });
+        const secondScene = this.scene.manager.scenes[1];
+
+        this.scene.manager.run(secondScene)
+
+        if (secondScene instanceof UIScene) {
+            secondScene.load.on("complete", () => { secondScene.start(); });
+        }
     }
 
     preload() {
