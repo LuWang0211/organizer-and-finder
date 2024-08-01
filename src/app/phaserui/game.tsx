@@ -1,64 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
 import { Game } from "phaser";
-import { UIScene } from "@phaser/UIScene";
-
-import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
-import InputTextPlugin from 'phaser3-rex-plugins/plugins/inputtext-plugin';
-import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin';
 
 import { useMeasure } from "react-use";
-import { LoaderScene } from "./scenes/LoaderScene";
-import { HeadlessLoaderScene } from "./scenes/HeadLessLoaderScene";
+import { config } from "@/app/phaserui/gameConfig";
 
-const config = {
-    type: Phaser.AUTO,
-    width: 1024,
-    height: 768,
-    transparent: true,
-    scene: [
-        process.env.NEXT_PUBLIC_SKIP_FULL_LOADING_SCREEN ? HeadlessLoaderScene : LoaderScene,
-        UIScene,
-    ],
-    dom: {
-        createContainer: true
-    },
-    scale: {
-        mode: Phaser.Scale.NONE,
-    },
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: {x: 0, y: 300 },
-            debug: false
-        }
-    },
-    // ...
-    plugins: {
-        scene: [
-            {
-            key: 'rexUI',
-            plugin: UIPlugin,
-            mapping: 'rexUI'
-        }],
 
-        global: [
-        {
-            key: 'rexInputTextPlugin',
-            plugin: InputTextPlugin ,
-            start: true
-        },
-        {
-            key: 'rexAnchor',
-            plugin: AnchorPlugin,
-            start: true
-        }]
-    }
-};
+interface PhaserGameProps {
+    secondSceneOverride?: Phaser.Scene;
+}
 
-export default function PhaserGame() {
+export default function PhaserGame(props: PhaserGameProps) {
+    const { secondSceneOverride } = props;
+
     const game = useRef<Game>();
 
     const container = useRef<HTMLDivElement>();
@@ -71,6 +27,18 @@ export default function PhaserGame() {
         containerMeasure(element);
         container.current = element;
     }, []);
+    
+    let configWithOverride = config;
+
+    if (secondSceneOverride) {
+        configWithOverride = {
+            ...config,
+            scene: [
+                config.scene[0],
+                secondSceneOverride,
+            ] as any
+        };
+    }
 
 
     useLayoutEffect(() => {
@@ -80,7 +48,7 @@ export default function PhaserGame() {
             console.log("Creating game");
             
             game.current = new Game({
-                ...config, parent: container.current, input: {
+                ...configWithOverride, parent: container.current, input: {
                     mouse: {
                         target: container.current
                     },
