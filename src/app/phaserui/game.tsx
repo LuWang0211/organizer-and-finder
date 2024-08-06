@@ -11,6 +11,7 @@ import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin';
 
 import { useMeasure } from "react-use";
 import { LoaderScene } from "./scenes/LoaderScene";
+import { HeadlessLoaderScene } from "./scenes/HeadLessLoaderScene";
 
 const config = {
     type: Phaser.AUTO,
@@ -18,7 +19,7 @@ const config = {
     height: 768,
     transparent: true,
     scene: [
-        LoaderScene,
+        process.env.NEXT_PUBLIC_SKIP_FULL_LOADING_SCREEN ? HeadlessLoaderScene : LoaderScene,
         UIScene,
     ],
     dom: {
