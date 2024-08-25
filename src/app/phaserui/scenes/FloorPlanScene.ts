@@ -13,14 +13,14 @@ export class FloorPlanScene extends Phaser.Scene {
 
     private rooms: Room[] = [];
     private _doors: Phaser.GameObjects.Rectangle[] = [];
-    
+
     private _doorplacementManager: DoorplacementManager | undefined;
 
     public get doors() {
         return this._doors;
     }
 
-    create() {
+    start() {
         const sizer = this.rexUI.add.sizer({
             orientation: 0,
 			x: 0,
@@ -46,6 +46,8 @@ export class FloorPlanScene extends Phaser.Scene {
         const buttonAddDoor = new Button(this, "Add a Door");
         sizer.add(buttonAddDoor.gameObject);
         sizer.addSpace();
+
+        sizer.layout();
 
         buttonAddRoom.gameObject.depth = 200;
         buttonAddHallway.gameObject.depth = 200;

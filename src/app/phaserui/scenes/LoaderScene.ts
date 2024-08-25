@@ -26,7 +26,8 @@ export class LoaderScene extends Phaser.Scene {
             centerY: "center-100",
         });
 
-        this.scene.manager.run("UIScene");
+        const nextScene = this.scene.manager.scenes[1];
+        this.scene.manager.run(nextScene);
     }
 
     preload() {
@@ -44,7 +45,8 @@ export class LoaderScene extends Phaser.Scene {
     private uiSceneStarted = false;
 
     update() {
-        const loaderPlugin = this.scene.manager.getScene("UIScene").load;
+        const nextScene = this.scene.manager.scenes[1];
+        const loaderPlugin = nextScene.load;
         const progress = loaderPlugin.progress;
 
         // Pause the animation if the loading progress is greater than the current animation progress
@@ -56,7 +58,8 @@ export class LoaderScene extends Phaser.Scene {
 
         if (progress == 1 && !loaderPlugin.isLoading() && !this.uiSceneStarted && this.isAnmiationAtEnd()){
             this.uiSceneStarted = true;
-            (this.scene.manager.getScene("UIScene") as UIScene).start();
+
+            (nextScene as any).start?.();
 
             this.scene.setVisible(false);
         }
