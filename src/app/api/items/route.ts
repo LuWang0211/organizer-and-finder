@@ -1,6 +1,6 @@
 // src/app/api/items/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchItems, createItem } from '../../../services/itemService'; // Import the service functions
+import { fetchItems, createItem } from '@services/itemService'; // Import the service functions
 
 export async function GET() {
   try {

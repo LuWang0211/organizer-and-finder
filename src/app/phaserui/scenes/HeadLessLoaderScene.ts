@@ -1,16 +1,19 @@
-import { UIScene } from "@phaser/UIScene";
 
+import Phaser from "phaser";
 export class HeadlessLoaderScene extends Phaser.Scene {
     constructor() {
 		super("HeadlessLoaderScene");
 	}
 
     create() {
-        this.scene.manager.run("UIScene");
+        // Find the second scene and start it
+        const secondScene = this.scene.manager.scenes[1];
 
-        const uiScene: UIScene= this.scene.manager.getScene("UIScene") as UIScene;
-        
-        uiScene.load.on("complete", () => { uiScene.start(); });
+        secondScene.load.on("complete", () => { 
+            (secondScene as any).start?.(); 
+        });
+
+        this.scene.manager.run(secondScene);
     }
 
     preload() {
