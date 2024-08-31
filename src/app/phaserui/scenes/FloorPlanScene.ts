@@ -1,7 +1,7 @@
 import { Button } from "@/app/phaserui/components/Button";
-import { Room } from "@/app/phaserui/components/Room";
+import { Hallway, Room } from "@/app/phaserui/components/Room";
 import { mergeLines } from "@/utils/geometry";
-import { bind, flatten } from "lodash";
+import { bind, flatten, pick } from "lodash";
 import { DoorplacementManager } from "../components/DoorplacementManager";
 import { OnFloorPlanContourChanged } from "../components/events";
 
@@ -45,6 +45,9 @@ export class FloorPlanScene extends Phaser.Scene {
 
         const buttonAddDoor = new Button(this, "Add a Door");
         sizer.add(buttonAddDoor.gameObject);
+
+        const buttonSaveJson = new Button(this, "Save as Json");
+        sizer.add(buttonSaveJson.gameObject);
         sizer.addSpace();
 
         sizer.layout();
@@ -56,6 +59,7 @@ export class FloorPlanScene extends Phaser.Scene {
         buttonAddRoom.addClickListner(this.addRoom, this);
         buttonAddHallway.addClickListner(this.addHallway, this);
         buttonAddDoor.addClickListner(this.addDoor, this);
+        buttonSaveJson.addClickListner(this.onSaveJson, this);
 
         this._doorplacementManager = new DoorplacementManager(this);
 
@@ -70,7 +74,7 @@ export class FloorPlanScene extends Phaser.Scene {
     }
 
     addHallway() { 
-        this.rooms.push(new Room(this, 0xFFFFFF, bind(this.onRoomResize, this) ));
+        this.rooms.push(new Hallway(this, bind(this.onRoomResize, this) ));
     }
 
     addDoor() {
@@ -85,6 +89,32 @@ export class FloorPlanScene extends Phaser.Scene {
         const mergedLines = mergeLines(lines);
 
         this.events.emit(OnFloorPlanContourChanged, mergedLines);
+    }
+
+    onSaveJson() {
+        const fileContent = JSON.stringify({
+            rooms: this.rooms.map(room => room.serialize()),
+            doors: this.doors.map(door => pick(door.getBounds(), ['x', 'y', 'width', 'height']))
+        }, null, 2);
+        const blob = new Blob([fileContent], { type: 'application/json' });
+
+        // Create a URL for the Blob
+        const url = URL.createObjectURL(blob);
+
+        // Create a download link and set the filename
+        let a: HTMLAnchorElement | null = document.createElement('a');
+        a.href = url;
+        a.download = 'floorplan.json';
+
+        // Trigger the download by clicking the link
+        a.click();
+
+        // Clean up by revoking the object URL
+        URL.revokeObjectURL(url);
+
+        // Recycle the <a> element (optional but good practice)
+        a.remove();  // Since the element was not added to the DOM, this is optional
+        a = null;    // Explicitly set to null to ensure garbage collection
     }
 
     preload() {

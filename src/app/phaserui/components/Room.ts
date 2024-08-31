@@ -7,6 +7,7 @@ export class Room {
     private scene: Phaser.Scene;
 
     private _onResize?: () => void;
+    protected _type: string = "room";
 
     constructor(scene: Phaser.Scene, color: number = 0x6666ff, onResize?: () => void) {
         this.scene = scene;
@@ -20,6 +21,10 @@ export class Room {
 
     public get lines() {
        return getRectangleEdges(this.rect.getBounds());
+    }
+
+    public get type() {
+        return this._type;
     }
 
     /**
@@ -170,10 +175,19 @@ export class Room {
     serialize() {
         const bounds = this.rect.getBounds();
         return {
+            type: this.type,
             x: bounds.x,
             y: bounds.y,
             width: bounds.width,
             height: bounds.height
         };
+    }
+}
+
+export class Hallway extends Room {
+
+    constructor(scene: Phaser.Scene, onResize?: () => void) {
+        super(scene, 0xFFFFFF, onResize);
+        this._type = "hallway";
     }
 }
