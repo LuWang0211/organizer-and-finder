@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchItems } from '../../../services/itemService'; // Import the service
+import { fetchItems } from '@services/itemService'; // Import the service
 
 const openai = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],

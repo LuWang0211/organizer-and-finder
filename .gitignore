@@ -52,6 +52,7 @@ design/**/*.eps
 design/**/*.bak
 design/**/*.zip
 design/**/*.ftpp
+design/**/*.spine
 
 
 public/assets
