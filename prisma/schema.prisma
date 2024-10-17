@@ -8,18 +8,46 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model item {
-  id            Int       @id @default(autoincrement())
-  name          String    @db.VarChar(255)
-  locationid    Int?
-  quantity      Int?      @default(0)
-  inotherobject Boolean?  @default(false)
-  otherobjectid Int?
-  location      location? @relation(fields: [locationid], references: [id], onUpdate: NoAction, map: "fk_location")
+model user {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  wechatId  String?  
+  phone     String?  
+  username  String   @unique
+  password  String
+  familyId  Int?
+  family    family?  @relation(fields: [familyId], references: [id])
+}
+
+model family {
+  id     Int     @id @default(autoincrement())
+  name   String
+  users  user[]  
+  rooms  room[]  
+}
+
+model room {
+  id        Int       @id @default(autoincrement())
+  name      String
+  familyId  Int
+  family    family    @relation(fields: [familyId], references: [id])
+  locations location[]
 }
 
 model location {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
-  item item[]
+  roomId  Int
+  room    room    @relation(fields: [roomId], references: [id])
+  items item[]
+}
+
+model item {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  locationid    Int?
+  location      location? @relation(fields: [locationid], references: [id], onUpdate: NoAction)
+  quantity      Int?      @default(0)
+  inotherobject Boolean?  @default(false)
+  otherobjectid Int?
 }
