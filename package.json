@@ -9,17 +9,20 @@
     "start": "next start",
     "lint": "next lint",
     "symbol-link": "npx tsx scripts/symbollink.ts",
-    "game": "pushd \"../gameengine/source/editor\" && npm run localrun && popd"
+    "game": "pushd \"../gameengine/source/editor\" && npm run localrun && popd",
+    "schema": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.16.1",
     "@vercel/postgres": "^0.9.0",
+    "auth": "^1.2.3",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "iconify-icon": "^2.1.0",
     "lodash": "^4.17.21",
     "next": "14.2.4",
+    "next-auth": "^5.0.0-beta.25",
     "number-to-words": "^1.2.4",
     "openai": "^4.57.0",
     "phaser": "^3.80.1",

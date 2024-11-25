@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { getSession } from '@/auth';
+import prisma from '@/services/db';
 
-const prisma = new PrismaClient();
 
 export async function fetchItems(prismaClient = prisma) {
   try {
@@ -24,8 +24,10 @@ export async function createItem(name: string, prismaClient = prisma) {
 
 export async function fetchItemsByContainer(locationid: number, prismaInstance = prisma) {
   try {
+    const session = await getSession();
+    
     return await prismaInstance.item.findMany({
-      where: { locationid },
+      where: { locationid, location: { room: { familyId: session?.dbUser.familyId! } } },
       select: { id: true, name: true, quantity: true, inotherobject: true, otherobjectid: true },
     });
   } catch (error) {
