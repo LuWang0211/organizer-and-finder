@@ -1,26 +1,27 @@
 import { cn } from "@/utils/tailwind";
+import LinkWithReport from "./LinkWithReport";
+
 interface ContainersListProps {
-    roomName?: string;
-    // containers?: { id: number; name: string; items: string[] }[];
-    containers?: { id: number; name: string; items: { id: number; name: string; quantity: number; inotherobject: boolean; otherobjectid: number }[] }[];
+    roomId: string;
+    containers: { 
+        id: number;
+        name: string;
+        items: { 
+          id: number;
+          name: string;
+          quantity: number | null;
+          inotherobject: boolean | null;
+          otherobjectid: number | null;
+        }[];
+      }[]; 
     className?: string;
-    onSelectContainer: (containerId: number, containerName: string) => void; 
+    loading: boolean;
 }
 
-export default function ContainersList( { className, roomName, containers = [], onSelectContainer }: ContainersListProps) {
+export default function ContainersList( { className, containers, roomId }: ContainersListProps) {
+    // console.log("roomId in ContainersList:", roomId); 
 
     return <div className={cn(" bg-purple-100 opacity-60", className)} >
-
-        {/* Room Name as Header */}
-        {roomName ? (
-            <div className="text-center text-2xl font-bold mb-4 text-pink-600">
-                {decodeURI(roomName)} is now selected
-            </div>
-        ) : (
-            <div className="text-center text-lg text-gray-600 mb-4">No room is selected</div>
-        )}
-
-
         <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse bg-white rounded-lg shadow-md text-left">
                 <thead>
@@ -31,14 +32,16 @@ export default function ContainersList( { className, roomName, containers = [], 
                     </tr>
                 </thead>
                 <tbody>
-                    {containers.length > 0 ? ( // Now containers will default to an empty array
+                    {containers && containers.length > 0 ? (
+                        
                         containers.map((container) => (
                             <tr
                                 key={container.id}
                                 className="hover:bg-pink-100 cursor-pointer transition duration-200"
-                                onClick={() => onSelectContainer(container.id, container.name)}
                             >
-                                <td className="py-2 px-4 border-b border-pink-300 text-gray-900">{container.id}</td>
+                                <td >
+                                    <LinkWithReport roomId={roomId} containerId={container.id}  containerName={container.name} />
+                                </td>
                                 <td className="py-2 px-4 border-b border-pink-300 text-gray-900">{container.name}</td>
                                 <td className="py-2 px-4 border-b border-pink-300 text-gray-900">
                                     <div className="text-xs text-gray-600">
@@ -62,7 +65,6 @@ export default function ContainersList( { className, roomName, containers = [], 
                             </tr>
                         ))
                     ) : (
-                        // <div className="text-center text-pink-800">No containers found for this room.</div> // Fallback message when there are no containers
                         <tr>
                             <td colSpan={3} className="text-center py-4 text-pink-800">
                                 No container found for this room.

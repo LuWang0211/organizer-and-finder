@@ -1,26 +1,13 @@
 import { cn } from "@/utils/tailwind";
 
 interface ItemsListProps {
-    containerName?: string;
-    items?: { id: number; name: string; quantity: number; inotherobject: Boolean, otherobjectid: number}[];
+    items?: { id: number; name: string; quantity: number | null; inotherobject: boolean | null; otherobjectid: number | null }[];
     className?: string;
-    loading: boolean;
 }
 
-export default function ItemsList({ className, containerName, items = [], loading }: ItemsListProps) {
-    if (loading) return <div>Loading items...</div>;
+export default function ItemsList({ className,  items = [] }: ItemsListProps) {
 
     return <div className={cn(" bg-gray-500 opacity-40", className)}>
-        
-
-        {/* Container Name as Header */}
-        {containerName ? (
-            <div className="text-center text-2xl font-bold mb-4 text-white-400">
-                {containerName} is now selected
-            </div>
-        ) : (
-            <div className="text-center text-2xl font-bold mb-4 text-white-400">No Container is selected</div>
-        )}
 
         <div className="text-center text-gray-500">
             <table className="w-full bg-white shadow-lg rounded-lg">
@@ -41,7 +28,7 @@ export default function ItemsList({ className, containerName, items = [], loadin
                                 <td className="py-2 px-4 text-center">{item.id}</td>
                                 <td className="py-2 px-4 text-center">{item.name}</td>
                                 <td className="py-2 px-4 text-center">{item.quantity}</td>
-                                <td className="py-2 px-4 text-center">{item.inotherobject.toString()}</td>
+                                <td className="py-2 px-4 text-center">{item.inotherobject?.toString() ?? 'false'}</td>
                                 <td className="py-2 px-4 text-center">{item.otherobjectid}</td>
                             </tr>
                         ))

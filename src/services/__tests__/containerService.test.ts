@@ -4,7 +4,7 @@ import prismaMock, { MockPrismaClient } from '../__mocks__/prismaMock';
 import { fetchContainersByRoom } from '../containerService';
 
 describe('Container Service Functions', () => {
-  const roomId = 1;
+  const roomId = 'Sample_Room_ID';
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -13,7 +13,7 @@ describe('Container Service Functions', () => {
   it('should fetch containers by room ID successfully', async () => {
     const mockContainers = [
       {
-        id: 1,
+        id: 'Sample_Room_ID_1',
         name: 'Sample Location 1',
         roomId: 1,
         items: [
@@ -22,7 +22,7 @@ describe('Container Service Functions', () => {
         ],
       },
       {
-        id: 2,
+        id: 'Sample_Room_ID_2',
         name: 'Sample Location 2',
         roomId: 1,
         items: [

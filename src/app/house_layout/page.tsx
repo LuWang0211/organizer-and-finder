@@ -1,9 +1,5 @@
-import Containers from "./[room]/Containers";
-import Items from "./[room]/Items";
-
+// src/app/house_layout/page.tsx
 export default function Page() {
     return <>
-        <Containers />
-        <Items />
     </>;
 }

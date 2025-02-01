@@ -17,6 +17,8 @@ export default function Layout( { children }: { children: React.ReactNode }) {
             <LoftFloorplan className="row-span-2" isFolded={!fullScreenView} onFold={(isFolded => setFullScreenView(!isFolded))} />
         </Suspense>
         
-        {!fullScreenView && children}
+        <div className={cn({"hidden": fullScreenView})}>
+            {children}
+        </div>
     </div>;
 }
