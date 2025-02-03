@@ -12,22 +12,23 @@ import Image from "next/image";
 import loftPic from '../../../public/assets/texture/loft.png';
 
 interface RoomProps {
-    roomName: string;
+    roomId: string;
     x: number;
     y: number;
     w: number;
     h: number;
     className?: string;
-    onClick: () => void;
+    onClick: (roomId: string) => void;  // Change to pass room name and id
 }
 
-function Room({ roomName, x, y, w, h, className, onClick}: RoomProps) {
-    return <div id={roomName} className={cn("absolute cursor-pointer", className)} style={{
+function Room({ roomId, x, y, w, h, className, onClick}: RoomProps) {
+
+    return <div className={cn("absolute cursor-pointer", className)} style={{
         top: `${y}px`,
         left: `${x}px`,
         width: `${w}px`,
         height: `${h}px`
-    }} onClick={onClick} />;
+    }} onClick={() => onClick(roomId)} />;
 }
 
 interface LoftFloorplanProps {
@@ -82,15 +83,16 @@ export default function LoftFloorplan({
 
     const router = useRouter();
 
-    const zoomToElement = useCallback((elementId: string) => {
+    const zoomToElement = useCallback((roomId: string) => {
+
         if (!isFolded) {
             shrink();
         }
 
         setTimeout(() => {
-            transformComponentRef.current?.zoomToElement(elementId);
+            transformComponentRef.current?.zoomToElement(roomId);
 
-            router.push(`/house_layout/${elementId}`);
+            router.push(`/house_layout/${roomId}`);
         }, 1);
     }, [isFolded, shrink, router]);
 
@@ -117,8 +119,9 @@ export default function LoftFloorplan({
 
         if (parts.length > 2) {
             const elementId = parts[2];
+
             setTimeout(() => {
-                zoomToElementLatest.current?.(decodeURI(elementId));
+                return zoomToElementLatest.current?.(decodeURI(elementId));
             }, 1);
         }
     },);
@@ -132,29 +135,32 @@ export default function LoftFloorplan({
                 }}> {
                     <div className="w-full relative">
                         <Image src={loftPic} alt="floorplan" className={"h-[750px] w-auto max-w-[max-content] transform-gpu"} />
-                        <Room roomName="kitchen" x={13} y={13} w={305} h={380} className="hover:bg-red-500 opacity-50"
-                            onClick={() => zoomToElement("kitchen")} />
-                        <Room roomName="living room" x={13} y={393} w={305} h={247} className="hover:bg-yellow-500 opacity-50"
-                            onClick={() => zoomToElement("living room")} />
-                        <Room roomName="bedroom level 1" x={328} y={338} w={243} h={300} className="hover:bg-green-700 opacity-50"
-                            onClick={() => zoomToElement("bedroom level 1")} />
-                        <Room roomName="restroom level 1" x={328} y={175} w={245} h={155} className="hover:bg-blue-700 opacity-50"
-                            onClick={() => zoomToElement("restroom level 1")} />
-                        <Room roomName="restroom level 2" x={630} y={10} w={155} h={375} className="hover:bg-blue-700 opacity-50"
-                            onClick={() => zoomToElement("restroom level 2")} />
-                        <Room roomName="bedroom level 2" x={793} y={422} w={225} h={218} className="hover:bg-green-700 opacity-50"
-                            onClick={() => zoomToElement("bedroom level 2")} />
-                        <Room roomName="closet" x={862} y={260} w={157} h={155} className="hover:bg-purple-800 opacity-50"
-                            onClick={() => zoomToElement("closet")} />
+                        <Room roomId="kitchen_SampleFamily" x={13} y={13} w={305} h={380} className="hover:bg-red-500 opacity-50"
+                            onClick={() => zoomToElement("kitchen_SampleFamily")} />
+                        <Room roomId="living_room_SampleFamily" x={13} y={393} w={305} h={247} className="hover:bg-yellow-500 opacity-50"
+                            onClick={() => zoomToElement("living_room_SampleFamily")} />
+                        <Room roomId="bedroom_level_1_SampleFamily" x={328} y={338} w={243} h={300} className="hover:bg-green-700 opacity-50"
+                            onClick={() => zoomToElement("bedroom_level_1_SampleFamily")} />
+                        <Room roomId="restroom_level_1_SampleFamily" x={328} y={175} w={245} h={155} className="hover:bg-blue-700 opacity-50"
+                            onClick={() => zoomToElement("restroom_level_1_SampleFamily")} />
+                        <Room roomId="restroom_level_2_SampleFamily" x={630} y={10} w={155} h={375} className="hover:bg-blue-700 opacity-50"
+                            onClick={() => zoomToElement("restroom_level_2_SampleFamily")} />
+                        <Room roomId="bedroom_level_2_SampleFamily" x={793} y={422} w={225} h={218} className="hover:bg-green-700 opacity-50"
+                            onClick={() => zoomToElement("bedroom_level_2_SampleFamily")} />
+                        <Room roomId="closet_SampleFamily" x={862} y={260} w={157} h={155} className="hover:bg-purple-800 opacity-50"
+                            onClick={() => zoomToElement("closet_SampleFamily")} />
                     </div>
                 }
             </TransformComponent>
-        </TransformWrapper>            
-        
+        </TransformWrapper>    
 
         {!isFolded && <Icon icon={menuFoldLeft} width="2rem" height="2rem" className=" text-red-100 absolute top-2 right-5 cursor-pointer shadow-lg"
-            onClick={shrink}  />}
+                    onClick={shrink} />}
+
         {isFolded && <Icon icon={menuUnFoldRight} width="2rem" height="2rem" className=" text-red-100 absolute top-2 right-5 cursor-pointer shadow-lg" 
-            onClick={expand} />}
+            onClick={expand} /> }
+
+    
     </div>;
+
 }

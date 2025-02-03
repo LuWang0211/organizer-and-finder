@@ -1,9 +1,8 @@
-import Containers from "./Containers";
-import Items from "./Items";
+// src/app/house_layout/[room]/page.tsx
+import React from "react";
 
-export default function Page( { params: { room } }: { params: { room: string } }) {
-    return <>
-        <Containers roomName={ room } />
-        <Items />
-    </>;
+export default function Page(): React.JSX.Element {
+  return (
+    <div>Please select a container to view its contents</div>
+  );
 }
