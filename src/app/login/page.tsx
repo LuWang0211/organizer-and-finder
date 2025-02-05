@@ -6,7 +6,7 @@ const RedirectHelper = dynamic(
     { ssr: false }
   );
 
-export async function CurrentLoginParty({session}: {session: SessionType}) {
+async function CurrentLoginParty({session}: {session: SessionType}) {
     const { dbUser } = session;
 
     if (dbUser.accountProvider === "microsoft-entra-id") {
