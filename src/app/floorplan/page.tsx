@@ -1,13 +1,9 @@
-"use client";
-
-import dynamic from "next/dynamic";
-
-const DynamicComponentWithNoSSR = dynamic(
-    () => import('@/app/floorplan/FloorplanPage'),
-    { ssr: false }
-  );
-
+import PageClient from "@/app/floorplan/PageClient";
+import AuthProtectedComponent from "@/AuthProtectedComponent";
+import { extractPathFromDirectory } from "@/utils/path";
 
 export default function Page() {
-    return <DynamicComponentWithNoSSR />;
+    return <AuthProtectedComponent route={extractPathFromDirectory(__dirname ) }>
+        <PageClient />;
+    </AuthProtectedComponent>
 }

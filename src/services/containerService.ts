@@ -1,11 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { getSession } from "@/auth";
+import prisma from "./db";
 
 export async function fetchContainersByRoom(roomId: string, prismaInstance = prisma) {
   try {
+
+    const session = await getSession();
+
     return await prismaInstance.location.findMany({
-      where: { roomId },
+      where: { roomId, room: { familyId: session?.dbUser.familyId! } },
       include: {
         items: {
           select: {
