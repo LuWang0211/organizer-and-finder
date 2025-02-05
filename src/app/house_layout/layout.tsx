@@ -1,11 +1,10 @@
 
 import AuthProtectedComponent from "@/AuthProtectedComponent";
 import LayoutClient from "@/app/house_layout/LayoutClient";
-import { extractPathFromDirectory } from "@/utils/path";
 
 
 export default function Layout(props: React.ComponentProps<typeof LayoutClient>) {
-    return <AuthProtectedComponent route={extractPathFromDirectory(__dirname ) }>
+    return <AuthProtectedComponent route={"/house_layout"}>
         {<LayoutClient {...props} />}
     </AuthProtectedComponent>
 }
