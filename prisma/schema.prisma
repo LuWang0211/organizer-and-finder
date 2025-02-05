@@ -26,6 +26,17 @@ model family {
   name  String
   rooms room[]
   users user[]
+  house house[]
+}
+
+model house {
+  id      Int     @id @default(autoincrement())
+  name    String
+  metadata Json?
+  familyId        Int
+  family          family @relation(fields: [familyId], references: [id])
+
+  rooms room[]
 }
 
 model room {
@@ -34,6 +45,10 @@ model room {
   familyId  Int
   locations location[]
   family    family     @relation(fields: [familyId], references: [id])
+  metadata Json?
+
+  houseId Int
+  house   house @relation(fields: [houseId], references: [id])
 }
 
 model location {

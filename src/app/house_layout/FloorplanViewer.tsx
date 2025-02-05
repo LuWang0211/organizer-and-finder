@@ -10,6 +10,8 @@ import { useLatest, useMount } from "react-use";
 import { TransformComponent, TransformWrapper, ReactZoomPanPinchRef, useTransformInit, ReactZoomPanPinchState } from "react-zoom-pan-pinch";
 import Image from "next/image";
 import loftPic from '../../../public/assets/texture/loft.png';
+import { RoomDef } from "./common";
+import { getColorByNumber } from "@/ui/colors";
 
 interface RoomProps {
     roomId: string;
@@ -22,7 +24,6 @@ interface RoomProps {
 }
 
 function Room({ roomId, x, y, w, h, className, onClick}: RoomProps) {
-
     return <div className={cn("absolute cursor-pointer", className)} style={{
         top: `${y}px`,
         left: `${x}px`,
@@ -31,17 +32,19 @@ function Room({ roomId, x, y, w, h, className, onClick}: RoomProps) {
     }} onClick={() => onClick(roomId)} />;
 }
 
-interface LoftFloorplanProps {
+interface FloorPlanViewerProps {
     className?: string;
     isFolded: boolean;
+    roomDefs: RoomDef[];
     onFold: (isFolded: boolean) => void;
 }
 
-export default function LoftFloorplan({
+export default function FloorplanViewer({
     className,
     isFolded,
+    roomDefs,
     onFold
-}: LoftFloorplanProps) {
+}: FloorPlanViewerProps) {
     const transformComponentRef = useRef<ReactZoomPanPinchRef | null>(null);
     const initialTransformStateRef = useRef<ReactZoomPanPinchState>();
 
@@ -135,20 +138,8 @@ export default function LoftFloorplan({
                 }}> {
                     <div className="w-full relative">
                         <Image src={loftPic} alt="floorplan" className={"h-[750px] w-auto max-w-[max-content] transform-gpu"} />
-                        <Room roomId="kitchen_SampleFamily" x={13} y={13} w={305} h={380} className="hover:bg-red-500 opacity-50"
-                            onClick={() => zoomToElement("kitchen_SampleFamily")} />
-                        <Room roomId="living_room_SampleFamily" x={13} y={393} w={305} h={247} className="hover:bg-yellow-500 opacity-50"
-                            onClick={() => zoomToElement("living_room_SampleFamily")} />
-                        <Room roomId="bedroom_level_1_SampleFamily" x={328} y={338} w={243} h={300} className="hover:bg-green-700 opacity-50"
-                            onClick={() => zoomToElement("bedroom_level_1_SampleFamily")} />
-                        <Room roomId="restroom_level_1_SampleFamily" x={328} y={175} w={245} h={155} className="hover:bg-blue-700 opacity-50"
-                            onClick={() => zoomToElement("restroom_level_1_SampleFamily")} />
-                        <Room roomId="restroom_level_2_SampleFamily" x={630} y={10} w={155} h={375} className="hover:bg-blue-700 opacity-50"
-                            onClick={() => zoomToElement("restroom_level_2_SampleFamily")} />
-                        <Room roomId="bedroom_level_2_SampleFamily" x={793} y={422} w={225} h={218} className="hover:bg-green-700 opacity-50"
-                            onClick={() => zoomToElement("bedroom_level_2_SampleFamily")} />
-                        <Room roomId="closet_SampleFamily" x={862} y={260} w={157} h={155} className="hover:bg-purple-800 opacity-50"
-                            onClick={() => zoomToElement("closet_SampleFamily")} />
+                        {roomDefs.map(({x, y, h, w, id}, index) => <Room key={id} roomId={id} x={x} y={y} w={w} h={h} 
+                            className={cn("opacity-50", `hover:bg-${getColorByNumber(index)}`)} onClick={zoomToElement} />)}
                     </div>
                 }
             </TransformComponent>
