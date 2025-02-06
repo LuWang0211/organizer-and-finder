@@ -1,10 +1,25 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import {  useMount, useSearchParam } from "react-use";
+import { redirect, usePathname, useRouter } from "next/navigation";
+import {  useMount } from "react-use";
 
 interface RedirectHelperProps {
     isLogged: boolean;
+}
+
+/**
+ * Remembers the current page URL before redirecting the user to the login page.
+ * @returns {null}
+ */
+export function PreLoginHelper(): null {
+    const currentPathname = usePathname();
+
+    useMount(() => {
+        window.localStorage.setItem("redirect", currentPathname);
+        redirect("/login");
+    });
+
+    return null;
 }
 
 /* This component is used to redirect the user to the page they were trying to access before logging in.
@@ -12,16 +27,11 @@ interface RedirectHelperProps {
  it is not supposed to be used in any other context.
  */
 export default function RedirectHelper({ isLogged }: RedirectHelperProps) {
-    const redirect = useSearchParam("redirect");
     const router = useRouter();
 
     const redirectValue = window.localStorage.getItem("redirect");
 
     useMount(() => {
-        if (!isLogged && redirect) {
-            window.localStorage.setItem("redirect", redirect);
-            return;
-        }
         if (isLogged && redirectValue) {
             window.localStorage.removeItem("redirect");
             router.push(redirectValue);

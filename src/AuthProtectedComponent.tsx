@@ -1,19 +1,18 @@
-import { redirect } from "next/navigation";
 import { getSession } from "./auth";
+import { PreLoginHelper } from "./app/login/RedirectHelper";
 
 interface AuthProtectedComponentProps { 
-    route: string;
     children: React.ReactNode 
 }
 
 
 export default async function AuthProtectedComponent(
-    { route, children }: AuthProtectedComponentProps)
+    { children }: AuthProtectedComponentProps)
 {
     const session = await getSession();
 
     if (!session) {
-        redirect(`/login${route ? `?redirect=${route}` : ""}`);
+        return <PreLoginHelper />
     }
 
     return <>{children}</>;

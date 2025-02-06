@@ -8,8 +8,6 @@ import SelectedContainer from "./SelectedContainer";
 
 export default async function RoomLayout({ params, children }: PropsWithChildren<{ params: { room: string } }>) {
 
-  // console.log("params in [room] layout - get from parent:", params);
-  
   const roomId = params.room;
   const containersData = await fetchContainersByRoom(roomId);
 

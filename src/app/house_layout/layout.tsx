@@ -36,7 +36,7 @@ async function DataLoader({ children }: { children: React.ReactNode }) {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    return <AuthProtectedComponent route={"/house_layout"}>
+    return <AuthProtectedComponent>
         {<DataLoader >{ children }</DataLoader>}
     </AuthProtectedComponent>
 }
