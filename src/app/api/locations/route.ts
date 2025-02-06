@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { fetchContainersByRoom } from '@/services/containerService';
+import { fetchLocationsByRoom } from '@/services/locationService';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -10,10 +10,9 @@ export async function GET(request: Request) {
     }
 
     try {
-        const containers = await fetchContainersByRoom(roomId);
-        // console.log("Containers:", containers);
-        return NextResponse.json(containers);
+        const locations = await fetchLocationsByRoom(roomId);
+        return NextResponse.json(locations);
     } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch containers" }, { status: 500 });
+        return NextResponse.json({ error: "Failed to fetch locations" }, { status: 500 });
     }
 }

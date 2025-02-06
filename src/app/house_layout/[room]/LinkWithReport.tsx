@@ -2,21 +2,21 @@
 
 import Link from "next/link";
 import { useContext } from "react";
-import { ContainerSelectionContext } from "./ContainerSelectionContext";
+import { LocationSelectionContext } from "./LocationSelectionContext";
 
 interface LinkWithReportProps {
     roomId: string;
-    containerId: number;
-    containerName: string;
+    locationId: number;
+    locationName: string;
 }
 
-export default function LinkWithReport({ roomId, containerId, containerName} : LinkWithReportProps) {
-    const { setSelectedContainer} = useContext(ContainerSelectionContext);
+export default function LinkWithReport({ roomId, locationId, locationName} : LinkWithReportProps) {
+    const { setSelectedLocation} = useContext(LocationSelectionContext);
 
     return (
-        <Link className="py-2 px-4 border-b border-pink-300 text-gray-900" href={`/house_layout/${roomId}/${containerId}`}
-            onClick={() => setSelectedContainer(containerName)}>
-            {containerId}
+        <Link className="py-2 px-4 border-b border-pink-300 text-gray-900" href={`/house_layout/${roomId}/${locationId}`}
+            onClick={() => setSelectedLocation(locationName)}>
+            {locationId}
         </Link>
     );
 }

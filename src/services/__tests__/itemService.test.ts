@@ -1,7 +1,7 @@
 // src/services/__tests__/itemServer.test.ts
 import { PrismaClient } from '@prisma/client';
 import prismaMock, { MockPrismaClient } from '../__mocks__/prismaMock';
-import { fetchItems, fetchItemsByContainer } from '../itemService';
+import { fetchItems, fetchItemsByLocation } from '../itemService';
 
 describe('Item Service Functions', () => {
   afterEach(() => {
@@ -23,18 +23,18 @@ describe('Item Service Functions', () => {
     });
   });
 
-  describe('fetchItemsByContainer', () => {
-    it('should fetch items by container ID successfully', async () => {
+  describe('fetchItemsByLocation', () => {
+    it('should fetch items by location ID successfully', async () => {
       const locationId = 1;
-      const mockItemsByContainer = [
+      const mockItemsByLocation = [
         { id: 1, name: 'Item 1', quantity: 5, inotherobject: false, otherobjectid: null },
         { id: 3, name: 'Item 3', quantity: 2, inotherobject: true, otherobjectid: 1 },
       ];
 
-      (prismaMock.item.findMany as jest.Mock).mockResolvedValue(mockItemsByContainer);
+      (prismaMock.item.findMany as jest.Mock).mockResolvedValue(mockItemsByLocation);
 
-      const items = await fetchItemsByContainer(locationId, MockPrismaClient() as unknown as PrismaClient);
-      expect(items).toEqual(mockItemsByContainer);
+      const items = await fetchItemsByLocation(locationId, MockPrismaClient() as unknown as PrismaClient);
+      expect(items).toEqual(mockItemsByLocation);
       expect(prismaMock.item.findMany).toHaveBeenCalledWith({
         where: { locationid: locationId },
         select: { id: true, name: true, quantity: true, inotherobject: true, otherobjectid: true },

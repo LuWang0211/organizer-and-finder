@@ -1,15 +1,15 @@
 // src/app/api/items/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchItems, createItem, fetchItemsByContainer } from '@services/itemService'; // Import the service functions
+import { fetchItems, createItem, fetchItemsByLocation } from '@services/itemService'; // Import the service functions
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
-    const containerId = searchParams.get('containerId');
+    const locationId = searchParams.get('locationId');
 
     try {
-      // If `containerId` is provided, fetch items by that container ID
-      if (containerId) {
-        const items = await fetchItemsByContainer(Number(containerId));
+      // If `locationId` is provided, fetch items by that location ID
+      if (locationId) {
+        const items = await fetchItemsByLocation(Number(locationId));
         return NextResponse.json(items, { status: 200 });
       }
 
