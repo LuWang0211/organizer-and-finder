@@ -1,9 +1,9 @@
 import { cn } from "@/utils/tailwind";
 import LinkWithReport from "./LinkWithReport";
 
-interface ContainersListProps {
+interface LocationsListProps {
     roomId: string;
-    containers: { 
+    locations: { 
         id: number;
         name: string;
         items: { 
@@ -18,42 +18,41 @@ interface ContainersListProps {
     loading: boolean;
 }
 
-export default function ContainersList( { className, containers, roomId }: ContainersListProps) {
-    // console.log("roomId in ContainersList:", roomId); 
+export default function LocationsList( { className, locations, roomId }: LocationsListProps) {
 
     return <div className={cn(" bg-purple-100 opacity-60", className)} >
         <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse bg-white rounded-lg shadow-md text-left">
                 <thead>
                     <tr className="bg-pink-200 text-pink-800 text-sm uppercase">
-                        <th className="py-2 px-4 border-b border-pink-300">Container ID</th>
-                        <th className="py-2 px-4 border-b border-pink-300">Container Name</th>
+                        <th className="py-2 px-4 border-b border-pink-300">Location ID</th>
+                        <th className="py-2 px-4 border-b border-pink-300">Location Name</th>
                         <th className="py-2 px-4 border-b border-pink-300">Items</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {containers && containers.length > 0 ? (
+                    {locations && locations.length > 0 ? (
                         
-                        containers.map((container) => (
+                        locations.map((location) => (
                             <tr
-                                key={container.id}
+                                key={location.id}
                                 className="hover:bg-pink-100 cursor-pointer transition duration-200"
                             >
                                 <td >
-                                    <LinkWithReport roomId={roomId} containerId={container.id}  containerName={container.name} />
+                                    <LinkWithReport roomId={roomId} locationId={location.id}  locationName={location.name} />
                                 </td>
-                                <td className="py-2 px-4 border-b border-pink-300 text-gray-900">{container.name}</td>
+                                <td className="py-2 px-4 border-b border-pink-300 text-gray-900">{location.name}</td>
                                 <td className="py-2 px-4 border-b border-pink-300 text-gray-900">
                                     <div className="text-xs text-gray-600">
-                                    {container.items && container.items.length > 0 ? (
+                                    {location.items && location.items.length > 0 ? (
                                         <>
-                                            {container.items.slice(0, 3).map((item, index) => (
+                                            {location.items.slice(0, 3).map((item, index) => (
                                                 <span key={index}>
                                                     {item.name}
-                                                    {index < 2 && index < container.items.length - 1 && ', '}
+                                                    {index < 2 && index < location.items.length - 1 && ', '}
                                                 </span>
                                             ))}
-                                            {container.items.length > 3 && (
+                                            {location.items.length > 3 && (
                                                 <span className="text-gray-500"> + more</span>
                                             )}
                                         </>
@@ -67,7 +66,7 @@ export default function ContainersList( { className, containers, roomId }: Conta
                     ) : (
                         <tr>
                             <td colSpan={3} className="text-center py-4 text-pink-800">
-                                No container found for this room.
+                                No location found for this room.
                             </td>
                         </tr>
                     )}

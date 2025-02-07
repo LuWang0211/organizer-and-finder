@@ -1,7 +1,7 @@
 import { getSession } from "@/auth";
 import prisma from "./db";
 
-export async function fetchContainersByRoom(roomId: string, prismaInstance = prisma) {
+export async function fetchLocationsByRoom(roomId: string, prismaInstance = prisma) {
   try {
 
     const session = await getSession();
@@ -21,6 +21,6 @@ export async function fetchContainersByRoom(roomId: string, prismaInstance = pri
       },
     });
   } catch (error) {
-    throw new Error('Error fetching containers');
+    throw new Error('Error fetching locations');
   }
 }

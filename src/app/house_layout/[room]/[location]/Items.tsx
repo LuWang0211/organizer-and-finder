@@ -34,7 +34,7 @@ export default function ItemsList({ className,  items = [] }: ItemsListProps) {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={5} className="py-4 text-center text-gray-500">No item found for this container.</td>
+                            <td colSpan={5} className="py-4 text-center text-gray-500">No item found for this location.</td>
                         </tr>
                     )}
                 </tbody>

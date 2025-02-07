@@ -22,7 +22,7 @@ export async function createItem(name: string, prismaClient = prisma) {
   }
 }
 
-export async function fetchItemsByContainer(locationid: number, prismaInstance = prisma) {
+export async function fetchItemsByLocation(locationid: number, prismaInstance = prisma) {
   try {
     const session = await getSession();
     

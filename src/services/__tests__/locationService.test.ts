@@ -1,17 +1,16 @@
-// src/services/__tests__/containerService.test.ts
 import { PrismaClient } from '@prisma/client';
 import prismaMock, { MockPrismaClient } from '../__mocks__/prismaMock';
-import { fetchContainersByRoom } from '../containerService';
+import { fetchLocationsByRoom } from '../locationService';
 
-describe('Container Service Functions', () => {
+describe('Location Service Functions', () => {
   const roomId = 'Sample_Room_ID';
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should fetch containers by room ID successfully', async () => {
-    const mockContainers = [
+  it('should fetch locations by room ID successfully', async () => {
+    const mockLocations = [
       {
         id: 'Sample_Room_ID_1',
         name: 'Sample Location 1',
@@ -31,10 +30,10 @@ describe('Container Service Functions', () => {
       },
     ];
     
-    (prismaMock.location.findMany as jest.Mock).mockResolvedValue(mockContainers);
+    (prismaMock.location.findMany as jest.Mock).mockResolvedValue(mockLocations);
 
-    const containers = await fetchContainersByRoom(roomId, MockPrismaClient() as unknown as PrismaClient);
-    expect(containers).toEqual(mockContainers);
+    const locations = await fetchLocationsByRoom(roomId, MockPrismaClient() as unknown as PrismaClient);
+    expect(locations).toEqual(mockLocations);
     expect(prismaMock.location.findMany).toHaveBeenCalledWith({
         where: { roomId },
         // select: { id: true, name: true },
