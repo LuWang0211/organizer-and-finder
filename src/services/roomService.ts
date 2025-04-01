@@ -1,4 +1,5 @@
 import prisma from "./db";
+import { getSession } from "@/auth";
 
 export async function fetchHouseForFamily(familyId: number) {
     try {
@@ -21,5 +22,18 @@ export async function fetchRoomsForHouse(houseId: number) {
         return rooms;
     } catch (error) {
         throw new Error('Error fetching rooms');
+    }
+}
+
+export async function fetchRoomsForFamily(roomId: string, prismaInstance = prisma) {
+    const session = await getSession();
+    try {
+        // console.log("familyId, roomId", session?.dbUser.familyId, roomId);
+        const rooms = await prismaInstance.room.findMany({
+            where: { familyId: session?.dbUser.familyId!,id: roomId, },
+        });
+        return rooms;
+    } catch (error) {
+        throw new Error('Error fetching rooms For family');
     }
 }

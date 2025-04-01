@@ -27,6 +27,7 @@ model family {
   rooms room[]
   users user[]
   house house[]
+  locations location[]
 }
 
 model house {
@@ -57,6 +58,8 @@ model location {
   roomId String
   items  item[]
   room   room   @relation(fields: [roomId], references: [id])
+  familyId Int @default(1)
+  family  family? @relation(fields: [familyId], references: [id])
 }
 
 model item {
