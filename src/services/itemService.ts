@@ -22,15 +22,32 @@ export async function createItem(name: string, prismaClient = prisma) {
   }
 }
 
-export async function fetchItemsByLocation(locationid: number, prismaInstance = prisma) {
+export async function fetchItemsByLocation(locationid: string, prismaInstance = prisma) {
   try {
     const session = await getSession();
+    if (!session) {
+      throw new Error('Unauthorized');
+    }
     
     return await prismaInstance.item.findMany({
-      where: { locationid, location: { room: { familyId: session?.dbUser.familyId! } } },
-      select: { id: true, name: true, quantity: true, inotherobject: true, otherobjectid: true },
+      where: { 
+        locationid, 
+        location: { 
+          room: { 
+            familyId: session.dbUser.familyId! 
+          } 
+        } 
+      },
+      select: { 
+        id: true, 
+        name: true, 
+        quantity: true, 
+        inotherobject: true, 
+        otherobjectid: true 
+      },
     });
   } catch (error) {
+    console.error('Error in fetchItemsByLocation:', error);
     throw new Error('Error fetching items');
   }
 }

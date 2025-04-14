@@ -3,15 +3,15 @@ import { fetchItemsByLocation } from "@/services/itemService";
 import ItemsList from "./Items";
 
 type LocationProps = {
-  locationId: number;
+  locationId: string;
 };
 
-export default async function Location({ locationId}: LocationProps) {
-    const itemsData = await fetchItemsByLocation(Number(locationId));
+export default async function Location({ locationId }: LocationProps) {
+    const itemsData = await fetchItemsByLocation(locationId);
 
-  return (
-      <ItemsList items={itemsData} />
-  );
+    return (
+        <ItemsList items={itemsData} />
+    );
 }
 
 
