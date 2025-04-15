@@ -4,7 +4,7 @@ import LinkWithReport from "./LinkWithReport";
 interface LocationsListProps {
     roomId: string;
     locations: { 
-        id: number;
+        id: string;
         name: string;
         items: { 
           id: number;
