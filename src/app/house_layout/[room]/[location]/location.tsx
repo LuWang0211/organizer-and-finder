@@ -13,5 +13,3 @@ export default async function Location({ locationId }: LocationProps) {
         <ItemsList items={itemsData} />
     );
 }
-
-
