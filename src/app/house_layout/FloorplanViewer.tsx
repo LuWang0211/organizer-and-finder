@@ -85,9 +85,9 @@ export default function FloorplanViewer({
     }, [onFold]);
 
     const router = useRouter();
+    const pathname = usePathname();
 
     const zoomToElement = useCallback((roomId: string) => {
-
         if (!isFolded) {
             shrink();
         }
@@ -95,13 +95,24 @@ export default function FloorplanViewer({
         setTimeout(() => {
             transformComponentRef.current?.zoomToElement(roomId);
 
-            router.push(`/house_layout/${roomId}`);
+            const parts = pathname.split("/");
+            const currentRoom = parts[2];
+            
+            if (currentRoom !== roomId) {
+                // If clicking a different room, always go to room root
+                router.push(`/house_layout/${roomId}`);
+            } else if (parts.length > 3) {
+                // If in location view of the same room, preserve the location
+                const location = parts[3];
+                router.push(`/house_layout/${roomId}/${location}`);
+            } else {
+                // If in room view, navigate to room root
+                router.push(`/house_layout/${roomId}`);
+            }
         }, 1);
-    }, [isFolded, shrink, router]);
+    }, [isFolded, shrink, router, pathname]);
 
     const zoomToElementLatest = useLatest(zoomToElement);
-
-    const pathname = usePathname();
 
     useMount(() => {
 
