@@ -13,7 +13,7 @@ export default async function LocationPage({ params }: { params: { room: string;
         const locationId = `${params.room}_${params.location}`;
         return (
             <div>
-                <Location locationId={locationId} />
+                <Location locationId={locationId} locationName={params.location}/>
             </div>
         );
     } catch (error) {

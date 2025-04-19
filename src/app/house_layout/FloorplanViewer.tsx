@@ -94,25 +94,24 @@ export default function FloorplanViewer({
 
         setTimeout(() => {
             transformComponentRef.current?.zoomToElement(roomId);
-
-            const parts = pathname.split("/");
-            const currentRoom = parts[2];
-            
-            if (currentRoom !== roomId) {
-                // If clicking a different room, always go to room root
-                router.push(`/house_layout/${roomId}`);
-            } else if (parts.length > 3) {
-                // If in location view of the same room, preserve the location
-                const location = parts[3];
-                router.push(`/house_layout/${roomId}/${location}`);
-            } else {
-                // If in room view, navigate to room root
-                router.push(`/house_layout/${roomId}`);
-            }
         }, 1);
-    }, [isFolded, shrink, router, pathname]);
+    }, [isFolded, shrink]);
 
-    const zoomToElementLatest = useLatest(zoomToElement);
+    const handleRoomClick = useCallback((roomId: string) => {
+        const parts = pathname.split("/");
+        const currentRoom = parts[2];
+        // If clicking a different room, always go to room root
+        if (currentRoom !== roomId) {
+            router.push(`/house_layout/${roomId}`);
+        }
+    }, [router, pathname]);
+
+    const handleRoomInteraction = useCallback((roomId: string) => {
+        zoomToElement(roomId);
+        handleRoomClick(roomId);
+    }, [zoomToElement , handleRoomClick]);
+
+    const handleRoomInteractionLatest = useLatest(handleRoomInteraction);
 
     useMount(() => {
 
@@ -135,7 +134,7 @@ export default function FloorplanViewer({
             const elementId = parts[2];
 
             setTimeout(() => {
-                return zoomToElementLatest.current?.(decodeURI(elementId));
+                return handleRoomInteractionLatest.current?.(decodeURI(elementId));
             }, 1);
         }
     },);
@@ -150,7 +149,7 @@ export default function FloorplanViewer({
                     <div className="w-full relative">
                         <Image src={loftPic} alt="floorplan" className={"h-[750px] w-auto max-w-[max-content] transform-gpu"} />
                         {roomDefs.map(({x, y, h, w, id}, index) => <Room key={id} roomId={id} x={x} y={y} w={w} h={h} 
-                            className={cn("opacity-50", `hover:bg-${getColorByNumber(index)}`)} onClick={zoomToElement} />)}
+                            className={cn("opacity-50", `hover:bg-${getColorByNumber(index)}`)} onClick={handleRoomInteraction} />)}
                     </div>
                 }
             </TransformComponent>

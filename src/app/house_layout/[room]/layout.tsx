@@ -4,7 +4,6 @@ import { PropsWithChildren } from "react";
 import { fetchLocationsByRoom } from "@/services/locationService";
 import LocationList from "./Locations";
 import LocationSelectionContextProvider from "./LocationSelectionContext";
-import SelectedLocation from "./SelectedLocation";
 import { getSession } from "@/auth";
 import { fetchRoomsForFamily } from "@/services/roomService";
 
@@ -28,7 +27,6 @@ export default async function RoomLayout({ params, children }: PropsWithChildren
         </div>
       <LocationSelectionContextProvider>
         <LocationList locations={locationsData} roomId={roomId} loading={false}/>
-        <SelectedLocation />
       </LocationSelectionContextProvider>
       {children}
     </div>

@@ -3,12 +3,17 @@ import { cn } from "@/utils/tailwind";
 interface ItemsListProps {
     items?: { id: number; name: string; quantity: number | null; inotherobject: boolean | null; otherobjectid: number | null }[];
     className?: string;
+    locationName?: string;
 }
 
-export default function ItemsList({ className,  items = [] }: ItemsListProps) {
+export default function ItemsList({ className,  items = [], locationName = "" }: ItemsListProps) {
 
-    return <div className={cn(" bg-gray-500 opacity-40", className)}>
-
+    return <div className={className}>
+        <div className="text-center text-2xl py-2 font-bold bg-gray-500 flex justify-center">
+            {locationName ? `${locationName} is now selected` : "No location is selected"}
+        </div>
+    
+        <div className={cn(" bg-gray-500 opacity-40")}>
         <div className="text-center text-gray-500">
             <table className="w-full bg-white shadow-lg rounded-lg">
                 <thead className="bg-gray-800 text-white">
@@ -40,5 +45,6 @@ export default function ItemsList({ className,  items = [] }: ItemsListProps) {
                 </tbody>
             </table>
         </div>
+    </div>
     </div>;
 }

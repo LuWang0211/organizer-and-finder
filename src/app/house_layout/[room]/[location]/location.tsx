@@ -4,12 +4,13 @@ import ItemsList from "./Items";
 
 type LocationProps = {
   locationId: string;
+  locationName: string;
 };
 
-export default async function Location({ locationId }: LocationProps) {
+export default async function Location({ locationId, locationName }: LocationProps) {
     const itemsData = await fetchItemsByLocation(locationId);
 
     return (
-        <ItemsList items={itemsData} />
+        <ItemsList items={itemsData} locationName={locationName}/>
     );
 }
