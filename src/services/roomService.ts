@@ -25,10 +25,9 @@ export async function fetchRoomsForHouse(houseId: number) {
     }
 }
 
-export async function fetchRoomsForFamily(roomId: string, prismaInstance = prisma) {
+export async function fetchRoomForFamily(roomId: string, prismaInstance = prisma) {
     const session = await getSession();
     try {
-        // console.log("familyId, roomId", session?.dbUser.familyId, roomId);
         const rooms = await prismaInstance.room.findMany({
             where: { familyId: session?.dbUser.familyId!,id: roomId, },
         });

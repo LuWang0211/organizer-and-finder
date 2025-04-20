@@ -5,7 +5,7 @@ import { fetchLocationsByRoom } from "@/services/locationService";
 import LocationList from "./Locations";
 import LocationSelectionContextProvider from "./LocationSelectionContext";
 import { getSession } from "@/auth";
-import { fetchRoomsForFamily } from "@/services/roomService";
+import { fetchRoomForFamily } from "@/services/roomService";
 
 
 export default async function RoomLayout({ params, children }: PropsWithChildren<{ params: { room: string } }>) {
@@ -17,7 +17,7 @@ export default async function RoomLayout({ params, children }: PropsWithChildren
 
   const roomId = params.room;
   const locationsData = await fetchLocationsByRoom(roomId);
-  const [roomInfo] = await fetchRoomsForFamily(roomId);
+  const [roomInfo] = await fetchRoomForFamily(roomId);
   // console.log("roomInfo", roomInfo);
 
   return (
