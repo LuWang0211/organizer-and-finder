@@ -27,6 +27,7 @@ model family {
   rooms room[]
   users user[]
   house house[]
+  locations location[]
 }
 
 model house {
@@ -52,19 +53,21 @@ model room {
 }
 
 model location {
-  id     Int    @id @default(autoincrement())
-  name   String @db.VarChar(255)
+  id     String    @id @db.VarChar(255)
+  name   String    @db.VarChar(255)
   roomId String
   items  item[]
-  room   room   @relation(fields: [roomId], references: [id])
+  room   room      @relation(fields: [roomId], references: [id])
+  familyId Int     @default(1)
+  family  family?  @relation(fields: [familyId], references: [id])
 }
 
 model item {
   id            Int       @id @default(autoincrement())
   name          String    @db.VarChar(255)
-  locationid    Int?
+  locationid    String?
   quantity      Int?      @default(0)
   inotherobject Boolean?  @default(false)
   otherobjectid Int?
-  location      location? @relation(fields: [locationid], references: [id], onUpdate: NoAction)
+  location      location? @relation(fields: [locationid], references: [id], onUpdate: Cascade)
 }

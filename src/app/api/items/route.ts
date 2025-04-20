@@ -5,11 +5,12 @@ import { fetchItems, createItem, fetchItemsByLocation } from '@services/itemServ
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const locationId = searchParams.get('locationId');
+    const roomName = searchParams.get('roomName');
 
     try {
       // If `locationId` is provided, fetch items by that location ID
       if (locationId) {
-        const items = await fetchItemsByLocation(Number(locationId));
+        const items = await fetchItemsByLocation(locationId, roomName || undefined);
         return NextResponse.json(items, { status: 200 });
       }
 
