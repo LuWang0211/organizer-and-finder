@@ -1,3 +1,10 @@
+export interface HouseDef {
+    name: string;
+    floorplanPicture: string,
+    width: number,
+    height: number
+}
+
 export interface RoomDef {
     id: string;
     name: string;

@@ -9,8 +9,7 @@ import { useCallback, useRef } from "react";
 import { useLatest, useMount } from "react-use";
 import { TransformComponent, TransformWrapper, ReactZoomPanPinchRef, useTransformInit, ReactZoomPanPinchState } from "react-zoom-pan-pinch";
 import Image from "next/image";
-import loftPic from '../../../public/assets/texture/loft.png';
-import { RoomDef } from "./common";
+import { HouseDef, RoomDef } from "./common";
 import { getColorByNumber } from "@/ui/colors";
 
 interface RoomProps {
@@ -33,14 +32,15 @@ function Room({ roomId, x, y, w, h, className, onClick}: RoomProps) {
 }
 
 interface FloorPlanViewerProps {
-    className?: string;
+    houseDef: HouseDef;
     isFolded: boolean;
     roomDefs: RoomDef[];
     onFold: (isFolded: boolean) => void;
+    className?: string;
 }
 
 export default function FloorplanViewer({
-    className,
+    houseDef,
     isFolded,
     roomDefs,
     onFold
@@ -139,7 +139,9 @@ export default function FloorplanViewer({
         }
     },);
 
-    return <div className={cn(" relative flex justify-center items-center overflow-hidden", className)} >
+    const { floorplanPicture, width, height } = houseDef;
+
+    return <div className={"relative flex justify-center items-center overflow-hidden row-span-2"} >
         <TransformWrapper initialScale={1} limitToBounds={false} centerOnInit={true} minScale={0.5} maxScale={3}
             ref={transformComponentRef}
         >
@@ -147,7 +149,7 @@ export default function FloorplanViewer({
                     width: "100%", height: "100%"
                 }}> {
                     <div className="w-full relative">
-                        <Image src={loftPic} alt="floorplan" className={"h-[750px] w-auto max-w-[max-content] transform-gpu"} />
+                        <Image src={floorplanPicture} width={width} height={height} alt="floorplan" className={"h-[750px] w-auto max-w-[max-content] transform-gpu"} />
                         {roomDefs.map(({x, y, h, w, id}, index) => <Room key={id} roomId={id} x={x} y={y} w={w} h={h} 
                             className={cn("opacity-50", `hover:bg-${getColorByNumber(index)}`)} onClick={handleRoomInteraction} />)}
                     </div>

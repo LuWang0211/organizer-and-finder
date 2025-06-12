@@ -2,15 +2,15 @@
 import FloorplanViewer from "./FloorplanViewer";
 import { Suspense, useState } from "react";
 import { cn } from "@/utils/tailwind";
-import { RoomDef } from "./common";
+import { HouseDef, RoomDef } from "./common";
 
 interface LayoutClientProps {
-    floorPlanType: string;
+    houseDef: HouseDef;
     roomDefs: RoomDef[];
     children: React.ReactNode;
 }
 
-export default function Layout( { floorPlanType: roomType, roomDefs, children }: LayoutClientProps) {
+export default function Layout( { houseDef, roomDefs, children }: LayoutClientProps) {
 
     const [fullScreenView, setFullScreenView] = useState(true);
 
@@ -19,7 +19,7 @@ export default function Layout( { floorPlanType: roomType, roomDefs, children }:
         "grid-cols-1 grid-rows-1": fullScreenView,
     })}>
         <Suspense>
-            <FloorplanViewer roomDefs={roomDefs} className="row-span-2" isFolded={!fullScreenView} 
+            <FloorplanViewer houseDef={houseDef} roomDefs={roomDefs} isFolded={!fullScreenView} 
                 onFold={(isFolded => setFullScreenView(!isFolded))} />
         </Suspense>
         

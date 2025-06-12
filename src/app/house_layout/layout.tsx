@@ -4,6 +4,8 @@ import LayoutClient from "@/app/house_layout/LayoutClient";
 import { getSession } from "@/auth";
 import { fetchHouseForFamily, fetchRoomsForHouse } from "@/services/roomService";
 import { redirect } from "next/navigation";
+import { HouseDef } from "./common";
+import { JsonObject } from "@prisma/client/runtime/library";
 
 async function DataLoader({ children }: { children: React.ReactNode }) {
     const session = await getSession();
@@ -19,6 +21,8 @@ async function DataLoader({ children }: { children: React.ReactNode }) {
         redirect('/new_house');
     }
 
+    const houseDef: HouseDef = house.metadata! as unknown as HouseDef;
+
     const rooms = await fetchRoomsForHouse(house.id);
 
     const roomDefs = rooms.map(room => {
@@ -30,7 +34,7 @@ async function DataLoader({ children }: { children: React.ReactNode }) {
         }
     });
 
-    return <LayoutClient floorPlanType={((house.metadata as any)?.["type"])} roomDefs={roomDefs} >
+    return <LayoutClient houseDef={houseDef} roomDefs={roomDefs} >
         {children}
     </LayoutClient>;
 }
