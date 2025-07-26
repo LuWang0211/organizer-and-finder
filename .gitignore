@@ -58,3 +58,5 @@ design/**/*.webp
 
 public/assets
 scripts/symbollink.js
+.vscode/**/*
+.vscode/
