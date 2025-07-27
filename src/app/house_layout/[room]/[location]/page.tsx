@@ -2,7 +2,8 @@ import Location from "./location";
 import { getSession } from "@/auth";
 import { redirect } from "next/navigation";
 
-export default async function LocationPage({ params }: { params: { room: string; location: string } }) {
+export default async function LocationPage(props: { params: Promise<{ room: string; location: string }> }) {
+    const params = await props.params;
     const session = await getSession();
 
     if (!session) {

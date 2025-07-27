@@ -1,10 +1,5 @@
 import { signIn, signOut, getSession, SessionType } from "@/auth"
-import dynamic from "next/dynamic";
-
-const RedirectHelper = dynamic(
-    () => import('@/app/login/RedirectHelper'),
-    { ssr: false }
-  );
+import RedirectHelper from '@/app/login/RedirectHelper';
 
 async function CurrentLoginParty({session}: {session: SessionType}) {
     const { dbUser } = session;

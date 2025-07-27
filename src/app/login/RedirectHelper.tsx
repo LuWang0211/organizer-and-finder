@@ -1,7 +1,8 @@
 "use client";
 
 import { redirect, usePathname, useRouter } from "next/navigation";
-import {  useMount } from "react-use";
+import { useMount } from "react-use";
+import { useState, useEffect } from "react";
 
 interface RedirectHelperProps {
     isLogged: boolean;
@@ -28,16 +29,36 @@ export function PreLoginHelper(): null {
  */
 export default function RedirectHelper({ isLogged }: RedirectHelperProps) {
     const router = useRouter();
+    
+    // Hydration-safe pattern: Prevent server/client HTML mismatch
+    // - redirectValue starts as null on both server and client
+    // - isClient starts as false to match server render (no window access)
+    const [redirectValue, setRedirectValue] = useState<string | null>(null);
+    const [isClient, setIsClient] = useState(false);
 
-    const redirectValue = window.localStorage.getItem("redirect");
-
+    // On mount (client-side only), set isClient=true and load from localStorage
+    // This ensures server renders null, then client updates after hydration
     useMount(() => {
-        if (isLogged && redirectValue) {
-            window.localStorage.removeItem("redirect");
-            router.push(redirectValue);
-        }
+        setIsClient(true);
+        const stored = localStorage.getItem("redirect");
+        setRedirectValue(stored);
     });
 
+    // Handle redirect logic only after client hydration is complete
+    useEffect(() => {
+        if (isClient && isLogged && redirectValue) {
+            localStorage.removeItem("redirect");
+            router.push(redirectValue);
+        }
+    }, [isClient, isLogged, redirectValue, router]);
+
+    // Return null during SSR to match initial client render
+    // This prevents hydration mismatch errors
+    if (!isClient) {
+        return null;
+    }
+
+    // Only show redirect UI after client hydration when conditions are met
     if (isLogged && redirectValue) {
         return <div className="absolute top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-4 rounded-lg text-black">
@@ -45,5 +66,6 @@ export default function RedirectHelper({ isLogged }: RedirectHelperProps) {
             </div>
         </div>;
     }
+    
     return null;
 }

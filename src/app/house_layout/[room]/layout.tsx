@@ -8,7 +8,13 @@ import { getSession } from "@/auth";
 import { fetchRoomForFamily } from "@/services/roomService";
 
 
-export default async function RoomLayout({ params, children }: PropsWithChildren<{ params: { room: string } }>) {
+export default async function RoomLayout(props: PropsWithChildren<{ params: Promise<{ room: string }> }>) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const session = await getSession();
 
   if (!session) {

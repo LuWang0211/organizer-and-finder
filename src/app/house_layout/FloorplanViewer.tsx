@@ -46,7 +46,7 @@ export default function FloorplanViewer({
     onFold
 }: FloorPlanViewerProps) {
     const transformComponentRef = useRef<ReactZoomPanPinchRef | null>(null);
-    const initialTransformStateRef = useRef<ReactZoomPanPinchState>();
+    const initialTransformStateRef = useRef<ReactZoomPanPinchState>(undefined);
 
     const shrink = useCallback(() => {
         const transformState = transformComponentRef.current?.instance.transformState;
