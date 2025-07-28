@@ -7,7 +7,7 @@ import { cn } from "@/utils/tailwind"
 // Base button styles
 const buttonBaseStyles = [
   "relative z-10 inline-flex items-center justify-center font-bold overflow-visible",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline focus-visible:ring-offset-2",
+  "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-outline focus-visible:ring-offset-2",
   "transition-all duration-200 ease-out active:translate-y-0.5",
   "border-4 border-border rounded-full"
 ]
@@ -55,7 +55,7 @@ const buttonVariants = cva(buttonBaseStyles, {
 // Shadow variants using cva
 const shadowVariants = cva(
   [
-    "absolute inset-0 z-10 rounded-full blur-[4px] translate-y-1.5 scale-x-105 origin-bottom",
+    "absolute inset-0 z-10 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom",
     "group-hover/button:translate-y-2 group-hover/button:scale-x-110 group-hover/button:blur-[6px] group-hover/button:opacity-80",
     "transition-all duration-200 ease-out"
   ],

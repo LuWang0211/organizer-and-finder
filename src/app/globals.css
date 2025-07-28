@@ -1,30 +1,80 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@theme {
+  /* Raw HSL values - single source of truth */
+  --color-background-raw: 199 100% 85%;
+  --color-foreground-raw: 247 28% 23%;
+  --color-secondary-raw: 63 8% 99%;
+  --color-primary-accent-raw: 332 100% 77%;
+  --color-secondary-accent-raw: 48 100% 71%;
+  --color-highlight-raw: 32 100% 71%;
+  --color-outline-raw: 324 70% 15%;
+  --color-confirm-raw: 97 58% 77%;
+  --color-card-raw: 39 100% 95%;
+  --color-shadow-raw: 175 19% 28%;
+  --color-text-main-raw: 247 28% 23%;
+  --color-border-raw: 324 70% 15%;
+
+  
+  /* Tailwind utilities with hsl() wrapper */
+  --color-background: hsl(var(--color-background-raw));
+  --color-foreground: hsl(var(--color-foreground-raw));
+  --color-secondary: hsl(var(--color-secondary-raw));
+  --color-primary-accent: hsl(var(--color-primary-accent-raw));
+  --color-secondary-accent: hsl(var(--color-secondary-accent-raw));
+  --color-highlight: hsl(var(--color-highlight-raw));
+  --color-outline: hsl(var(--color-outline-raw));
+  --color-confirm: hsl(var(--color-confirm-raw));
+  --color-card: hsl(var(--color-card-raw));
+  --color-shadow: hsl(var(--color-shadow-raw));
+  --color-text-main: hsl(var(--color-text-main-raw));
+  --color-border: hsl(var(--color-border-raw));
+  
+  --radius: 0.5rem;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+@utility text-balance {
+  text-wrap: balance;
 }
 
-iconify-icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
+@source "src/pages/**/*.{js,ts,jsx,tsx,mdx}";
+@source "src/components/**/*.{js,ts,jsx,tsx,mdx}";
+@source "src/app/**/*.{js,ts,jsx,tsx,mdx}";
+@source "src/ui/**/*.{js,ts,jsx,tsx}";
+
+@plugin "tailwindcss-animate";
+
+/* Safelist for dynamic color usage in FloorplanViewer */
+@layer utilities {
+  .hover\:bg-red-500:hover { background-color: theme(colors.red.500); }
+  .hover\:bg-yellow-500:hover { background-color: theme(colors.yellow.500); }
+  .hover\:bg-green-700:hover { background-color: theme(colors.green.700); }
+  .hover\:bg-blue-700:hover { background-color: theme(colors.blue.700); }
+  .hover\:bg-purple-800:hover { background-color: theme(colors.purple.800); }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+    }
+  }
+
+  iconify-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
   }
 }
 
@@ -32,18 +82,19 @@ iconify-icon {
 
 @layer base {
   :root {
-    --background: 199 100% 85%;            /* #b8eaff */
-    --foreground: 247 28% 23%;             /* #2d2b4c */
-    --secondary: 63 8% 99%;                /* #fdfee9 */
-    --primary-accent: 332 100% 77%;        /* #ff8ab8 */
-    --secondary-accent: 48 100% 71%;       /* #ffe066 */
-    --highlight: 32 100% 71%;              /* #ffb36b */
-    --outline: 324 70% 15%;                /* #ff6f61 */
-    --confirm: 97 58% 77%;                 /* #b6e7a0 */
-    --card-bg: 39 100% 95%;                /* #fff7e6 */
-    --shadow: 175 19% 28%;                 /* #b6b6e7 */
-    --text-main: 247 28% 23%;              /* #2d2b4c */
-    --radius: 0.5rem;
+    /* Reference raw values from @theme for color-mix compatibility */
+    --background: var(--color-background-raw);
+    --foreground: var(--color-foreground-raw);
+    --secondary: var(--color-secondary-raw);
+    --primary-accent: var(--color-primary-accent-raw);
+    --secondary-accent: var(--color-secondary-accent-raw);
+    --highlight: var(--color-highlight-raw);
+    --outline: var(--color-outline-raw);
+    --confirm: var(--color-confirm-raw);
+    --card: var(--color-card-raw);
+    --shadow: var(--color-shadow-raw);
+    --text-main: var(--color-text-main-raw);
+    --border: var(--color-border-raw);
   }
   .dark {
     --background: 0 0% 3.9%;
