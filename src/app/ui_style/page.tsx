@@ -192,7 +192,7 @@ export default function UIStyleShowcase() {
             <TabsTrigger value="tab3">Tab Three</TabsTrigger>
           </TabsList>
           <TabsContent value="tab1">
-            <Card className="hover:scale-100 [&>div]:hover:scale-100 [&>div]:hover:shadow-none">
+            <Card className="hover:scale-100 hover:[&>div]:scale-100 hover:[&>div]:shadow-none">
               <CardHeader>
                 <CardTitle>Tab One Content</CardTitle>
               </CardHeader>
@@ -202,7 +202,7 @@ export default function UIStyleShowcase() {
             </Card>
           </TabsContent>
           <TabsContent value="tab2">
-            <Card className="hover:scale-100 [&>div]:hover:scale-100 [&>div]:hover:shadow-none">
+            <Card className="hover:scale-100 hover:[&>div]:scale-100 hover:[&>div]:shadow-none">
               <CardHeader>
                 <CardTitle>Tab Two Content</CardTitle>
               </CardHeader>
@@ -212,7 +212,7 @@ export default function UIStyleShowcase() {
             </Card>
           </TabsContent>
           <TabsContent value="tab3">
-            <Card className="hover:scale-100 [&>div]:hover:scale-100 [&>div]:hover:shadow-none">
+            <Card className="hover:scale-100 hover:[&>div]:scale-100 hover:[&>div]:shadow-none">
               <CardHeader>
                 <CardTitle>Tab Three Content</CardTitle>
               </CardHeader>

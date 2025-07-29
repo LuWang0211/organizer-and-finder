@@ -149,7 +149,7 @@ export default function FloorplanViewer({
                     width: "100%", height: "100%"
                 }}> {
                     <div className="w-full relative">
-                        <Image src={floorplanPicture} width={width} height={height} alt="floorplan" className={"h-[750px] w-auto max-w-[max-content] transform-gpu"} />
+                        <Image src={floorplanPicture} width={width} height={height} alt="floorplan" className={"h-[750px] w-auto max-w-max transform-gpu"} />
                         {roomDefs.map(({x, y, h, w, id}, index) => <Room key={id} roomId={id} x={x} y={y} w={w} h={h} 
                             className={cn("opacity-50", `hover:bg-${getColorByNumber(index)}`)} onClick={handleRoomInteraction} />)}
                     </div>

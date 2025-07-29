@@ -12,14 +12,14 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: [
-          "bg-card-bg",
-          "shadow-[0_2px_8px_0_hsl(var(--shadow)/20%)_inset,2px_-2px_8px_0_color-mix(in_oklch,hsl(var(--card-bg)),black_10%)_inset]",
-          "hover:shadow-[0_4px_12px_0_hsl(var(--shadow)/30%)_inset,3px_-3px_12px_0_color-mix(in_oklch,hsl(var(--card-bg)),black_15%)_inset]"
+          "bg-card",
+          "shadow-[0_2px_8px_0_hsl(var(--shadow)/20%)_inset,2px_-2px_8px_0_color-mix(in_oklch,hsl(var(--card)),black_10%)_inset]",
+          "hover:shadow-[0_4px_12px_0_hsl(var(--shadow)/30%)_inset,3px_-3px_12px_0_color-mix(in_oklch,hsl(var(--card)),black_15%)_inset]"
         ],
         secondary: [
           "bg-cyan-300",
-          "shadow-[0_2px_8px_0_rgba(0,0,0,0.15)_inset,2px_-2px_8px_0_color-mix(in_oklch,theme(colors.cyan.300),black_15%)_inset]",
-          "hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.25)_inset,3px_-3px_12px_0_color-mix(in_oklch,theme(colors.cyan.300),black_20%)_inset]"
+          "shadow-[0_2px_8px_0_rgba(0,0,0,0.15)_inset,2px_-2px_8px_0_color-mix(in_oklch,var(--color-cyan-300),black_15%)_inset]",
+          "hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.25)_inset,3px_-3px_12px_0_color-mix(in_oklch,var(--color-cyan-300),black_20%)_inset]"
         ]
       }
     },
