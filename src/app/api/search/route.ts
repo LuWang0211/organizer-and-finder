@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchItems } from '@services/itemService'; // Import the service
+import { ipAddress } from '@vercel/functions'
 
 const openai = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -9,19 +10,8 @@ const openai = new OpenAI({
 const ALLOWED_IP = process.env.ALLOWED_IP;
 const DEV_IP = process.env.DEV_IP;
 
-// Function to get the client IP address
-const getClientIp = (req: NextRequest) => {
-  const xForwardedFor = req.headers.get('x-forwarded-for');
-  // console.log(`xForwardedFor: ${JSON.stringify(req.headers)}`);
-  if (xForwardedFor) {
-    const ips = xForwardedFor.split(',').map(ip => ip.trim());
-    return ips[0]; // Return the first IP in the list
-  }
-  return req.ip;
-};
-
 export async function POST(request: NextRequest) {
-  const clientIp = getClientIp(request);
+  const clientIp = ipAddress(request);
   // console.log(`Client IP: ${clientIp}`);
 
   // Validate the client IP address
