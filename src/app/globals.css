@@ -16,16 +16,6 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 iconify-icon {
   display: inline-block;
   width: 1em;
@@ -35,5 +25,61 @@ iconify-icon {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+
+
+@layer base {
+  :root {
+    --background: 199 100% 85%;            /* #b8eaff */
+    --foreground: 247 28% 23%;             /* #2d2b4c */
+    --secondary: 63 8% 99%;                /* #fdfee9 */
+    --primary-accent: 332 100% 77%;        /* #ff8ab8 */
+    --secondary-accent: 48 100% 71%;       /* #ffe066 */
+    --highlight: 32 100% 71%;              /* #ffb36b */
+    --outline: 324 70% 15%;                /* #ff6f61 */
+    --confirm: 97 58% 77%;                 /* #b6e7a0 */
+    --card-bg: 39 100% 95%;                /* #fff7e6 */
+    --shadow: 175 19% 28%;                 /* #b6b6e7 */
+    --text-main: 247 28% 23%;              /* #2d2b4c */
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

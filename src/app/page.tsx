@@ -1,4 +1,5 @@
 'use client'; // Mark this component as a client component
+import { Button } from '@/ui/components/button';
 import { useState } from 'react'; 
 
 
@@ -33,9 +34,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Add a new item
-        </p>
+        <Button variant={"secondary"}>Add a new item</Button>
       </div>
 
       <div className="relative z-10 flex place-items-center before:absolute before:h-[300px] before:w-full ...">
@@ -48,9 +47,8 @@ export default function Home() {
           required
           className="border border-gray-300 text-black p-2 rounded-md"
         />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">
-          Add Item
-        </button>
+        <Button variant={"primary"} type="submit">Add Item</Button>
+
         {responseMessage && <p className="mt-4 text-green-600">{responseMessage}</p>}
       </form>
       </div>

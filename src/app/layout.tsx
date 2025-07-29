@@ -23,7 +23,7 @@ export default function RootLayout({
         backgroundImage: "url(/assets/texture/background.png)",
         backgroundSize: "100vw 100vh"
       }}>
-        <div className="absolute left-0 right-0 top-0 bottom-0 bg-repeat" style={{
+        <div className="absolute left-0 right-0 top-0 bottom-0 bg-repeat overflow-y-auto" style={{
           backgroundImage: "url(/assets/texture/grid.png)",
         }}>
           {children}
