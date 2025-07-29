@@ -15,9 +15,9 @@ interface PhaserGameProps {
 export default function PhaserGame(props: PhaserGameProps) {
     const { secondSceneOverride } = props;
 
-    const game = useRef<Game>();
+    const game = useRef<Game>(undefined);
 
-    const container = useRef<HTMLDivElement>();
+    const container = useRef<HTMLDivElement>(undefined);
 
     // useMeasure is a 3rd party hook that measures the size of a DOM element
     const [containerMeasure, { width: containerWidth, height: containerHeight }] = useMeasure<HTMLDivElement>();

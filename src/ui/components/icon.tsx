@@ -84,7 +84,7 @@ const Icon = React.forwardRef<HTMLDivElement, IconProps>(
     
     // Clone children and add size/stroke props if it's a React element
     const iconChildren = React.isValidElement(children) 
-      ? React.cloneElement(children as React.ReactElement, {
+      ? React.cloneElement(children as React.ReactElement<any>, {
           size: config.iconSize,
           strokeWidth: config.strokeWidth
         })
