@@ -60,3 +60,4 @@ public/assets
 scripts/symbollink.js
 .vscode/**/*
 .vscode/
+.claude/settings.local.json
