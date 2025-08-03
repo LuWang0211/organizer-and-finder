@@ -1,0 +1,65 @@
+{
+  "house": {
+    "type": "loft",
+    "width": 1797,
+    "height": 1300,
+    "floorplanPicture": "/assets/floorplans/1b1b.png"
+  },
+  "ui": {
+    "name": "Loft",
+    "description": "Multi-level loft with separate areas",
+    "features": ["Two levels", "Multiple bedrooms", "Spacious layout", "Unique design"]
+  },
+  "rooms": [
+    {
+      "id": "bedroom",
+      "name": "bedroom",
+      "metadata": {
+        "h": 346,
+        "w": 305,
+        "x": 18,
+        "y": 18
+      }
+    },
+    {
+      "id": "closet",
+      "name": "closet",
+      "metadata": {
+        "h": 228,
+        "w": 262,
+        "x": 342,
+        "y": 18
+      }
+    },
+    {
+      "id": "kitchen",
+      "name": "kitchen",
+      "metadata": {
+        "h": 152,
+        "w": 278,
+        "x": 695,
+        "y": 577
+      }
+    },
+    {
+      "id": "living_room",
+      "name": "living room",
+      "metadata": {
+        "h": 348,
+        "w": 655,
+        "x": 18,
+        "y": 382
+      }
+    },
+    {
+      "id": "restroom",
+      "name": "restroom",
+      "metadata": {
+        "h": 228,
+        "w": 349,
+        "x": 625,
+        "y": 20
+      }
+    }
+  ]
+}
