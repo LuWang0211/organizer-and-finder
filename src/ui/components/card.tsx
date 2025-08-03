@@ -20,6 +20,11 @@ const cardVariants = cva(
           "bg-cyan-300",
           "shadow-[0_2px_8px_0_rgba(0,0,0,0.15)_inset,2px_-2px_8px_0_color-mix(in_oklch,var(--color-cyan-300),black_15%)_inset]",
           "hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.25)_inset,3px_-3px_12px_0_color-mix(in_oklch,var(--color-cyan-300),black_20%)_inset]"
+        ],
+        primary: [
+          "bg-primary-accent text-white",
+          "shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
+          "hover:shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]"
         ]
       }
     },
@@ -68,7 +73,7 @@ const CardTitle = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-2xl font-extrabold leading-none tracking-tight text-text-main",
+      "text-2xl font-extrabold leading-none tracking-tight",
       "[text-shadow:0.5px_0.5px_0_rgba(0,0,0,0.3),-0.5px_0.5px_0_rgba(0,0,0,0.3),0.5px_-0.5px_0_rgba(0,0,0,0.2),-0.5px_-0.5px_0_rgba(0,0,0,0.2)]",
       className
     )}
@@ -83,7 +88,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-base text-text-main/80 font-medium", className) }
+    className={cn("text-base font-medium", className) }
     {...props}
   />
 ))

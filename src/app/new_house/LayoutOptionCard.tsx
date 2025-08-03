@@ -12,14 +12,14 @@ interface LayoutOptionCardProps {
 export default function LayoutOptionCard({ option, layoutId, isSelected = false, onClick }: LayoutOptionCardProps) {
   return (
     <Card
-      variant={isSelected ? "secondary" : "default"}
+      variant={isSelected ? "primary" : "default"}
       data-layout-id={layoutId}
       className="cursor-pointer transition-all duration-200"
       onClick={onClick}
     >
       <CardHeader className="text-center">
         <div className="flex justify-center mb-4">
-          <div className="relative w-32 h-24 overflow-hidden rounded-lg border-2 border-gray-200">
+          <div className="relative w-32 h-24 overflow-hidden">
             <Image
               src={option.floorplanPicture}
               alt={`${option.name} floor plan`}
