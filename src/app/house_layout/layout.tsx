@@ -3,9 +3,8 @@ import AuthProtectedComponent from "@/AuthProtectedComponent";
 import LayoutClient from "@/app/house_layout/LayoutClient";
 import { getSession } from "@/auth";
 import { fetchHouseForFamily, fetchRoomsForHouse } from "@/services/roomService";
-import { redirect } from "next/navigation";
+import { redirect  } from "next/navigation";
 import { HouseDef } from "./common";
-import { JsonObject } from "@prisma/client/runtime/library";
 
 async function DataLoader({ children }: { children: React.ReactNode }) {
     const session = await getSession();

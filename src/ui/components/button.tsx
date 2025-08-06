@@ -66,7 +66,7 @@ const buttonVariants = cva(buttonBaseStyles, {
 // Shadow variants using cva
 const shadowVariants = cva(
   [
-    "absolute inset-0 z-10 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom",
+    "z-0 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom pointer-events-none",
     "group-hover/button:translate-y-2 group-hover/button:scale-x-110 group-hover/button:blur-[6px] group-hover/button:opacity-80",
     "group-disabled/button:opacity-20 group-disabled/button:translate-y-0.5 group-disabled/button:scale-x-100 group-disabled/button:blur-none",
     "transition-all duration-200 ease-out"
@@ -98,6 +98,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button"
     
     return (
+
       <div className={cn("relative inline-block group/button", disabled && "group-disabled/button")}>
         {/* Floating shadow */}
         <div 
@@ -113,12 +114,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           disabled={disabled}
           className={cn(
             buttonVariants({ variant, size }),
-            "relative z-10"
+            "relative z-10 block",
+            className
           )}
           {...props}
         >
           {children}
         </Comp>
+        
       </div>
     )
   }

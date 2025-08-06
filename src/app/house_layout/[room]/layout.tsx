@@ -6,6 +6,7 @@ import LocationList from "./Locations";
 import LocationSelectionContextProvider from "./LocationSelectionContext";
 import { getSession } from "@/auth";
 import { fetchRoomForFamily } from "@/services/roomService";
+import { redirect } from "next/navigation";
 
 
 export default async function RoomLayout(props: PropsWithChildren<{ params: Promise<{ room: string }> }>) {
@@ -23,8 +24,11 @@ export default async function RoomLayout(props: PropsWithChildren<{ params: Prom
 
   const roomId = params.room;
   const locationsData = await fetchLocationsByRoom(roomId);
-  const [roomInfo] = await fetchRoomForFamily(roomId);
-  // console.log("roomInfo", roomInfo);
+  const roomInfo = await fetchRoomForFamily(roomId);
+
+  if (!roomInfo) {
+    redirect('/house_layout_404');
+  }
 
   return (
     <div className="room-layout">
