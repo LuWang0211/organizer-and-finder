@@ -26,7 +26,7 @@ export default function PhaserGame(props: PhaserGameProps) {
     const assignRef = useCallback((element: HTMLDivElement) => {
         containerMeasure(element);
         container.current = element;
-    }, []);
+    }, [containerMeasure]);
     
     let configWithOverride = config;
 
@@ -68,7 +68,7 @@ export default function PhaserGame(props: PhaserGameProps) {
                 game.current = undefined;
             }
         }
-    }, []);
+    }, [configWithOverride]);
 
     useEffect(() => {
         // Resize the game to fit the container,
