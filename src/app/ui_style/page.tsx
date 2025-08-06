@@ -14,13 +14,26 @@ export default function UIStyleShowcase() {
       {/* BUTTONS */}
       <section className="flex flex-col items-center gap-6 w-full">
         <h2 className="text-2xl font-bold">Buttons</h2>
-        <div className="flex flex-wrap gap-4 items-center justify-center">
-          <Button variant="primary">Primary</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="primary" size="sm">Small</Button>
-          <Button variant="primary" size="lg">Large</Button>
+        
+        <div className="flex flex-col gap-6 items-center">
+          <div className="flex flex-wrap gap-4 items-center justify-center">
+            <Button variant="primary">Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="primary" size="sm">Small</Button>
+            <Button variant="primary" size="lg">Large</Button>
+          </div>
+          
+          <div className="flex flex-col gap-2 items-center">
+            <h3 className="text-lg font-semibold text-white/80">Disabled States</h3>
+            <div className="flex flex-wrap gap-4 items-center justify-center">
+              <Button variant="primary" disabled>Primary Disabled</Button>
+              <Button variant="secondary" disabled>Secondary Disabled</Button>
+              <Button variant="outline" disabled>Outline Disabled</Button>
+              <Button variant="ghost" disabled>Ghost Disabled</Button>
+            </div>
+          </div>
         </div>
       </section>
 

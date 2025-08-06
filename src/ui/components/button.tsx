@@ -18,25 +18,36 @@ const buttonVariants = cva(buttonBaseStyles, {
     variant: {
       primary: [
         "bg-primary-accent text-white",
+        "[text-shadow:0.5px_0.5px_0_rgba(0,0,0,0.3),-0.5px_0.5px_0_rgba(0,0,0,0.3),0.5px_-0.5px_0_rgba(0,0,0,0.2),-0.5px_-0.5px_0_rgba(0,0,0,0.2)]",
         "shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
         "hover:scale-[1.02] hover:shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
-        "active:shadow-inner active:shadow-black/10"
+        "active:shadow-inner active:shadow-black/10",
+        "disabled:bg-primary-accent/70 disabled:text-white/60 disabled:cursor-not-allowed",
+        "disabled:shadow-[-2px_2px_1px_0px_hsl(var(--highlight)/25%)_inset,2px_-2px_1px_0px_color-mix(in_oklch,hsl(var(--primary-accent)),black_50%)_inset] disabled:hover:scale-100 disabled:active:translate-y-0 disabled:saturate-50"
       ],
       secondary: [
         "bg-secondary text-text-main",
         "shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
-        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]"
+        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
+        "disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed",
+        "disabled:shadow-[2px_-2px_1px_0px_color-mix(in_oklch,hsl(var(--secondary)),black_60%)_inset] disabled:hover:scale-100 disabled:active:translate-y-0"
       ],
       outline: [
         "bg-transparent text-white/90 border-2 border-current",
+        "[text-shadow:0.5px_0.5px_0_rgba(255,255,255,0.8)]",
         "hover:bg-background/10",
         "shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
-        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]"
+        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
+        "disabled:text-gray-500 disabled:border-gray-500 disabled:cursor-not-allowed disabled:opacity-50",
+        "disabled:bg-transparent disabled:shadow-none disabled:hover:scale-100 disabled:hover:bg-transparent disabled:active:translate-y-0",
+        "disabled:hover:shadow-none"
       ],
       ghost: [
         "font-medium",
         "bg-transparent text-white/50 border-transparent border-2",
-        "hover:bg-background/10 hover:scale-[1.02] hover:border-white/20 hover:text-white/90 "
+        "hover:bg-background/10 hover:scale-[1.02] hover:border-white/20 hover:text-white/90",
+        "disabled:text-white/40 disabled:cursor-not-allowed disabled:opacity-40",
+        "disabled:hover:bg-transparent disabled:hover:scale-100 disabled:hover:border-transparent disabled:active:translate-y-0"
       ]
     },
     size: {
@@ -57,6 +68,7 @@ const shadowVariants = cva(
   [
     "absolute inset-0 z-10 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom",
     "group-hover/button:translate-y-2 group-hover/button:scale-x-110 group-hover/button:blur-[6px] group-hover/button:opacity-80",
+    "group-disabled/button:opacity-20 group-disabled/button:translate-y-0.5 group-disabled/button:scale-x-100 group-disabled/button:blur-none",
     "transition-all duration-200 ease-out"
   ],
   {
@@ -74,31 +86,6 @@ const shadowVariants = cva(
   }
 )
 
-// Text variants using cva
-const textVariants = cva(
-  "relative z-20",
-  {
-    variants: {
-      variant: {
-        primary: [
-          "text-white",
-          "[text-shadow:0.5px_0.5px_0_rgba(0,0,0,0.3),-0.5px_0.5px_0_rgba(0,0,0,0.3),0.5px_-0.5px_0_rgba(0,0,0,0.2),-0.5px_-0.5px_0_rgba(0,0,0,0.2)]"
-        ],
-        secondary: [
-          "text-text-main"
-        ],
-        outline: [
-          "text-white/20",
-          "[text-shadow:0.5px_0.5px_0_rgba(255,255,255,0.8)]"
-        ],
-        ghost: []
-      }
-    },
-    defaultVariants: {
-      variant: "primary"
-    }
-  }
-)
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -107,11 +94,11 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size, asChild = false, children, ...props }, ref) => {
+  ({ className, variant = 'primary', size, asChild = false, children, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     
     return (
-      <div className="relative inline-block group/button">
+      <div className={cn("relative inline-block group/button", disabled && "group-disabled/button")}>
         {/* Floating shadow */}
         <div 
           className={cn(
@@ -123,17 +110,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {/* Button with highlight and border */}
         <Comp
           ref={ref}
+          disabled={disabled}
           className={cn(
             buttonVariants({ variant, size }),
             "relative z-10"
           )}
           {...props}
         >
-          <span className={cn(
-            textVariants({ variant })
-          )}>
-            {children}
-          </span>
+          {children}
         </Comp>
       </div>
     )
