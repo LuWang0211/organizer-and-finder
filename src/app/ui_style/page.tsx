@@ -40,7 +40,7 @@ export default function UIStyleShowcase() {
       {/* CARD */}
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <h2 className="text-2xl font-bold">Card</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
           <Card>
             <CardHeader>
               <CardTitle>Default Card</CardTitle>
@@ -54,6 +54,22 @@ export default function UIStyleShowcase() {
             </CardContent>
             <CardFooter>
               <span className="text-xs text-muted-foreground">Footer or actions go here</span>
+            </CardFooter>
+          </Card>
+
+          <Card variant="primary">
+            <CardHeader>
+              <CardTitle>Primary Card Variant</CardTitle>
+              <CardDescription>Highlighted card with primary button styling</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-2">
+                This primary variant uses the same visual style as the primary button - with the primary accent background, white text, and inset shadows that create depth and emphasis.
+              </p>
+              <Button variant="secondary">Action</Button>
+            </CardContent>
+            <CardFooter>
+              <span className="text-xs opacity-75">Variant: Primary</span>
             </CardFooter>
           </Card>
           
@@ -72,6 +88,8 @@ export default function UIStyleShowcase() {
               <span className="text-xs text-muted-foreground">Variant: Secondary</span>
             </CardFooter>
           </Card>
+          
+          
         </div>
       </section>
 

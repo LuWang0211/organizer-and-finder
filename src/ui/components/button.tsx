@@ -98,7 +98,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button"
     
     return (
-      <div className={cn("relative group/button", disabled && "group-disabled/button")} style={{ display: 'inline-block' }}>
+
+      <div className={cn("relative inline-block group/button", disabled && "group-disabled/button")}>
+        {/* Floating shadow */}
+        <div 
+          className={cn(
+            shadowVariants({ variant }),
+            className
+          )} 
+        />
+        
         {/* Button with highlight and border */}
         <Comp
           ref={ref}
@@ -113,13 +122,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {children}
         </Comp>
         
-        {/* Floating shadow */}
-        <div 
-          className={cn(
-            shadowVariants({ variant }),
-            "absolute top-0 left-0 right-0 bottom-0"
-          )}
-        />
       </div>
     )
   }
