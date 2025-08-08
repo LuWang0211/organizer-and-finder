@@ -1,4 +1,4 @@
-import { StagingRectangle } from "./StagingRectangle";
+import { StagingRectangle, EdgeType, SnapPoint } from "./StagingRectangle";
 
 export class FloorplanV2Scene extends Phaser.Scene {
     private floorplanV2Image?: Phaser.GameObjects.Image;
@@ -13,6 +13,8 @@ export class FloorplanV2Scene extends Phaser.Scene {
     private previewRectangle?: Phaser.GameObjects.Rectangle;
     private stagingRectangles: StagingRectangle[] = [];
     private selectedRectangle?: StagingRectangle;
+    private snapDistance: number = 10;
+    private snappingEnabled: boolean = true;
 
     constructor() {
         super("FloorplanV2Scene");
@@ -41,7 +43,15 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.input.on('drag', (pointer: any, gameObject: any, dragX: number, dragY: number) => {
             if (!this.isDrawingMode && (gameObject as any).stagingRectangle) {
                 const stagingRect = (gameObject as any).stagingRectangle as StagingRectangle;
-                stagingRect.onDrag(dragX, dragY);
+                
+                if ((gameObject as any).edgeType) {
+                    // Handle edge resizing using Phaser's drag coordinates
+                    const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+                    stagingRect.onEdgeResize((gameObject as any).edgeType, worldPoint.x, worldPoint.y);
+                } else {
+                    // Handle rectangle dragging
+                    stagingRect.onDrag(dragX, dragY);
+                }
                 this.selectRectangle(stagingRect);
             }
         });
@@ -50,6 +60,7 @@ export class FloorplanV2Scene extends Phaser.Scene {
             if (!this.isDrawingMode) {
                 if (currentlyOver.length > 0) {
                     const clickedObject = currentlyOver[0];
+                    
                     if ((clickedObject as any).stagingRectangle) {
                         const stagingRect = (clickedObject as any).stagingRectangle as StagingRectangle;
                         this.selectRectangle(stagingRect);
@@ -88,6 +99,7 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.events.on('resetScale', this.resetScale, this);
         this.events.on('toggleDrawingMode', this.toggleDrawingMode, this);
         this.events.on('deleteSelectedRectangle', this.deleteSelectedRectangle, this);
+        this.events.on('toggleSnapping', this.toggleSnapping, this);
         
         this.game.events.emit('sceneReady', this);
     }
@@ -221,5 +233,86 @@ export class FloorplanV2Scene extends Phaser.Scene {
 
     stopCameraDrag(): void {
         this.isDragging = false;
+    }
+
+    toggleSnapping(enabled: boolean): void {
+        this.snappingEnabled = enabled;
+    }
+
+    isSnappingEnabled(): boolean {
+        return this.snappingEnabled;
+    }
+
+    findSnapPoints(rectangle: StagingRectangle, edge: EdgeType, worldX: number, worldY: number): SnapPoint[] {
+        const snapPoints: SnapPoint[] = [];
+        
+        for (const otherRect of this.stagingRectangles) {
+            if (otherRect === rectangle) continue;
+            
+            const otherBounds = otherRect.gameObject.getBounds();
+            
+            switch (edge) {
+                case 'top':
+                case 'bottom':
+                    // Check horizontal edges of other rectangles
+                    const snapToTop = Math.abs(worldY - otherBounds.top);
+                    const snapToBottom = Math.abs(worldY - otherBounds.bottom);
+                    
+                    if (snapToTop <= this.snapDistance) {
+                        snapPoints.push({
+                            x: worldX,
+                            y: otherBounds.top,
+                            distance: snapToTop,
+                            type: 'edge'
+                        });
+                    }
+                    
+                    if (snapToBottom <= this.snapDistance) {
+                        snapPoints.push({
+                            x: worldX,
+                            y: otherBounds.bottom,
+                            distance: snapToBottom,
+                            type: 'edge'
+                        });
+                    }
+                    break;
+                    
+                case 'left':
+                case 'right':
+                    // Check vertical edges of other rectangles
+                    const snapToLeft = Math.abs(worldX - otherBounds.left);
+                    const snapToRight = Math.abs(worldX - otherBounds.right);
+                    
+                    if (snapToLeft <= this.snapDistance) {
+                        snapPoints.push({
+                            x: otherBounds.left,
+                            y: worldY,
+                            distance: snapToLeft,
+                            type: 'edge'
+                        });
+                    }
+                    
+                    if (snapToRight <= this.snapDistance) {
+                        snapPoints.push({
+                            x: otherBounds.right,
+                            y: worldY,
+                            distance: snapToRight,
+                            type: 'edge'
+                        });
+                    }
+                    break;
+            }
+        }
+        
+        return snapPoints.sort((a, b) => a.distance - b.distance);
+    }
+
+    getSnapPosition(worldX: number, worldY: number, snapPoints: SnapPoint[]): { x: number, y: number, snapped: boolean } {
+        if (snapPoints.length === 0) {
+            return { x: worldX, y: worldY, snapped: false };
+        }
+        
+        const closest = snapPoints[0];
+        return { x: closest.x, y: closest.y, snapped: true };
     }
 }
