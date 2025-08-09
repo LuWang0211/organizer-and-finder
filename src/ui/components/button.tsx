@@ -6,7 +6,7 @@ import { cn } from "@/utils/tailwind"
 
 // Base button styles
 const buttonBaseStyles = [
-  "relative z-10 inline-flex items-center justify-center font-bold overflow-visible",
+  "relative z-20 inline-flex items-center justify-center font-bold overflow-visible",
   "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-outline focus-visible:ring-offset-2",
   "transition-all duration-200 ease-out active:translate-y-0.5",
   "border-4 border-border rounded-full"
@@ -19,7 +19,7 @@ const buttonVariants = cva(buttonBaseStyles, {
       primary: [
         "bg-primary-accent text-white",
         "[text-shadow:0.5px_0.5px_0_rgba(0,0,0,0.3),-0.5px_0.5px_0_rgba(0,0,0,0.3),0.5px_-0.5px_0_rgba(0,0,0,0.2),-0.5px_-0.5px_0_rgba(0,0,0,0.2)]",
-        "shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
+        "shadow-[-2px_2px_1px_0.5px_hsl(var(--highlight)/60%)_inset,2px_-2px_1px_0.5px_color-mix(in_oklch,hsl(var(--primary-accent)),black_25%)_inset]",
         "hover:scale-[1.02] hover:shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
         "active:shadow-inner active:shadow-black/10",
         "disabled:bg-primary-accent/70 disabled:text-white/60 disabled:cursor-not-allowed",
@@ -66,7 +66,7 @@ const buttonVariants = cva(buttonBaseStyles, {
 // Shadow variants using cva
 const shadowVariants = cva(
   [
-    "z-0 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom pointer-events-none",
+    "absolute inset-0 z-10 bg-shadow/60 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom",
     "group-hover/button:translate-y-2 group-hover/button:scale-x-110 group-hover/button:blur-[6px] group-hover/button:opacity-80",
     "group-disabled/button:opacity-20 group-disabled/button:translate-y-0.5 group-disabled/button:scale-x-100 group-disabled/button:blur-none",
     "transition-all duration-200 ease-out"
@@ -98,23 +98,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button"
     
     return (
-
-      <div className={cn("relative inline-block group/button", disabled && "group-disabled/button")}>
-        {/* Floating shadow */}
-        <div 
-          className={cn(
-            shadowVariants({ variant }),
-            className
-          )} 
-        />
-        
+      <div className={cn("relative group/button inline-block", disabled && "group-disabled/button")}>
         {/* Button with highlight and border */}
         <Comp
           ref={ref}
           disabled={disabled}
           className={cn(
             buttonVariants({ variant, size }),
-            "relative z-10 block",
             className
           )}
           {...props}
@@ -122,6 +112,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {children}
         </Comp>
         
+        {/* Floating shadow */}
+        <div className={cn(shadowVariants({ variant }))} />
       </div>
     )
   }

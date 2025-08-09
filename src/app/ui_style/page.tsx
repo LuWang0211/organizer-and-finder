@@ -40,7 +40,7 @@ export default function UIStyleShowcase() {
       {/* CARD */}
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <h2 className="text-2xl font-bold">Card</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start">
           <Card>
             <CardHeader>
               <CardTitle>Default Card</CardTitle>
@@ -96,7 +96,7 @@ export default function UIStyleShowcase() {
       {/* BUBBLE */}
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <h2 className="text-2xl font-bold">Bubble Components</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start">
           <Bubble variant="default">
             <h3 className="text-xl font-bold mb-2 text-text-main">Default Bubble</h3>
             <p className="text-text-main/80">Rounded rectangle with realistic bubble appearance using box-shadow and shine effects.</p>
@@ -129,7 +129,7 @@ export default function UIStyleShowcase() {
       {/* ICONS */}
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <h2 className="text-2xl font-bold">Icons</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start">
           <div className="flex flex-col items-center gap-4">
             <h3 className="text-lg font-bold">Color Variants</h3>
             <div className="flex gap-4 items-center justify-center">

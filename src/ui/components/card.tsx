@@ -41,14 +41,14 @@ export interface CardProps
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, ...props }, ref) => (
     <div className="relative group">
-      {/* Floating shadow */}
-      <div className="absolute inset-0 -z-10 bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 scale-x-110 origin-bottom group-hover:translate-y-3 group-hover:scale-x-115 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-200 ease-out" />
       {/* Main Card */}
       <div
         ref={ref}
         className={cn(cardVariants({ variant }), className)}
         {...props}
       />
+      {/* Floating shadow */}
+      <div className="absolute inset-0 -z-10 bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 scale-x-110 origin-bottom group-hover:translate-y-3 group-hover:scale-x-115 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-200 ease-out" />
     </div>
   )
 )
