@@ -6,14 +6,18 @@ import { useMeasure } from "react-use";
 import { FloorplanV2Scene } from "./FloorplanV2Scene";
 import { Button } from "@/ui/components/button";
 import { Icon } from "@/ui/components/icon";
-import { Magnet } from "lucide-react";
+import { Magnet, ChevronDown } from "lucide-react";
+import { FloorPlanColors, getHexColorByName } from "@/ui/colors";
 
 export default function FloorplanV2Game() {
     const floorplanV2Game = useRef<Game>(undefined);
     const floorplanV2Container = useRef<HTMLDivElement>(undefined);
     const [isDrawingMode, setIsDrawingMode] = useState(false);
     const [selectedRectangle, setSelectedRectangle] = useState<any>(null);
+    const [selectedPolygon, setSelectedPolygon] = useState<any>(null);
     const [snappingEnabled, setSnappingEnabled] = useState(true);
+    const [rectangleCount, setRectangleCount] = useState(0);
+    const [showColorDropdown, setShowColorDropdown] = useState(false);
 
     const [containerMeasure, { width: containerWidth, height: containerHeight }] = useMeasure<HTMLDivElement>();
 
@@ -82,6 +86,34 @@ export default function FloorplanV2Game() {
         }
     }, [snappingEnabled]);
 
+    const handleCombineRectangles = useCallback(() => {
+        if (floorplanV2Game.current) {
+            const scene = floorplanV2Game.current.scene.getScene('FloorplanV2Scene') as FloorplanV2Scene;
+            if (scene) {
+                scene.events.emit('combineRectangles');
+            }
+        }
+    }, []);
+
+    const handleDeletePolygon = useCallback(() => {
+        if (floorplanV2Game.current && selectedPolygon) {
+            const scene = floorplanV2Game.current.scene.getScene('FloorplanV2Scene') as FloorplanV2Scene;
+            if (scene) {
+                scene.events.emit('deleteSelectedPolygon');
+            }
+        }
+    }, [selectedPolygon]);
+
+    const handleColorChange = useCallback((color: string) => {
+        if (floorplanV2Game.current && selectedPolygon) {
+            const scene = floorplanV2Game.current.scene.getScene('FloorplanV2Scene') as FloorplanV2Scene;
+            if (scene) {
+                scene.events.emit('changePolygonColor', color);
+            }
+        }
+        setShowColorDropdown(false);
+    }, [selectedPolygon]);
+
     useLayoutEffect(() => {
         if (floorplanV2Game.current === undefined) {
             console.log("Creating floorplan v2 game");
@@ -102,6 +134,22 @@ export default function FloorplanV2Game() {
             floorplanV2Game.current.events.on('sceneReady', (scene: FloorplanV2Scene) => {
                 scene.events.on('rectangleSelected', (rectangle: any) => {
                     setSelectedRectangle(rectangle);
+                    // Clear polygon selection when rectangle is selected
+                    if (rectangle) {
+                        setSelectedPolygon(null);
+                    }
+                });
+
+                scene.events.on('polygonSelected', (polygon: any) => {
+                    setSelectedPolygon(polygon);
+                    // Clear rectangle selection when polygon is selected
+                    if (polygon) {
+                        setSelectedRectangle(null);
+                    }
+                });
+
+                scene.events.on('rectangleCountChanged', (count: number) => {
+                    setRectangleCount(count);
                 });
                 
                 // Sync initial snapping state
@@ -126,6 +174,22 @@ export default function FloorplanV2Game() {
             floorplanV2Game.current?.scale.setZoom(containerHeight / 768);
         }
     }, [containerWidth, containerHeight]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (showColorDropdown) {
+                setShowColorDropdown(false);
+            }
+        };
+
+        if (showColorDropdown) {
+            document.addEventListener('click', handleClickOutside);
+            return () => {
+                document.removeEventListener('click', handleClickOutside);
+            };
+        }
+    }, [showColorDropdown]);
 
     return (
         <div className="w-full h-full relative">
@@ -158,6 +222,51 @@ export default function FloorplanV2Game() {
 
                 {/* Right Section */}
                 <div className="absolute right-4 top-0 flex gap-2">
+                    {selectedPolygon && (
+                        <div className="relative">
+                            <Button
+                                onClick={() => setShowColorDropdown(!showColorDropdown)}
+                                variant="secondary"
+                                size="sm"
+                                className="flex items-center gap-2"
+                            >
+                                <div 
+                                    className="w-12 h-7 rounded border border-gray-300"
+                                    style={{ backgroundColor: getHexColorByName(selectedPolygon.color || 'gray-500') }}
+                                    title={selectedPolygon.color || 'gray-500'}
+                                />
+                                <ChevronDown size={12} />
+                            </Button>
+                            {showColorDropdown && (
+                                <div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-50">
+                                    <div className="p-2 flex flex-col gap-1">
+                                        {FloorPlanColors.map((color) => (
+                                            <button
+                                                key={color}
+                                                onClick={() => handleColorChange(color)}
+                                                className={`w-8 h-8 rounded border-2 hover:scale-110 transition-transform ${
+                                                    selectedPolygon.color === color 
+                                                        ? 'border-blue-500 ring-2 ring-blue-200' 
+                                                        : 'border-gray-300'
+                                                }`}
+                                                style={{ backgroundColor: getHexColorByName(color) }}
+                                                title={color}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {rectangleCount > 0 && !isDrawingMode && (
+                        <Button
+                            onClick={handleCombineRectangles}
+                            variant="primary"
+                            size="sm"
+                        >
+                            Combine ({rectangleCount})
+                        </Button>
+                    )}
                     {selectedRectangle && (
                         <Button
                             onClick={handleDeleteRectangle}
@@ -165,6 +274,15 @@ export default function FloorplanV2Game() {
                             size="sm"
                         >
                             Delete Rectangle
+                        </Button>
+                    )}
+                    {selectedPolygon && (
+                        <Button
+                            onClick={handleDeletePolygon}
+                            variant="secondary"
+                            size="sm"
+                        >
+                            Delete Polygon
                         </Button>
                     )}
                     <Button
