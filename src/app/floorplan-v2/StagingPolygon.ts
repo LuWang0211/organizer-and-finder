@@ -13,7 +13,7 @@ export interface OriginalRectangle {
     height: number;
 }
 
-export class StagingPolygon {
+export class StagingPolygon extends Phaser.Events.EventEmitter {
     private scene: FloorplanV2Scene;
     private phaserGraphics: Phaser.GameObjects.Graphics;
     private _isSelected: boolean = false;
@@ -22,6 +22,7 @@ export class StagingPolygon {
     private _color: FloorPlanColor = "gray-500"; // Default color
 
     constructor(scene: FloorplanV2Scene, vertices: PolygonVertex[], originalRectangles: OriginalRectangle[]) {
+        super();
         this.scene = scene;
         this.vertices = vertices;
         this.originalRectangles = originalRectangles;
@@ -57,8 +58,14 @@ export class StagingPolygon {
     }
 
     setColor(color: FloorPlanColor): void {
+        const oldColor = this._color;
         this._color = color;
         this.render();
+        
+        // Emit color change event
+        if (oldColor !== color) {
+            this.emit('colorChanged', color, oldColor);
+        }
     }
 
     setSelected(selected: boolean): void {
@@ -94,6 +101,7 @@ export class StagingPolygon {
     }
 
     destroy(): void {
+        this.removeAllListeners(); // Clean up event listeners
         this.phaserGraphics.destroy();
     }
 
@@ -118,5 +126,9 @@ export class StagingPolygon {
             polygon.setColor(data.color);
         }
         return polygon;
+    }
+
+    getVertices(): PolygonVertex[] {
+        return [...this.vertices];
     }
 }

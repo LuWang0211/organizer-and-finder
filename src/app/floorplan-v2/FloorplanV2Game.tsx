@@ -4,10 +4,13 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { Game } from "phaser";
 import { useMeasure } from "react-use";
 import { FloorplanV2Scene } from "./FloorplanV2Scene";
+import { UIScene } from "./UIScene";
 import { Button } from "@/ui/components/button";
 import { Icon } from "@/ui/components/icon";
 import { Magnet, ChevronDown } from "lucide-react";
 import { FloorPlanColors, getHexColorByName } from "@/ui/colors";
+import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
+import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin';
 
 export default function FloorplanV2Game() {
     const floorplanV2Game = useRef<Game>(undefined);
@@ -31,7 +34,7 @@ export default function FloorplanV2Game() {
         width: 1024,
         height: 768,
         transparent: true,
-        scene: [FloorplanV2Scene],
+        scene: [FloorplanV2Scene, UIScene],
         scale: {
             mode: Phaser.Scale.NONE,
         },
@@ -41,6 +44,22 @@ export default function FloorplanV2Game() {
                 gravity: { x: 0, y: 0 },
                 debug: false
             }
+        },
+        plugins: {
+            scene: [
+                {
+                    key: 'rexUI',
+                    plugin: UIPlugin,
+                    mapping: 'rexUI'
+                }
+            ],
+            global: [
+                {
+                    key: 'rexAnchor',
+                    plugin: AnchorPlugin,
+                    start: true
+                }
+            ]
         }
     };
 

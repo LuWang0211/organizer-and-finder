@@ -112,6 +112,9 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.events.on('toggleSnapping', this.toggleSnapping, this);
         this.events.on('combineRectangles', this.combineRectangles, this);
         
+        // Launch UI scene for camera-independent UI elements
+        this.scene.launch('UIScene', { mainScene: this });
+        
         this.game.events.emit('sceneReady', this);
     }
 
@@ -518,4 +521,9 @@ export class FloorplanV2Scene extends Phaser.Scene {
             inverted: false
         };
     }
+
+    public getStagingPolygons(): StagingPolygon[] {
+        return this.stagingPolygons;
+    }
+
 }
