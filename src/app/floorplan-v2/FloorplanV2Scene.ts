@@ -109,6 +109,7 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.events.on('deleteSelectedRectangle', this.deleteSelectedRectangle, this);
         this.events.on('deleteSelectedPolygon', this.deleteSelectedPolygon, this);
         this.events.on('changePolygonColor', this.changePolygonColor, this);
+        this.events.on('setPolygonLabel', this.setPolygonLabel, this);
         this.events.on('toggleSnapping', this.toggleSnapping, this);
         this.events.on('combineRectangles', this.combineRectangles, this);
         
@@ -179,6 +180,13 @@ export class FloorplanV2Scene extends Phaser.Scene {
     createRectangle(point1: { x: number, y: number }, point2: { x: number, y: number }) {
         const width = Math.abs(point2.x - point1.x);
         const height = Math.abs(point2.y - point1.y);
+        
+        // Prevent zero-dimension rectangles that cause hitAreaCallback errors
+        // when clicking the same point twice during rectangle drawing
+        if (width < 5 || height < 5) {
+            return; // Don't create rectangles smaller than 5x5 pixels
+        }
+        
         const centerX = (point1.x + point2.x) / 2;
         const centerY = (point1.y + point2.y) / 2;
 
@@ -221,7 +229,6 @@ export class FloorplanV2Scene extends Phaser.Scene {
         polygon.setSelected(true);
 
         this.events.emit('polygonSelected', polygon);
-        console.log('Polygon selected:', polygon);
     }
 
     clearSelection(): void {
@@ -279,6 +286,14 @@ export class FloorplanV2Scene extends Phaser.Scene {
         if (this.selectedPolygon) {
             this.selectedPolygon.setColor(color);
             // Re-emit the polygon selected event to update the UI with new color
+            this.events.emit('polygonSelected', this.selectedPolygon);
+        }
+    }
+
+    setPolygonLabel(label: string): void {
+        if (this.selectedPolygon) {
+            this.selectedPolygon.setLabel(label);
+            // Re-emit the polygon selected event to update the UI with new label
             this.events.emit('polygonSelected', this.selectedPolygon);
         }
     }

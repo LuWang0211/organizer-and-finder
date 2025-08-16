@@ -5,6 +5,7 @@ import { getSession } from "@/auth";
 import { fetchHouseForFamily, fetchRoomsForHouse } from "@/services/roomService";
 import { redirect  } from "next/navigation";
 import { HouseDef } from "./common";
+import { room as RoomType } from "@prisma/client";
 
 async function DataLoader({ children }: { children: React.ReactNode }) {
     const session = await getSession();
@@ -24,7 +25,7 @@ async function DataLoader({ children }: { children: React.ReactNode }) {
 
     const rooms = await fetchRoomsForHouse(house.id);
 
-    const roomDefs = rooms.map(room => {
+    const roomDefs = rooms.map((room: RoomType) => {
         const {x, y, h, w} = room.metadata as {x: number, y: number, h: number, w: number};
         return {
             id: room.id,

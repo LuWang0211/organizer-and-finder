@@ -13,6 +13,10 @@ class PolygonThumbnail {
     private thumbnailGraphics: Phaser.GameObjects.Graphics;
     // @ts-expect-error TS2564
     private boundingRect: Phaser.GameObjects.Rectangle;
+    // @ts-expect-error TS2564
+    private labelText: Phaser.GameObjects.Text;
+
+    private tapPlugin: any;
     private targetWidth: number;
     private targetHeight: number;
     private cachedScaledVertices: {x: number, y: number}[] = [];
@@ -31,6 +35,8 @@ class PolygonThumbnail {
     private subscribeToEvents(): void {
         // Subscribe to color changes from the polygon
         this.polygon.on('colorChanged', this.onColorChanged, this);
+        // Subscribe to label changes from the polygon
+        this.polygon.on('labelChanged', this.updateLabel, this);
     }
 
     private onColorChanged = (): void => {
@@ -142,6 +148,17 @@ class PolygonThumbnail {
         // Add thumbnail graphics to container
         this.container.add(this.thumbnailGraphics);
 
+        // Create label text
+        this.labelText = this.scene.add.text(0, 0, this.polygon.label || '', {
+            fontSize: '12px',
+            color: '#000000',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            padding: { x: 4, y: 2 },
+            align: 'center'
+        });
+        this.labelText.setOrigin(0.5, 0.5);
+        this.container.add(this.labelText);
+
         // Position graphics at (0,0) - with positive coords + origin(0.5,0.5), this centers perfectly
         this.thumbnailGraphics.setPosition(0, 0);
 
@@ -160,10 +177,18 @@ class PolygonThumbnail {
         // Set interactive on graphics object (like StagingPolygon)
         this.thumbnailGraphics.setInteractive(polygon, Phaser.Geom.Polygon.Contains);
         
-        // Add click handler
+        // Temporarily disable single click to test tap plugin
         this.thumbnailGraphics.on('pointerdown', () => {
             this.mainScene.selectPolygon(this.polygon);
         });
+
+        // Add double-tap detection using RexUI tap plugin
+        this.tapPlugin = (this.scene as any).rexGestures.add.tap(this.thumbnailGraphics, { taps: 2 })
+            .on('tap', () => {
+                // Handle double-tap - ensure polygon is selected and emit event to React layer
+                this.mainScene.selectPolygon(this.polygon);
+                this.mainScene.events.emit('polygonThumbnailDoubleClicked', this.polygon);
+            });
     }
 
     public updateColor(): void {
@@ -173,6 +198,13 @@ class PolygonThumbnail {
         this.drawPolygon(this.cachedScaledVertices);
     }
 
+    private updateLabel = (): void => {
+        if (this.labelText) {
+            this.labelText.setText(this.polygon.label || '');
+        }
+    }
+
+
     public getContainer(): Phaser.GameObjects.Container {
         return this.container;
     }
@@ -180,6 +212,12 @@ class PolygonThumbnail {
     public destroy(): void {
         // Unsubscribe from polygon events
         this.polygon.off('colorChanged', this.onColorChanged, this);
+        this.polygon.off('labelChanged', this.updateLabel, this);
+        
+        // Clean up tap plugin
+        if (this.tapPlugin) {
+            this.tapPlugin.destroy();
+        }
         
         if (this.container) {
             this.container.destroy();
@@ -243,7 +281,7 @@ class ShapesList {
             height: 200, // Will be adjusted dynamically
             panel: {
                 child: this.sizer
-            }
+            },
         });
         
         // Add background using rexUI's addBackground method (this will auto-resize)
@@ -260,9 +298,6 @@ class ShapesList {
         // Layout after adding background
         this.container.layout();
 
-        // // Add debug border to see the panel bounds
-        // this.container.drawBounds(uiScene.add.graphics(), 0xff0000);
-        
         this.container.setDepth(1000); // High depth to stay on top
         
         // Hide initially - positioning will be done when shown
@@ -347,8 +382,6 @@ class ShapesList {
         
         // Force layout update for background to resize properly
         this.container.layout();
-        
-        this.container.drawBounds(this.uiScene.add.graphics().clear(), 0x00ffff);
         
         // Set higher depth for thumbnail containers so they're interactive above background
         this.thumbnails.forEach(thumbnail => {
