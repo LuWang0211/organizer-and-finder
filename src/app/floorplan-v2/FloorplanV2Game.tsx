@@ -7,7 +7,7 @@ import { FloorplanV2Scene } from "./FloorplanV2Scene";
 import { UIScene } from "./UIScene";
 import { Button } from "@/ui/components/button";
 import { Icon } from "@/ui/components/icon";
-import { Magnet, ChevronDown } from "lucide-react";
+import { Magnet, ChevronDown, Upload, Download } from "lucide-react";
 import { FloorPlanColors, getHexColorByName } from "@/ui/colors";
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin';
@@ -16,11 +16,13 @@ import GesturesPlugin from 'phaser3-rex-plugins/plugins/gestures-plugin';
 export default function FloorplanV2Game() {
     const floorplanV2Game = useRef<Game>(undefined);
     const floorplanV2Container = useRef<HTMLDivElement>(undefined);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [isDrawingMode, setIsDrawingMode] = useState(false);
     const [selectedRectangle, setSelectedRectangle] = useState<any>(null);
     const [selectedPolygon, setSelectedPolygon] = useState<any>(null);
     const [snappingEnabled, setSnappingEnabled] = useState(true);
     const [rectangleCount, setRectangleCount] = useState(0);
+    const [polygonCount, setPolygonCount] = useState(0);
     const [showColorDropdown, setShowColorDropdown] = useState(false);
 
     const [containerMeasure, { width: containerWidth, height: containerHeight }] = useMeasure<HTMLDivElement>();
@@ -153,6 +155,79 @@ export default function FloorplanV2Game() {
         }
     }, [selectedPolygon]);
 
+    const handleReloadBackground = useCallback(() => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    }, []);
+
+    const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageDataUrl = e.target?.result as string;
+                if (floorplanV2Game.current) {
+                    const scene = floorplanV2Game.current.scene.getScene('FloorplanV2Scene') as FloorplanV2Scene;
+                    if (scene) {
+                        scene.events.emit('reloadBackgroundImage', imageDataUrl, file.name);
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        // Reset the input value so the same file can be selected again
+        if (event.target) {
+            event.target.value = '';
+        }
+    }, []);
+
+    const handleExportPolygons = useCallback(() => {
+        if (floorplanV2Game.current) {
+            const scene = floorplanV2Game.current.scene.getScene('FloorplanV2Scene') as FloorplanV2Scene;
+            if (scene) {
+                const polygons = scene.getStagingPolygons();
+                const backgroundInfo = scene.getBackgroundInfo();
+                
+                const fileContent = JSON.stringify({
+                    house: {
+                        type: backgroundInfo.type,
+                        width: backgroundInfo.width,
+                        height: backgroundInfo.height,
+                        floorplanPicture: backgroundInfo.floorplanPicture
+                    },
+                    ui: {
+                        name: "TBD",
+                        description: "TBD",
+                        features: ["TBD"]
+                    },
+                    rooms: polygons.map(polygon => {
+                        // Convert label to dash-separated identifier for id
+                        const id = polygon.label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                        return {
+                            id: id || 'untitled',
+                            name: polygon.label,
+                            vertices: polygon.getVertices()
+                        };
+                    }),
+                    exportedAt: new Date().toISOString()
+                }, null, 2);
+                
+                const blob = new Blob([fileContent], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                let a: HTMLAnchorElement | null = document.createElement('a');
+                a.href = url;
+                a.download = 'floorplan-polygons.json';
+                a.click();
+                
+                URL.revokeObjectURL(url);
+                a.remove();
+                a = null;
+            }
+        }
+    }, []);
+
     // Keep a ref to the latest handleSetLabel function to avoid closure issues
     const handleSetLabelRef = useLatest(handleSetLabel);
 
@@ -192,6 +267,10 @@ export default function FloorplanV2Game() {
 
                 scene.events.on('rectangleCountChanged', (count: number) => {
                     setRectangleCount(count);
+                });
+
+                scene.events.on('polygonCountChanged', (count: number) => {
+                    setPolygonCount(count);
                 });
 
                 scene.events.on('polygonThumbnailDoubleClicked', (polygon: any) => {
@@ -248,6 +327,30 @@ export default function FloorplanV2Game() {
             <div className="absolute top-4 left-0 right-0 z-10 px-4">
                 {/* Left Section */}
                 <div className="absolute left-4 top-0 flex gap-2">
+                    {/* Reload Background Button - only show when no selection */}
+                    {!selectedPolygon && !selectedRectangle && (
+                        <Button
+                            onClick={handleReloadBackground}
+                            variant="secondary"
+                            size="sm"
+                            className="flex items-center gap-2"
+                        >
+                            <Upload size={16} />
+                            Reload Background
+                        </Button>
+                    )}
+                    {/* Export Button - only show when no polygon selected and at least 1 polygon exists */}
+                    {!selectedPolygon && polygonCount > 0 && (
+                        <Button
+                            onClick={handleExportPolygons}
+                            variant="secondary"
+                            size="sm"
+                            className="flex items-center gap-2"
+                        >
+                            <Download size={16} />
+                            Export Polygons
+                        </Button>
+                    )}
                     {selectedPolygon && (
                         <>
                             <div className="relative">
@@ -356,6 +459,15 @@ export default function FloorplanV2Game() {
                     </Button>
                 </div>
             </div>
+            
+            {/* Hidden file input for background reload */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+            />
         </div>
     );
 }
