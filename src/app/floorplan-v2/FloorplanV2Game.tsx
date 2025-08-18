@@ -5,12 +5,15 @@ import { Game } from "phaser";
 import { useMeasure } from "react-use";
 import { FloorplanV2Scene } from "./FloorplanV2Scene";
 import { Button } from "@/ui/components/button";
+import { Icon } from "@/ui/components/icon";
+import { Magnet } from "lucide-react";
 
 export default function FloorplanV2Game() {
     const floorplanV2Game = useRef<Game>(undefined);
     const floorplanV2Container = useRef<HTMLDivElement>(undefined);
     const [isDrawingMode, setIsDrawingMode] = useState(false);
     const [selectedRectangle, setSelectedRectangle] = useState<any>(null);
+    const [snappingEnabled, setSnappingEnabled] = useState(true);
 
     const [containerMeasure, { width: containerWidth, height: containerHeight }] = useMeasure<HTMLDivElement>();
 
@@ -67,6 +70,18 @@ export default function FloorplanV2Game() {
         }
     }, [selectedRectangle]);
 
+    const handleToggleSnapping = useCallback(() => {
+        const newSnappingState = !snappingEnabled;
+        setSnappingEnabled(newSnappingState);
+        
+        if (floorplanV2Game.current) {
+            const scene = floorplanV2Game.current.scene.getScene('FloorplanV2Scene') as FloorplanV2Scene;
+            if (scene) {
+                scene.events.emit('toggleSnapping', newSnappingState);
+            }
+        }
+    }, [snappingEnabled]);
+
     useLayoutEffect(() => {
         if (floorplanV2Game.current === undefined) {
             console.log("Creating floorplan v2 game");
@@ -88,6 +103,9 @@ export default function FloorplanV2Game() {
                 scene.events.on('rectangleSelected', (rectangle: any) => {
                     setSelectedRectangle(rectangle);
                 });
+                
+                // Sync initial snapping state
+                scene.events.emit('toggleSnapping', snappingEnabled);
             });
         }
 
@@ -112,30 +130,58 @@ export default function FloorplanV2Game() {
     return (
         <div className="w-full h-full relative">
             <div ref={assignRef} className="w-full h-full overflow-hidden" />
-            <div className="absolute top-4 right-4 z-10 flex gap-2">
-                {selectedRectangle && (
+            
+            {/* Top Controls Layout: Left, Center, Right */}
+            <div className="absolute top-4 left-0 right-0 z-10 px-4">
+                {/* Left Section */}
+                <div className="absolute left-4 top-0 flex gap-2">
+                    {/* Left controls can go here */}
+                </div>
+
+                {/* Center Section - Snapping Toggle (Absolutely Centered) */}
+                <div className="absolute left-1/2 top-0 -translate-x-1/2 flex gap-2">
+                    <div className="relative group">
+                        <Icon
+                            onClick={handleToggleSnapping}
+                            variant={snappingEnabled ? "primary" : "default"}
+                            size="sm"
+                            className="cursor-pointer"
+                        >
+                            <Magnet />
+                        </Icon>
+                        {/* Tooltip */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 delay-0 group-hover:delay-500 pointer-events-none z-50">
+                            {snappingEnabled ? "Snapping: ON - Click to disable" : "Snapping: OFF - Click to enable"}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Section */}
+                <div className="absolute right-4 top-0 flex gap-2">
+                    {selectedRectangle && (
+                        <Button
+                            onClick={handleDeleteRectangle}
+                            variant="secondary"
+                            size="sm"
+                        >
+                            Delete Rectangle
+                        </Button>
+                    )}
                     <Button
-                        onClick={handleDeleteRectangle}
-                        variant="secondary"
+                        onClick={handleToggleDrawingMode}
+                        variant={isDrawingMode ? "secondary" : "primary"}
                         size="sm"
                     >
-                        Delete Rectangle
+                        {isDrawingMode ? "Exit Drawing" : "New Rectangle"}
                     </Button>
-                )}
-                <Button
-                    onClick={handleToggleDrawingMode}
-                    variant={isDrawingMode ? "secondary" : "primary"}
-                    size="sm"
-                >
-                    {isDrawingMode ? "Exit Drawing" : "New Rectangle"}
-                </Button>
-                <Button
-                    onClick={handleResetScale}
-                    variant="outline"
-                    size="sm"
-                >
-                    Reset Scale
-                </Button>
+                    <Button
+                        onClick={handleResetScale}
+                        variant="outline"
+                        size="sm"
+                    >
+                        Reset Scale
+                    </Button>
+                </div>
             </div>
         </div>
     );
