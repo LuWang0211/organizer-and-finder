@@ -1,4 +1,7 @@
 import { StagingRectangle, EdgeType, SnapPoint } from "./StagingRectangle";
+import { StagingPolygon, PolygonVertex, OriginalRectangle } from "./StagingPolygon";
+import PolyBool, { Polygon, Vec2 } from '@velipso/polybool';
+import { FloorPlanColor } from "@/ui/colors";
 
 export class FloorplanV2Scene extends Phaser.Scene {
     private floorplanV2Image?: Phaser.GameObjects.Image;
@@ -12,7 +15,9 @@ export class FloorplanV2Scene extends Phaser.Scene {
     private firstClickPoint?: { x: number, y: number };
     private previewRectangle?: Phaser.GameObjects.Rectangle;
     private stagingRectangles: StagingRectangle[] = [];
+    private stagingPolygons: StagingPolygon[] = [];
     private selectedRectangle?: StagingRectangle;
+    private selectedPolygon?: StagingPolygon;
     private snapDistance: number = 10;
     private snappingEnabled: boolean = true;
 
@@ -64,6 +69,9 @@ export class FloorplanV2Scene extends Phaser.Scene {
                     if ((clickedObject as any).stagingRectangle) {
                         const stagingRect = (clickedObject as any).stagingRectangle as StagingRectangle;
                         this.selectRectangle(stagingRect);
+                    } else if ((clickedObject as any).stagingPolygon) {
+                        const stagingPolygon = (clickedObject as any).stagingPolygon as StagingPolygon;
+                        this.selectPolygon(stagingPolygon);
                     }
                 } else {
                     this.clearSelection();
@@ -99,7 +107,10 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.events.on('resetScale', this.resetScale, this);
         this.events.on('toggleDrawingMode', this.toggleDrawingMode, this);
         this.events.on('deleteSelectedRectangle', this.deleteSelectedRectangle, this);
+        this.events.on('deleteSelectedPolygon', this.deleteSelectedPolygon, this);
+        this.events.on('changePolygonColor', this.changePolygonColor, this);
         this.events.on('toggleSnapping', this.toggleSnapping, this);
+        this.events.on('combineRectangles', this.combineRectangles, this);
         
         this.game.events.emit('sceneReady', this);
     }
@@ -171,9 +182,16 @@ export class FloorplanV2Scene extends Phaser.Scene {
         const stagingRectangle = new StagingRectangle(this, centerX, centerY, width, height);
 
         this.stagingRectangles.push(stagingRectangle);
+        this.emitRectangleCountChanged();
     }
 
     selectRectangle(rectangle: StagingRectangle): void {
+        // Clear any polygon selection
+        if (this.selectedPolygon) {
+            this.selectedPolygon.setSelected(false);
+            this.selectedPolygon = undefined;
+        }
+
         if (this.selectedRectangle) {
             this.selectedRectangle.setSelected(false);
         }
@@ -184,11 +202,36 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.events.emit('rectangleSelected', rectangle);
     }
 
+    selectPolygon(polygon: StagingPolygon): void {
+        // Clear any rectangle selection
+        if (this.selectedRectangle) {
+            this.selectedRectangle.setSelected(false);
+            this.selectedRectangle = undefined;
+            this.events.emit('rectangleSelected', null);
+        }
+
+        if (this.selectedPolygon) {
+            this.selectedPolygon.setSelected(false);
+        }
+
+        this.selectedPolygon = polygon;
+        polygon.setSelected(true);
+
+        this.events.emit('polygonSelected', polygon);
+        console.log('Polygon selected:', polygon);
+    }
+
     clearSelection(): void {
         if (this.selectedRectangle) {
             this.selectedRectangle.setSelected(false);
             this.selectedRectangle = undefined;
             this.events.emit('rectangleSelected', null);
+        }
+
+        if (this.selectedPolygon) {
+            this.selectedPolygon.setSelected(false);
+            this.selectedPolygon = undefined;
+            this.events.emit('polygonSelected', null);
         }
     }
 
@@ -209,6 +252,31 @@ export class FloorplanV2Scene extends Phaser.Scene {
             
             this.selectedRectangle = undefined;
             this.events.emit('rectangleSelected', null);
+            this.emitRectangleCountChanged();
+        }
+    }
+
+    deleteSelectedPolygon(): void {
+        if (this.selectedPolygon) {
+            const polygonToDelete = this.selectedPolygon;
+            
+            const index = this.stagingPolygons.indexOf(polygonToDelete);
+            if (index > -1) {
+                this.stagingPolygons.splice(index, 1);
+            }
+            
+            polygonToDelete.destroy();
+            
+            this.selectedPolygon = undefined;
+            this.events.emit('polygonSelected', null);
+        }
+    }
+
+    changePolygonColor(color: FloorPlanColor): void {
+        if (this.selectedPolygon) {
+            this.selectedPolygon.setColor(color);
+            // Re-emit the polygon selected event to update the UI with new color
+            this.events.emit('polygonSelected', this.selectedPolygon);
         }
     }
 
@@ -314,5 +382,140 @@ export class FloorplanV2Scene extends Phaser.Scene {
         
         const closest = snapPoints[0];
         return { x: closest.x, y: closest.y, snapped: true };
+    }
+
+    emitRectangleCountChanged(): void {
+        this.events.emit('rectangleCountChanged', this.stagingRectangles.length);
+    }
+
+    combineRectangles(): void {
+        if (this.stagingRectangles.length === 0) {
+            alert('No rectangles to combine!');
+            return;
+        }
+
+        // Remove duplicates first
+        const uniqueRectangles = this.removeDuplicateRectangles();
+
+        // For multiple rectangles, check if all are connected
+        if (uniqueRectangles.length > 1 && !this.areAllRectanglesConnected(uniqueRectangles)) {
+            alert('Warning: Not all rectangles are connected (overlap or touch). Cannot combine disconnected groups.');
+            return;
+        }
+
+        // Convert rectangles to polygons and union them (works for single or multiple)
+        this.unionRectanglesIntoPolygon(uniqueRectangles);
+    }
+
+    private removeDuplicateRectangles(): StagingRectangle[] {
+        const unique: StagingRectangle[] = [];
+        
+        for (const rect of this.stagingRectangles) {
+            const bounds = rect.gameObject.getBounds();
+            const isDuplicate = unique.some(uniqueRect => {
+                const uniqueBounds = uniqueRect.gameObject.getBounds();
+                return Math.abs(bounds.x - uniqueBounds.x) < 0.1 &&
+                       Math.abs(bounds.y - uniqueBounds.y) < 0.1 &&
+                       Math.abs(bounds.width - uniqueBounds.width) < 0.1 &&
+                       Math.abs(bounds.height - uniqueBounds.height) < 0.1;
+            });
+            
+            if (!isDuplicate) {
+                unique.push(rect);
+            }
+        }
+        
+        return unique;
+    }
+
+    private areAllRectanglesConnected(rectangles: StagingRectangle[]): boolean {
+        if (rectangles.length <= 1) return true;
+
+        // Build adjacency graph
+        const adjacency: boolean[][] = [];
+        for (let i = 0; i < rectangles.length; i++) {
+            adjacency[i] = [];
+            for (let j = 0; j < rectangles.length; j++) {
+                adjacency[i][j] = i === j || this.rectanglesOverlapOrTouch(rectangles[i], rectangles[j]);
+            }
+        }
+
+        // Use DFS to check if all rectangles are reachable from the first one
+        const visited: boolean[] = new Array(rectangles.length).fill(false);
+        this.dfs(0, adjacency, visited);
+
+        return visited.every(v => v);
+    }
+
+    private rectanglesOverlapOrTouch(rect1: StagingRectangle, rect2: StagingRectangle): boolean {
+        const bounds1 = rect1.gameObject.getBounds();
+        const bounds2 = rect2.gameObject.getBounds();
+
+        // Check for overlap or edge-to-edge contact
+        const horizontalOverlap = bounds1.right >= bounds2.left && bounds1.left <= bounds2.right;
+        const verticalOverlap = bounds1.bottom >= bounds2.top && bounds1.top <= bounds2.bottom;
+
+        return horizontalOverlap && verticalOverlap;
+    }
+
+    private dfs(node: number, adjacency: boolean[][], visited: boolean[]): void {
+        visited[node] = true;
+        for (let i = 0; i < adjacency[node].length; i++) {
+            if (adjacency[node][i] && !visited[i]) {
+                this.dfs(i, adjacency, visited);
+            }
+        }
+    }
+
+    private unionRectanglesIntoPolygon(rectangles: StagingRectangle[]): void {
+        // Convert rectangles to PolyBool format
+        let unionResult = this.rectangleToPolyBoolPolygon(rectangles[0]);
+
+        for (let i = 1; i < rectangles.length; i++) {
+            const rectPolygon = this.rectangleToPolyBoolPolygon(rectangles[i]);
+            unionResult = PolyBool.union(unionResult, rectPolygon);
+        }
+
+        // Convert result back to our format
+        if (unionResult.regions.length === 0) {
+            alert('Error: Union operation failed');
+            return;
+        }
+
+        // Take the first (and should be only) region
+        const region = unionResult.regions[0];
+        const vertices: PolygonVertex[] = region.map(point => ({ x: point[0], y: point[1] }));
+
+        const originalRectangles: OriginalRectangle[] = rectangles.map(rect => ({
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height
+        }));
+
+        // Create polygon
+        const polygon = new StagingPolygon(this, vertices, originalRectangles);
+        this.stagingPolygons.push(polygon);
+
+        // Remove original rectangles
+        rectangles.forEach(rect => rect.destroy());
+        this.stagingRectangles = [];
+        this.selectedRectangle = undefined;
+        this.events.emit('rectangleSelected', null);
+        this.emitRectangleCountChanged();
+    }
+
+    private rectangleToPolyBoolPolygon(rectangle: StagingRectangle): Polygon {
+        const bounds = rectangle.gameObject.getBounds();
+        
+        return {
+            regions: [[
+                [bounds.left, bounds.top] as Vec2,
+                [bounds.right, bounds.top] as Vec2,
+                [bounds.right, bounds.bottom] as Vec2,
+                [bounds.left, bounds.bottom] as Vec2
+            ]],
+            inverted: false
+        };
     }
 }
