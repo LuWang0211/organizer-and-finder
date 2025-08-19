@@ -204,4 +204,8 @@ export class StagingRectangle {
     onClick(): void {
         console.log('Rectangle clicked at:', this.x, this.y);
     }
+
+    getBounds(): Phaser.Geom.Rectangle {
+        return this.phaserRectangle.getBounds();
+    }
 }

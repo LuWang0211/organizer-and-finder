@@ -55,8 +55,7 @@ design/**/*.ftpp
 design/**/*.spine
 design/**/*.webp
 
-design/claude/*.txt
-
+design/claude/*
 
 public/assets
 scripts/symbollink.js
