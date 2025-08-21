@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Game } from "phaser";
-import { useMeasure } from "react-use";
+import { useMeasure, useLatest } from "react-use";
 import { FloorplanV2Scene } from "./FloorplanV2Scene";
 import { UIScene } from "./UIScene";
 import { Button } from "@/ui/components/button";
@@ -11,6 +11,7 @@ import { Magnet, ChevronDown } from "lucide-react";
 import { FloorPlanColors, getHexColorByName } from "@/ui/colors";
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin';
+import GesturesPlugin from 'phaser3-rex-plugins/plugins/gestures-plugin';
 
 export default function FloorplanV2Game() {
     const floorplanV2Game = useRef<Game>(undefined);
@@ -29,7 +30,7 @@ export default function FloorplanV2Game() {
         floorplanV2Container.current = element;
     }, [containerMeasure]);
 
-    const floorplanV2Config = {
+    const floorplanV2Config = useRef({
         type: Phaser.AUTO,
         width: 1024,
         height: 768,
@@ -51,6 +52,11 @@ export default function FloorplanV2Game() {
                     key: 'rexUI',
                     plugin: UIPlugin,
                     mapping: 'rexUI'
+                },
+                {
+                    key: 'rexGestures',
+                    plugin: GesturesPlugin,
+                    mapping: 'rexGestures'
                 }
             ],
             global: [
@@ -61,7 +67,7 @@ export default function FloorplanV2Game() {
                 }
             ]
         }
-    };
+    }).current;
 
     const handleResetScale = useCallback(() => {
         if (floorplanV2Game.current) {
@@ -133,6 +139,23 @@ export default function FloorplanV2Game() {
         setShowColorDropdown(false);
     }, [selectedPolygon]);
 
+    const handleSetLabel = useCallback(() => {
+        console.log("handleSetLabel", selectedPolygon)
+        if (floorplanV2Game.current && selectedPolygon) {
+            const currentLabel = selectedPolygon.label || '';
+            const newLabel = prompt('Enter label for this room area:', currentLabel);
+            if (newLabel !== null) { // null means cancelled, empty string is valid
+                const scene = floorplanV2Game.current.scene.getScene('FloorplanV2Scene') as FloorplanV2Scene;
+                if (scene) {
+                    scene.events.emit('setPolygonLabel', newLabel);
+                }
+            }
+        }
+    }, [selectedPolygon]);
+
+    // Keep a ref to the latest handleSetLabel function to avoid closure issues
+    const handleSetLabelRef = useLatest(handleSetLabel);
+
     useLayoutEffect(() => {
         if (floorplanV2Game.current === undefined) {
             console.log("Creating floorplan v2 game");
@@ -170,9 +193,16 @@ export default function FloorplanV2Game() {
                 scene.events.on('rectangleCountChanged', (count: number) => {
                     setRectangleCount(count);
                 });
+
+                scene.events.on('polygonThumbnailDoubleClicked', (polygon: any) => {
+                    // Ensure the double-clicked polygon is selected, then use unified handleSetLabel
+                    setSelectedPolygon(polygon);
+                    // Use setTimeout with useLatest ref to get the latest handleSetLabel function
+                    setTimeout(() => handleSetLabelRef.current(), 0);
+                });
                 
-                // Sync initial snapping state
-                scene.events.emit('toggleSnapping', snappingEnabled);
+                // Sync initial snapping state (use true as default since snappingEnabled starts as true)
+                scene.events.emit('toggleSnapping', true);
             });
         }
 
@@ -218,7 +248,58 @@ export default function FloorplanV2Game() {
             <div className="absolute top-4 left-0 right-0 z-10 px-4">
                 {/* Left Section */}
                 <div className="absolute left-4 top-0 flex gap-2">
-                    {/* Left controls can go here */}
+                    {selectedPolygon && (
+                        <>
+                            <div className="relative">
+                                <Button
+                                    onClick={() => setShowColorDropdown(!showColorDropdown)}
+                                    variant="secondary"
+                                    size="sm"
+                                    className="flex items-center gap-2"
+                                >
+                                    <div 
+                                        className="w-12 h-7 rounded border border-gray-300"
+                                        style={{ backgroundColor: getHexColorByName(selectedPolygon.color || 'gray-500') }}
+                                        title={selectedPolygon.color || 'gray-500'}
+                                    />
+                                    <ChevronDown size={12} />
+                                </Button>
+                                {showColorDropdown && (
+                                    <div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-50">
+                                        <div className="p-2 flex flex-col gap-1">
+                                            {FloorPlanColors.map((color) => (
+                                                <button
+                                                    key={color}
+                                                    onClick={() => handleColorChange(color)}
+                                                    className={`w-8 h-8 rounded border-2 hover:scale-110 transition-transform ${
+                                                        selectedPolygon.color === color 
+                                                            ? 'border-blue-500 ring-2 ring-blue-200' 
+                                                            : 'border-gray-300'
+                                                    }`}
+                                                    style={{ backgroundColor: getHexColorByName(color) }}
+                                                    title={color}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <Button
+                                onClick={handleSetLabel}
+                                variant="secondary"
+                                size="sm"
+                            >
+                                Set Label
+                            </Button>
+                            <Button
+                                onClick={handleDeletePolygon}
+                                variant="secondary"
+                                size="sm"
+                            >
+                                Delete Polygon
+                            </Button>
+                        </>
+                    )}
                 </div>
 
                 {/* Center Section - Snapping Toggle (Absolutely Centered) */}
@@ -241,42 +322,6 @@ export default function FloorplanV2Game() {
 
                 {/* Right Section */}
                 <div className="absolute right-4 top-0 flex gap-2">
-                    {selectedPolygon && (
-                        <div className="relative">
-                            <Button
-                                onClick={() => setShowColorDropdown(!showColorDropdown)}
-                                variant="secondary"
-                                size="sm"
-                                className="flex items-center gap-2"
-                            >
-                                <div 
-                                    className="w-12 h-7 rounded border border-gray-300"
-                                    style={{ backgroundColor: getHexColorByName(selectedPolygon.color || 'gray-500') }}
-                                    title={selectedPolygon.color || 'gray-500'}
-                                />
-                                <ChevronDown size={12} />
-                            </Button>
-                            {showColorDropdown && (
-                                <div className="absolute top-full right-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-50">
-                                    <div className="p-2 flex flex-col gap-1">
-                                        {FloorPlanColors.map((color) => (
-                                            <button
-                                                key={color}
-                                                onClick={() => handleColorChange(color)}
-                                                className={`w-8 h-8 rounded border-2 hover:scale-110 transition-transform ${
-                                                    selectedPolygon.color === color 
-                                                        ? 'border-blue-500 ring-2 ring-blue-200' 
-                                                        : 'border-gray-300'
-                                                }`}
-                                                style={{ backgroundColor: getHexColorByName(color) }}
-                                                title={color}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
                     {rectangleCount > 0 && !isDrawingMode && (
                         <Button
                             onClick={handleCombineRectangles}
@@ -294,16 +339,7 @@ export default function FloorplanV2Game() {
                         >
                             Delete Rectangle
                         </Button>
-                    )}
-                    {selectedPolygon && (
-                        <Button
-                            onClick={handleDeletePolygon}
-                            variant="secondary"
-                            size="sm"
-                        >
-                            Delete Polygon
-                        </Button>
-                    )}
+                    )}                  
                     <Button
                         onClick={handleToggleDrawingMode}
                         variant={isDrawingMode ? "secondary" : "primary"}

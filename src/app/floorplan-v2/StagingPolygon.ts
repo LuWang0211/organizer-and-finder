@@ -20,6 +20,7 @@ export class StagingPolygon extends Phaser.Events.EventEmitter {
     private vertices: PolygonVertex[] = [];
     private originalRectangles: OriginalRectangle[] = [];
     private _color: FloorPlanColor = "gray-500"; // Default color
+    private _label: string = "untitled"; // Default label
 
     constructor(scene: FloorplanV2Scene, vertices: PolygonVertex[], originalRectangles: OriginalRectangle[]) {
         super();
@@ -57,6 +58,10 @@ export class StagingPolygon extends Phaser.Events.EventEmitter {
         return this._color;
     }
 
+    get label(): string {
+        return this._label;
+    }
+
     setColor(color: FloorPlanColor): void {
         const oldColor = this._color;
         this._color = color;
@@ -65,6 +70,16 @@ export class StagingPolygon extends Phaser.Events.EventEmitter {
         // Emit color change event
         if (oldColor !== color) {
             this.emit('colorChanged', color, oldColor);
+        }
+    }
+
+    setLabel(label: string): void {
+        const oldLabel = this._label;
+        this._label = label;
+        
+        // Emit label change event
+        if (oldLabel !== label) {
+            this.emit('labelChanged', label, oldLabel);
         }
     }
 
@@ -115,7 +130,8 @@ export class StagingPolygon extends Phaser.Events.EventEmitter {
         return {
             vertices: this.vertices,
             originalRectangles: this.originalRectangles,
-            color: this._color
+            color: this._color,
+            label: this._label
         };
     }
 
@@ -124,6 +140,9 @@ export class StagingPolygon extends Phaser.Events.EventEmitter {
         const polygon = new StagingPolygon(scene, data.vertices, data.originalRectangles);
         if (data.color) {
             polygon.setColor(data.color);
+        }
+        if (data.label) {
+            polygon.setLabel(data.label);
         }
         return polygon;
     }
