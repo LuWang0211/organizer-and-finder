@@ -5,6 +5,10 @@ import { FloorPlanColor } from "@/ui/colors";
 
 export class FloorplanV2Scene extends Phaser.Scene {
     private floorplanV2Image?: Phaser.GameObjects.Image;
+    private currentBackgroundInfo = {
+        type: "floorplan-v2-1b1b",
+        floorplanPicture: "/assets/floorplans/1b1b.png"
+    };
     private defaultZoom: number = 1;
     private defaultCameraX: number = 0;
     private defaultCameraY: number = 0;
@@ -112,6 +116,7 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.events.on('setPolygonLabel', this.setPolygonLabel, this);
         this.events.on('toggleSnapping', this.toggleSnapping, this);
         this.events.on('combineRectangles', this.combineRectangles, this);
+        this.events.on('reloadBackgroundImage', this.reloadBackgroundImage, this);
         
         // Launch UI scene for camera-independent UI elements
         this.scene.launch('UIScene', { mainScene: this });
@@ -279,6 +284,7 @@ export class FloorplanV2Scene extends Phaser.Scene {
             
             this.selectedPolygon = undefined;
             this.events.emit('polygonSelected', null);
+            this.emitPolygonCountChanged();
         }
     }
 
@@ -406,6 +412,10 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.events.emit('rectangleCountChanged', this.stagingRectangles.length);
     }
 
+    emitPolygonCountChanged(): void {
+        this.events.emit('polygonCountChanged', this.stagingPolygons.length);
+    }
+
     combineRectangles(): void {
         if (this.stagingRectangles.length === 0) {
             alert('No rectangles to combine!');
@@ -521,6 +531,7 @@ export class FloorplanV2Scene extends Phaser.Scene {
         this.selectedRectangle = undefined;
         this.events.emit('rectangleSelected', null);
         this.emitRectangleCountChanged();
+        this.emitPolygonCountChanged();
     }
 
     private rectangleToPolyBoolPolygon(rectangle: StagingRectangle): Polygon {
@@ -539,6 +550,53 @@ export class FloorplanV2Scene extends Phaser.Scene {
 
     public getStagingPolygons(): StagingPolygon[] {
         return this.stagingPolygons;
+    }
+
+    reloadBackgroundImage(imageDataUrl: string, filename?: string): void {
+        if (this.floorplanV2Image) {
+            // Create a new texture from the data URL
+            const textureKey = 'custom-background-' + Date.now();
+            
+            // Use the loader to add the texture properly
+            this.load.image(textureKey, imageDataUrl);
+            
+            // Listen for when the texture is loaded
+            this.load.once('complete', () => {
+                if (this.floorplanV2Image) {
+                    // Replace the texture
+                    this.floorplanV2Image.setTexture(textureKey);
+                    
+                    // Update background info with new type and path
+                    this.currentBackgroundInfo.type = filename ? filename.replace(/\.[^/.]+$/, '') : textureKey;
+                    this.currentBackgroundInfo.floorplanPicture = filename || "custom-uploaded-image";
+                    
+                    // Recalculate zoom based on new image dimensions, following the original create() logic
+                    const { width, height } = this.scale;
+                    const scaleX = (width * 0.618) / this.floorplanV2Image.width;
+                    const scaleY = (height * 0.618) / this.floorplanV2Image.height;
+                    this.defaultZoom = Math.min(scaleX, scaleY);
+                    
+                    // Apply the zoom to camera, not the image object
+                    this.cameras.main.setZoom(this.defaultZoom);
+                    this.cameras.main.centerOn(0, 0);
+                    
+                    // Update default camera position for reset functionality
+                    this.defaultCameraX = this.cameras.main.scrollX;
+                    this.defaultCameraY = this.cameras.main.scrollY;
+                }
+            });
+            
+            // Start loading
+            this.load.start();
+        }
+    }
+
+    public getBackgroundInfo(): any {
+        return {
+            ...this.currentBackgroundInfo,
+            width: this.floorplanV2Image?.width || 0,
+            height: this.floorplanV2Image?.height || 0
+        };
     }
 
 }
