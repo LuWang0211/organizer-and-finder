@@ -2,7 +2,7 @@
 import AuthProtectedComponent from "@/AuthProtectedComponent";
 import LayoutClient from "@/app/house_layout/LayoutClient";
 import { getSession } from "@/auth";
-import { fetchHouseForFamily, fetchRoomsForHouse } from "@/services/roomService";
+import { fetchHouseForFamily, fetchRoomsForHouse, RoomMetadataType } from "@/services/roomService";
 import { redirect  } from "next/navigation";
 import { HouseDef } from "./common";
 import { room as RoomType } from "@prisma/client";
@@ -26,11 +26,12 @@ async function DataLoader({ children }: { children: React.ReactNode }) {
     const rooms = await fetchRoomsForHouse(house.id);
 
     const roomDefs = rooms.map((room: RoomType) => {
-        const {x, y, h, w} = room.metadata as {x: number, y: number, h: number, w: number};
+        const {vertices, color} = room.metadata as unknown as RoomMetadataType;
         return {
             id: room.id,
             name: room.name,
-            x, y, h, w
+            vertices,
+            color
         }
     });
 

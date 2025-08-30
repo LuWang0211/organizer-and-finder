@@ -2,6 +2,8 @@ import prisma from "./db";
 import { getSession } from "@/auth";
 import { room } from "@prisma/client"
 
+
+
 export async function fetchHouseForFamily(familyId: number) {
     try {
         const house = await prisma.house.findFirst({
@@ -24,6 +26,14 @@ export async function fetchRoomsForHouse(houseId: number) {
     } catch (error) {
         throw new Error('Error fetching rooms');
     }
+}
+
+export interface RoomMetadataType {
+    color: string,
+    vertices: Array<{
+        x: number,
+        y: number
+    }>
 }
 
 export async function fetchRoomForFamily(roomId: string, prismaInstance = prisma) : Promise<room | null> {

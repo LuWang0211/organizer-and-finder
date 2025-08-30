@@ -26,7 +26,7 @@ export default function ItemsList({ className, items = [], locationName = "" }: 
   return (
     <div className={className}>
       <div className="px-2 py-3">
-        <div className="flex flex-wrap gap-4 justify-start">
+        <div className="flex flex-wrap gap-4 justify-start pointer-events-auto">
           {items.map((item) => (
             <Bubble
               key={item.id}

@@ -32,7 +32,7 @@ export default async function RoomLayout(props: PropsWithChildren<{ params: Prom
   }
 
   return (
-    <div className="room-layout h-screen flex flex-col">
+    <div className="room-layout h-screen flex flex-col pointer-events-none">
       <div className="flex-shrink-0 px-2 pt-2">
         <Card className="hover:scale-100 hover:[&>div]:scale-100 hover:[&>div]:shadow-none">
           <CardHeader className="py-4 items-center text-center">
