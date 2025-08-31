@@ -207,7 +207,10 @@ export default function FloorplanV2Game() {
                         return {
                             id: id || 'untitled',
                             name: polygon.label,
-                            vertices: polygon.getVertices()
+                            metadata: {
+                                vertices: polygon.getVertices(),
+                                color: polygon.color
+                            }
                         };
                     }),
                     exportedAt: new Date().toISOString()
