@@ -1,10 +1,10 @@
 import { fetchLocationsByRoom } from "@/services/locationService";
-import LocationList from "./LocationsList";
+import LocationsList from "./LocationsList";
 
 export default async function LocationsPanel({ roomId }: { roomId: string }) {
   const locationsData = await fetchLocationsByRoom(roomId);
   return (
-    <LocationList locations={locationsData} roomId={roomId} loading={false} />
+    <LocationsList locations={locationsData} roomId={roomId} loading={false} />
   );
 }
 
