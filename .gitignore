@@ -56,6 +56,7 @@ design/**/*.spine
 design/**/*.webp
 
 design/claude/*
+design/codex/*
 
 public/assets
 scripts/symbollink.js

@@ -1,4 +1,5 @@
 import { cn } from "@/utils/tailwind";
+import { Bubble } from "@/ui/components/bubble";
 import LinkWithReport from "./LinkWithReport";
 
 interface LocationsListProps {
@@ -19,59 +20,90 @@ interface LocationsListProps {
 }
 
 export default function LocationsList( { className, locations, roomId }: LocationsListProps) {
-
-    return <div className={cn(" bg-purple-100 opacity-60", className)} >
-        <div className="overflow-x-auto">
-            <table className="w-full table-auto border-collapse bg-white rounded-lg shadow-md text-left">
-                <thead>
-                    <tr className="bg-pink-200 text-pink-800 text-sm uppercase">
-                        <th className="py-2 px-4 border-b border-pink-300">Location ID</th>
-                        <th className="py-2 px-4 border-b border-pink-300">Location Name</th>
-                        <th className="py-2 px-4 border-b border-pink-300">Items</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {locations && locations.length > 0 ? (
-                        
-                        locations.map((location) => (
-                            <tr
-                                key={location.id}
-                                className="hover:bg-pink-100 cursor-pointer transition duration-200"
+    return (
+        <div className={cn("rounded-2xl p-6", className)}>
+            {locations && locations.length > 0 ? (
+                <div className="flex flex-wrap gap-4 justify-start">
+                    {locations.map((location) => (
+                        <div
+                            key={location.id}
+                            className="relative group"
+                        >
+                            <Bubble 
+                                variant="secondary" 
+                                size="sm"
+                                className="cursor-pointer min-w-[150px] hover:scale-105 transition-transform duration-200"
                             >
-                                <td >
-                                    <LinkWithReport roomId={roomId} locationId={location.id}  locationName={location.name} />
-                                </td>
-                                <td className="py-2 px-4 border-b border-pink-300 text-gray-900">{location.name}</td>
-                                <td className="py-2 px-4 border-b border-pink-300 text-gray-900">
-                                    <div className="text-xs text-gray-600">
-                                    {location.items && location.items.length > 0 ? (
-                                        <>
-                                            {location.items.slice(0, 3).map((item, index) => (
-                                                <span key={index}>
-                                                    {item.name}
-                                                    {index < 2 && index < location.items.length - 1 && ', '}
-                                                </span>
-                                            ))}
-                                            {location.items.length > 3 && (
-                                                <span className="text-gray-500"> + more</span>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <span  className="text-xs text-gray-500">No items</span>
-                                    )}
+                                <div className="text-center">
+                                    <h3 className="font-semibold text-gray-800 text-lg mb-1">
+                                        {location.name}
+                                    </h3>
+                                    <p className="text-base text-gray-600">
+                                        {location.items?.length || 0} items
+                                    </p>
+                                    <div className="mt-2">
+                                        <LinkWithReport 
+                                            roomId={roomId} 
+                                            locationId={location.id}  
+                                            locationName={location.name} 
+                                        />
                                     </div>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan={3} className="text-center py-4 text-pink-800">
-                                No location found for this room.
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                                </div>
+                            </Bubble>
+
+                            {/* CSS-only tooltip - positioned to the bottom */}
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                <Bubble variant="primary" size="sm" className="inline-block w-auto min-w-[260px] max-w-[640px] whitespace-normal break-words">
+                                    <div className="text-white flex">
+                                        {/* Left side - Location info */}
+                                        <div className="w-1/2 pr-2 min-w-0">
+                                            <h4 className="font-bold text-lg mb-1 break-words leading-snug">{location.name}</h4>
+                                            <p className="text-base text-white/90 break-words leading-snug">
+                                                ID: {location.id}
+                                            </p>
+                                            <p className="text-base text-white/90 break-words leading-snug">
+                                                Total: {location.items?.length || 0} items
+                                            </p>
+                                        </div>
+                                        
+                                        {/* Right side - Items list */}
+                                        <div className="w-1/2 pl-2 border-l border-white/20 min-w-0">
+                                            <p className="font-medium text-base mb-1">Items:</p>
+                                            {location.items && location.items.length > 0 ? (
+                                                <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
+                                                    {location.items.slice(0, 4).map((item, index) => (
+                                                        <div key={index} className="grid grid-cols-[1fr_auto] items-start gap-x-2 gap-y-1 text-base leading-snug">
+                                                            <span className="min-w-0 break-words">{item.name}</span>
+                                                            {item.quantity && (
+                                                                <span className="justify-self-end bg-white/20 px-1 rounded text-base whitespace-nowrap flex-shrink-0">
+                                                                    {item.quantity}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                    {location.items.length > 4 && (
+                                                        <p className="text-base text-white/70 italic">
+                                                            +{location.items.length - 4} more
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <p className="text-base text-white/70 italic">No items</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </Bubble>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-8">
+                    <Bubble variant="default" className="inline-block">
+                        <p className="text-gray-600 text-lg">No locations found for this room.</p>
+                    </Bubble>
+                </div>
+            )}
         </div>
-    </div>;
+    );
 }

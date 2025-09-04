@@ -60,8 +60,8 @@ const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
     
     return (
       <div className="relative group">
-        {/* Floating shadow */}
-        <div className="absolute inset-0 -z-10 bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 scale-x-110 origin-bottom group-hover:translate-y-3 group-hover:scale-x-115 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-300 ease-out" />
+        {/* Grounded shadow directly under bubble (tighter area) */}
+        <div className="absolute -z-10 left-1/2 bottom-3 h-4 w-[70%] -translate-x-1/2 rounded-full bg-shadow/60 blur-md opacity-80 transition-all duration-300 ease-out group-hover:bottom-2 group-hover:blur-lg group-hover:opacity-90" />
         
         {/* Main bubble container */}
         <div
