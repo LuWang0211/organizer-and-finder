@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/ui/components/tabs";
 import { Bubble } from "@/ui/components/bubble";
 import { Icon } from "@/ui/components/icon";
+import LoadingCard from "@/ui/components/loading-card";
+import Tooltip from "@/ui/components/tooltip";
 import { Smile, Heart, Star, Home, Settings, User, Bell, Mail } from "lucide-react";
 
 export default function UIStyleShowcase() {
@@ -253,6 +255,51 @@ export default function UIStyleShowcase() {
             </Card>
           </TabsContent>
         </Tabs>
+      </section>
+
+      {/* LOADING CARD */}
+      <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
+        <h2 className="text-2xl font-bold">Loading Card</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start">
+          <div className="h-28 w-full">
+            <LoadingCard />
+          </div>
+          <div className="h-28 w-full">
+            <LoadingCard label="Fetching items…" />
+          </div>
+          <div className="h-28 w-full">
+            <LoadingCard label="Please wait" />
+          </div>
+        </div>
+      </section>
+
+      {/* TOOLTIP */}
+      <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
+        <h2 className="text-2xl font-bold">Tooltip</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start justify-items-center">
+          <Tooltip 
+            arrow 
+            arrowClassName="bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]"
+            content={<Bubble variant="primary" size="sm"><p className="text-white">Bottom tooltip content</p></Bubble>}>
+            <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (bottom)</Bubble>
+          </Tooltip>
+
+          <Tooltip 
+            position="top"
+            arrow
+            arrowClassName="bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]"
+            content={<Bubble variant="primary" size="sm"><p className="text-white">Top tooltip content</p></Bubble>}>
+            <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (top)</Bubble>
+          </Tooltip>
+
+          <Tooltip 
+            position="right"
+            arrow
+            arrowClassName="bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]"
+            content={<Bubble variant="primary" size="sm"><p className="text-white">Right tooltip content</p></Bubble>}>
+            <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (right)</Bubble>
+          </Tooltip>
+        </div>
       </section>
     </main>
   );
