@@ -1,6 +1,6 @@
 import React from "react";
 import { fetchItemsByLocation } from "@/services/itemService";
-import ItemsList from "./Items";
+import ItemsList from "./ItemsList";
 
 type LocationProps = {
   locationId: string;
