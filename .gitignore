@@ -59,6 +59,8 @@ design/claude/*
 design/codex/*
 AGENTS.md
 
+AGENTS.md
+
 public/assets
 scripts/symbollink.js
 .vscode/**/*
