@@ -1,6 +1,6 @@
 "use client";
 import FloorplanViewer from "./FloorplanViewer";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import { cn } from "@/utils/tailwind";
 import { HouseDef, RoomDef } from "./common";
 import { Icon } from '@iconify-icon/react';
@@ -8,6 +8,17 @@ import menuFoldLeft from '@iconify-icons/line-md/menu-fold-left';
 import menuUnFoldRight from '@iconify-icons/line-md/menu-unfold-right';
 import { usePathname } from "next/navigation";
 
+
+const stopAll = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Best-effort: stop native propagation so canvas listeners don't receive it
+    // @ts-ignore
+    if (e.nativeEvent?.stopImmediatePropagation) {
+        // @ts-ignore
+        e.nativeEvent.stopImmediatePropagation();
+    }
+};
 interface LayoutClientProps {
     houseDef: HouseDef;
     roomDefs: RoomDef[];
@@ -25,6 +36,8 @@ export default function Layout( { houseDef, roomDefs, children }: LayoutClientPr
     useEffect(() => {
         setIsPanelOpen(shouldShowPanel);
     }, [shouldShowPanel]);
+
+    
 
     return <div className="w-full h-lvh relative overflow-hidden">
         <Suspense>
@@ -46,16 +59,23 @@ export default function Layout( { houseDef, roomDefs, children }: LayoutClientPr
                 </div>
             )}
             
-            <Icon 
-                icon={isPanelOpen ? menuUnFoldRight : menuFoldLeft} 
-                width="2rem" 
-                height="2rem" 
-                className={cn("text-red-100 absolute top-2 cursor-pointer shadow-lg z-10 pointer-events-auto", {
-                    "left-[-3em]": isPanelOpen,
-                    "right-5": !isPanelOpen
-                })}
-                onClick={() => setIsPanelOpen(!isPanelOpen)} 
-            />
+            <div
+                className={cn("text-red-100 absolute top-2 z-10 pointer-events-auto p-4", {
+                "left-[-3em]": isPanelOpen,
+                "right-5": !isPanelOpen
+            })}
+                onPointerDownCapture={stopAll}
+                onPointerUpCapture={stopAll}
+            >
+                <Icon 
+                    icon={isPanelOpen ? menuUnFoldRight : menuFoldLeft} 
+                    className={"cursor-pointer shadow-lg w-8 h-8"}
+                    width={'2em'}
+                    height={'2em'}
+                    onClick={(e) => { stopAll(e); setIsPanelOpen(!isPanelOpen); }}
+                   
+                />
+            </div>
         </div>
     </div>;
 }
