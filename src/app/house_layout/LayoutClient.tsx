@@ -6,7 +6,7 @@ import { HouseDef, RoomDef } from "./common";
 import { Icon } from '@iconify-icon/react';
 import menuFoldLeft from '@iconify-icons/line-md/menu-fold-left';
 import menuUnFoldRight from '@iconify-icons/line-md/menu-unfold-right';
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 const stopAll = (e: React.SyntheticEvent) => {
@@ -27,6 +27,7 @@ interface LayoutClientProps {
 
 export default function Layout( { houseDef, roomDefs, children }: LayoutClientProps) {
     const pathname = usePathname();
+    const router = useRouter();
     
     // Automatically open panel when navigating to child routes
     const shouldShowPanel = pathname !== '/house_layout';
@@ -36,7 +37,6 @@ export default function Layout( { houseDef, roomDefs, children }: LayoutClientPr
     useEffect(() => {
         setIsPanelOpen(shouldShowPanel);
     }, [shouldShowPanel]);
-
     
 
     return <div className="w-full h-lvh relative overflow-hidden">
@@ -45,7 +45,6 @@ export default function Layout( { houseDef, roomDefs, children }: LayoutClientPr
                 houseDef={houseDef}
                 roomDefs={roomDefs}
                 isPanelOpen={isPanelOpen}
-                onPanelVisibilityChange={setIsPanelOpen}
             />
         </Suspense>
         
@@ -72,7 +71,15 @@ export default function Layout( { houseDef, roomDefs, children }: LayoutClientPr
                     className={"cursor-pointer shadow-lg w-8 h-8"}
                     width={'2em'}
                     height={'2em'}
-                    onClick={(e) => { stopAll(e); setIsPanelOpen(!isPanelOpen); }}
+                    onClick={(e) => {
+                        stopAll(e);
+                        // Folded state should only be entered via room click (route change).
+                        // When closing the panel, navigate back to /house_layout without full refresh.
+                        if (isPanelOpen) {
+                            router.replace('/house_layout');
+                        }
+                        // If panel is closed, do nothing here; opening occurs when a room is clicked.
+                    }}
                    
                 />
             </div>

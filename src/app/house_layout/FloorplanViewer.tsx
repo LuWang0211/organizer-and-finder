@@ -7,7 +7,6 @@ interface FloorPlanViewerProps {
     houseDef: HouseDef;
     isPanelOpen: boolean;
     roomDefs: RoomDef[];
-    onPanelVisibilityChange: (open: boolean) => void;
     className?: string;
 }
 
