@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { Game } from "phaser";
 import { useMeasure, useLatest } from "react-use";
 import { usePathname, useRouter } from "next/navigation";
-import { HouseDef, RoomDef } from "./common";
+import { HouseDef, RoomDef, ViewerMode } from "./common";
 import { FloorplanViewerScene } from "./FloorplanViewerScene";
 
 interface FloorPlanViewerGameProps {
@@ -82,17 +82,12 @@ export default function FloorplanViewerGame({
                 floorplanGame.current.destroy(true);
                 floorplanGame.current = undefined;
                 gameCreated.current = false;
-                initialSize.current = null;
             }
         };
     }, []);
 
     // Track if game has been created to prevent recreation
     const gameCreated = useRef(false);
-    
-    // Store initial container size to avoid recreation on minor changes
-    const initialSize = useRef<{width: number, height: number} | null>(null);
-
     // Initialize Phaser game: ensure-on-render guard
     // Rationale: Next.js Fast Refresh may run effect cleanup (destroying the game)
     // without remounting this component or changing deps. Running this effect after
@@ -105,8 +100,6 @@ export default function FloorplanViewerGame({
             containerHeight > 0 &&
             !gameCreated.current
         ) {
-            initialSize.current = { width: containerWidth, height: containerHeight };
-
             floorplanGame.current = createGame(
                 containerWidth,
                 containerHeight,
@@ -115,10 +108,11 @@ export default function FloorplanViewerGame({
 
             gameCreated.current = true;
 
-            // Wait for the scene to be ready, then start it with initial data
+            // Wait for the scene to be ready, then start it with initial data and mode
             floorplanGame.current.events.once('ready', () => {
                 const sceneManager = floorplanGame.current?.scene;
-                sceneManager?.start('FloorplanViewerScene', { houseDef, roomDefs });
+                const mode: ViewerMode = isPanelOpen ? ViewerMode.Folded : ViewerMode.Fullscreen;
+                sceneManager?.start('FloorplanViewerScene', { houseDef, roomDefs, mode });
             });
 
             // Listen for room click events from the Phaser scene and navigate
@@ -138,6 +132,13 @@ export default function FloorplanViewerGame({
             floorplanGame.current.scale.resize(containerWidth, containerHeight);
         }
     }, [containerWidth, containerHeight]);
+
+    // Notify scene to pin/center on mode changes only (scene handles resize itself)
+    useEffect(() => {
+        if (!floorplanGame.current) return;
+        const mode: ViewerMode = isPanelOpen ? ViewerMode.Folded : ViewerMode.Fullscreen;
+        floorplanGame.current?.events.emit('pin', mode, undefined);
+    }, [isPanelOpen]);
 
     // Handle route-based room navigation
     useEffect(() => {

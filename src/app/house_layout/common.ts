@@ -9,3 +9,8 @@ export interface HouseDef {
 }
 
 export type RoomDef = RoomMetadataType & Pick<RoomPrismaType, 'id' | 'name'>
+
+export enum ViewerMode {
+    Fullscreen = 'fullscreen',
+    Folded = 'folded',
+}
