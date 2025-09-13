@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useMemo } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { Game } from "phaser";
 import { useMeasure, useLatest } from "react-use";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,6 +13,32 @@ interface FloorPlanViewerGameProps {
     roomDefs: RoomDef[];
     onPanelVisibilityChange: (open: boolean) => void;
     className?: string;
+}
+
+function createGame(containerWidth: number, containerHeight: number, parentElement: HTMLElement) {
+    return new Game({
+        type: Phaser.AUTO,
+        width: containerWidth,
+        height: containerHeight,
+        transparent: true,
+        parent: parentElement,
+        scene: [FloorplanViewerScene],
+        scale: {
+            mode: Phaser.Scale.RESIZE,
+        },
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { x: 0, y: 0 },
+                debug: false
+            }
+        },
+        plugins: {
+            global: [],
+            scene: []
+        }
+    });
+
 }
 
 export default function FloorplanViewerGame({
@@ -67,41 +93,32 @@ export default function FloorplanViewerGame({
     // Store initial container size to avoid recreation on minor changes
     const initialSize = useRef<{width: number, height: number} | null>(null);
 
-    // Initialize Phaser game - only once when container is ready
+    // Initialize Phaser game: ensure-on-render guard
+    // Rationale: Next.js Fast Refresh may run effect cleanup (destroying the game)
+    // without remounting this component or changing deps. Running this effect after
+    // every render allows us to recreate the game when it's missing.
     useLayoutEffect(() => {
-        if (containerWidth > 0 && containerHeight > 0 && floorplanContainer.current && !gameCreated.current) {
-            
+        if (
+            !floorplanGame.current &&
+            floorplanContainer.current &&
+            containerWidth > 0 &&
+            containerHeight > 0 &&
+            !gameCreated.current
+        ) {
             initialSize.current = { width: containerWidth, height: containerHeight };
-            
-            floorplanGame.current = new Game({
-                type: Phaser.AUTO,
-                width: containerWidth,
-                height: containerHeight,
-                transparent: true,
-                parent: floorplanContainer.current,
-                scene: [FloorplanViewerScene],
-                scale: {
-                    mode: Phaser.Scale.RESIZE,
-                },
-                physics: {
-                    default: 'arcade',
-                    arcade: {
-                        gravity: { x: 0, y: 0 },
-                        debug: false
-                    }
-                },
-                plugins: {
-                    global: [],
-                    scene: []
-                }
-            });
+
+            floorplanGame.current = createGame(
+                containerWidth,
+                containerHeight,
+                floorplanContainer.current!
+            );
 
             gameCreated.current = true;
 
             // Wait for the scene to be ready, then start it with initial data
             floorplanGame.current.events.once('ready', () => {
-                const sceneManager = floorplanGame.current!.scene;
-                sceneManager.start('FloorplanViewerScene', { houseDef, roomDefs });
+                const sceneManager = floorplanGame.current?.scene;
+                sceneManager?.start('FloorplanViewerScene', { houseDef, roomDefs });
             });
 
             // Listen for room click events from the Phaser scene and navigate
@@ -113,7 +130,7 @@ export default function FloorplanViewerGame({
         return () => {
             // Cleanup handled in component unmount effect
         };
-    }, [containerWidth, containerHeight]); // Need dimensions to create properly
+    });
 
     // Handle container size changes separately - just resize, don't recreate
     useLayoutEffect(() => {
