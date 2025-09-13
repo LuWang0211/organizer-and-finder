@@ -5,7 +5,7 @@ import { cn } from "@/utils/tailwind"
 
 const cardVariants = cva(
   [
-    "rounded-3xl border-4 border-border text-text-main overflow-hidden transition-all duration-200",
+    "rounded-3xl border-4 border-border text-text-main overflow-hidden transition-all duration-200 relative z-10",
     "hover:scale-[1.02]"
   ],
   {
@@ -48,7 +48,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       />
       {/* Floating shadow */}
-      <div className="absolute inset-0 -z-10 bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 scale-x-110 origin-bottom group-hover:translate-y-3 group-hover:scale-x-115 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-200 ease-out" />
+      <div className="absolute inset-y-0 -inset-x-2 z-[1] bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 origin-bottom group-hover:translate-y-3 group-hover:-inset-x-4 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-200 ease-out" />
     </div>
   )
 )

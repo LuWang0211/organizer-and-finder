@@ -19,7 +19,7 @@ export default async function LocationLayout(
         </Card>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 w-full overflow-auto">
         {children}
       </div>
     </div>

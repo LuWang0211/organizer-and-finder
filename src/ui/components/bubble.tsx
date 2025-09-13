@@ -7,7 +7,7 @@ const bubbleVariants = cva(
   [
     "relative rounded-3xl overflow-hidden transition-all duration-300",
     "hover:scale-[1.02]",
-    "backdrop-blur-xs"
+    "backdrop-blur-xs z-10"
   ],
   {
     variants: {
@@ -61,7 +61,7 @@ const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
     return (
       <div className="relative group">
         {/* Grounded shadow directly under bubble (tighter area) */}
-        <div className="absolute -z-10 left-1/2 bottom-3 h-4 w-[70%] -translate-x-1/2 rounded-full bg-shadow/60 blur-md opacity-80 transition-all duration-300 ease-out group-hover:bottom-2 group-hover:blur-lg group-hover:opacity-90" />
+        <div className="absolute z-[1] left-1/2 bottom-3 h-4 w-[70%] -translate-x-1/2 rounded-full bg-shadow/60 blur-md opacity-80 transition-all duration-300 ease-out group-hover:bottom-2 group-hover:blur-lg group-hover:opacity-90" />
         
         {/* Main bubble container */}
         <div
@@ -119,7 +119,7 @@ const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
           />
           
           {/* Content with proper text styling for glass effect */}
-          <div className="relative z-10 text-shadow">
+          <div className="relative z-[11] text-shadow">
             {children}
           </div>
         </div>

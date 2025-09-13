@@ -44,13 +44,13 @@ export default async function RoomLayout(props: PropsWithChildren<{ params: Prom
       </div>
       <div className="flex-1 flex flex-col">
         <LocationSelectionContextProvider>
-          <div className="h-1/2 overflow-auto">
+          <div className="h-1/2 overflow-x-hidden overflow-y-auto">
             <Suspense fallback={<LoadingCard label="Loading locations…" />}>
               <LocationsPanel roomId={roomId} />
             </Suspense>
           </div>
         </LocationSelectionContextProvider>
-        <div className="h-1/2 overflow-auto">
+        <div className="h-1/2 overflow-visible">
           {children}
         </div>
       </div>
