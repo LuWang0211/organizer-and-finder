@@ -1,3 +1,6 @@
+import { RoomMetadataType } from "@/services/roomService";
+import { room as RoomPrismaType} from "@prisma/client"
+
 export interface HouseDef {
     name: string;
     floorplanPicture: string,
@@ -5,11 +8,4 @@ export interface HouseDef {
     height: number
 }
 
-export interface RoomDef {
-    id: string;
-    name: string;
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-}
+export type RoomDef = RoomMetadataType & Pick<RoomPrismaType, 'id' | 'name'>
