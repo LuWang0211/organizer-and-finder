@@ -17,11 +17,14 @@ export class FloorplanViewerScene extends Phaser.Scene {
         super("FloorplanViewerScene");
     }
 
-    init(data?: { houseDef: HouseDef, roomDefs: RoomDef[], mode: ViewerMode }) {
+    private initialSelectedRoomId?: string;
+
+    init(data?: { houseDef: HouseDef, roomDefs: RoomDef[], mode: ViewerMode, selectedRoomId?: string }) {
         if (data) {
             this.houseDef = data.houseDef;
             this.roomDefs = data.roomDefs || [];
             this.currentMode = data.mode;
+            this.initialSelectedRoomId = data.selectedRoomId;
         }
         
     }
@@ -42,8 +45,8 @@ export class FloorplanViewerScene extends Phaser.Scene {
         this.floorplanImage.setOrigin(0.5, 0.5);
 
         // Initial fit using current mode (fullscreen or folded).
-        // Use animate: false so the very first frame is correctly centered.
-        this.resetView(this.currentMode, { animate: false });
+        // If selectedRoomId was provided, zoom to that room immediately.
+        this.resetView(this.currentMode, { animate: false, roomId: this.initialSelectedRoomId });
 
         // Add camera controls
         this.setupCameraControls();
@@ -51,11 +54,13 @@ export class FloorplanViewerScene extends Phaser.Scene {
         // Draw rooms as polygons (gray fill/stroke)
         this.drawRooms();
 
-        // Listen for pin events from app
-        this.pinHandler = (mode: ViewerMode, _element?: unknown) => {
+        // Listen for pin events from app: pin(mode, element?)
+        // - If a room id is provided as element, zoom and center to that room
+        // - Otherwise, center the whole floorplan based on mode
+        this.pinHandler = (mode: ViewerMode, element?: unknown) => {
             if (!this.floorplanImage) return;
             this.currentMode = mode;
-            this.resetView(mode);
+            this.resetView(mode, { roomId: typeof element === 'string' ? element : undefined });
         };
         this.game.events.on('pin', this.pinHandler);
 
@@ -112,18 +117,19 @@ export class FloorplanViewerScene extends Phaser.Scene {
         });
     }
 
-    // Compute desired zoom and scroll to fit image in a given viewport box
-    private computeViewportZoom(params: { fitWidth: number; fitHeight: number; marginFactor?: number; }) {
-        if (!this.floorplanImage) return null;
-        const { fitWidth, fitHeight, marginFactor = 0.8 } = params;
-        const imgW = this.floorplanImage.width;
-        const imgH = this.floorplanImage.height;
-        const zoom = Math.min((fitWidth * marginFactor) / imgW, (fitHeight * marginFactor) / imgH);
-        return { zoom };
+    // Compute the zoom level to fit a content box (contentWidth x contentHeight)
+    // into a viewport box (fitWidth x fitHeight) with an optional margin factor.
+    private computeFitZoom(
+        fitWidth: number,
+        fitHeight: number,
+        contentWidth: number,
+        contentHeight: number,
+        marginFactor: number = 0.8
+    ): number {
+        return Math.min((fitWidth * marginFactor) / contentWidth, (fitHeight * marginFactor) / contentHeight);
     }
 
-    // Public: Center the floorplan based on the given mode.
-    // Screen-space model (no speculative algebra):
+    // Center the floorplan based on the given mode (or a specific room if provided).
     // 1) Treat camera width/height as viewport pixels (screen-space); zoom does not change these.
     // 2) To place world(0,0) at a desired screen point S=(x,y) with no scaling, the camera center should move to
     //    C = (cam.width/2 - x, cam.height/2 - y).
@@ -131,42 +137,58 @@ export class FloorplanViewerScene extends Phaser.Scene {
     //    C = ((cam.width/2 - x)/z, (cam.height/2 - y)/z).
     // 4) For mode → pick S: fullscreen S=(cam.width/2, cam.height/2); folded S=(cam.width/4, cam.height/2).
     // 5) Compute target zoom z from the fit (~80% of available width/height; folded uses width/2) and pan to C.
-    resetView(mode: ViewerMode = ViewerMode.Fullscreen, opts?: { animate?: boolean; duration?: number; ease?: string }) {
+    resetView(
+        mode: ViewerMode = ViewerMode.Fullscreen,
+        opts?: { animate?: boolean; duration?: number; ease?: string; roomId?: string }
+    ) {
         const cam = this.cameras.main;
         const gameW = this.scale.width;
         const gameH = this.scale.height;
         const fitWidth = (mode === ViewerMode.Folded) ? gameW / 2 : gameW;
         const fitHeight = gameH;
-        const fit = this.computeViewportZoom({ fitWidth, fitHeight });
-        if (!fit) return;
+        const room = opts?.roomId ? this.roomDefs.find(r => r.id === opts.roomId) : undefined;
 
         const animate = opts?.animate ?? true;
         const duration = opts?.duration ?? 300;
         const ease = opts?.ease ?? 'Sine.easeOut';
 
-        // Desired on-screen pixel for world (0,0): center (fullscreen) or left-half center (folded)
+        // Desired on-screen pixel S where the anchor should appear
         const targetScreenX = (mode === ViewerMode.Folded) ? gameW / 4 : gameW / 2;
         const targetScreenY = gameH / 2;
 
-        const targetZoom = fit.zoom;
-        // Why divide by zoom here (not multiply):
-        // - We compute a screen-space center shift Δs = (cam.width/2 - targetScreenX, cam.height/2 - targetScreenY).
-        // - Zoom is applied after pan, so Δscreen = Δcamera × zoom.
-        // - To get the camera-space shift, divide by zoom: Δcamera = Δs / zoom.
-        // - Thus the camera center to pan to is:
-        const worldCenterX = (cam.width / 2 - targetScreenX) / targetZoom;
-        const worldCenterY = (cam.height / 2 - targetScreenY) / targetZoom;
+        // Unified flow: compute anchor (room center or world origin) and target zoom
+        let anchorX = 0;
+        let anchorY = 0;
+        let targetZoom: number;
+        if (room) {
+            const { centerX, centerY, boxW, boxH } = this.getRoomBox(room);
+            // Anchor is the room center in world space (unscaled)
+            anchorX = centerX;
+            anchorY = centerY;
+            targetZoom = this.computeFitZoom(fitWidth, fitHeight, boxW, boxH, 0.8);
+        } else {
+            if (!this.floorplanImage) return;
+            targetZoom = this.computeFitZoom(fitWidth, fitHeight, this.floorplanImage.width, this.floorplanImage.height, 0.8);
+        }
+
+        // Camera-space shift from desired screen center (divide whole delta by zoom)
+        // Δscreen = (cam.width/2 - Sx, cam.height/2 - Sy)
+        // Δcamera = Δscreen / zoom (convert to the same space as anchor)
+        const dxCamera = (cam.width / 2 - targetScreenX) / targetZoom;
+        const dyCamera = (cam.height / 2 - targetScreenY) / targetZoom;
+        // Pan target is the world center used by pan/centerOn:
+        // C = anchor (world) + Δcamera (world). Do NOT scale anchor by zoom.
+        const panX = anchorX + dxCamera;
+        const panY = anchorY + dyCamera;
 
         if (animate) {
             cam.zoomTo(targetZoom, duration, ease, true);
-            cam.pan(worldCenterX, worldCenterY, duration, ease, true);
+            cam.pan(panX, panY, duration, ease, true);
         } else {
             cam.setZoom(targetZoom);
-            cam.centerOn(worldCenterX, worldCenterY);
+            cam.centerOn(panX, panY);
         }
     }
-
-    // (All debug overlay and crosshair helpers removed for production cleanliness)
 
     private drawRooms() {
         // Clear existing graphics if redrawing
@@ -198,7 +220,7 @@ export class FloorplanViewerScene extends Phaser.Scene {
             const poly = new Phaser.Geom.Polygon(phaserPoints);
             g.setInteractive(poly, Phaser.Geom.Polygon.Contains);
 
-            // Notify app for navigation on click
+            // Notify app for navigation; React will emit a pin event with the selected room
             g.on('pointerdown', () => {
                 this.game.events.emit('roomClicked', room.id);
             });
@@ -217,5 +239,39 @@ export class FloorplanViewerScene extends Phaser.Scene {
 
             this.roomGraphics[room.id] = g;
         }
+    }
+
+    private getRoomBox(room: RoomDef) {
+        // Prefer querying the Phaser Graphics bounds so we match the actual rendered shape
+        // (including any stroke width or transforms). Fallback to vertex AABB if needed.
+        const g = this.roomGraphics[room.id];
+        if (g) {
+            const b = Phaser.Display.Bounds.GetBounds(g) as Phaser.Geom.Rectangle;
+            // Phaser.Geom.Rectangle has x, y, width, height, centerX, centerY
+            const boxW = Math.max(1, b.width);
+            const boxH = Math.max(1, b.height);
+            if (isFinite(boxW) && isFinite(boxH) && boxW > 0 && boxH > 0) {
+                const centerX = b.centerX;
+                const centerY = b.centerY;
+                return { boxW, boxH, centerX, centerY };
+            }
+        }
+
+        // Fallback: compute AABB from room vertices
+        let minX = Number.POSITIVE_INFINITY;
+        let maxX = Number.NEGATIVE_INFINITY;
+        let minY = Number.POSITIVE_INFINITY;
+        let maxY = Number.NEGATIVE_INFINITY;
+        for (const v of room.vertices as any[]) {
+            if (v.x < minX) minX = v.x;
+            if (v.x > maxX) maxX = v.x;
+            if (v.y < minY) minY = v.y;
+            if (v.y > maxY) maxY = v.y;
+        }
+        const boxW = Math.max(1, maxX - minX);
+        const boxH = Math.max(1, maxY - minY);
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+        return { boxW, boxH, centerX, centerY };
     }
 }
