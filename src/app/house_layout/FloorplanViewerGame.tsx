@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useMemo, useState } from "react";
 import { Game } from "phaser";
-import { useMeasure, useLatest, useMount } from "react-use";
+import { useMeasure, useLatest } from "react-use";
 import { usePathname, useRouter } from "next/navigation";
 import { HouseDef, RoomDef, ViewerMode } from "./common";
 import { FloorplanViewerScene } from "./FloorplanViewerScene";
@@ -11,7 +11,6 @@ interface FloorPlanViewerGameProps {
     houseDef: HouseDef;
     isPanelOpen: boolean;
     roomDefs: RoomDef[];
-    onPanelVisibilityChange: (open: boolean) => void;
     className?: string;
 }
 
@@ -45,7 +44,7 @@ export default function FloorplanViewerGame({
     houseDef,
     isPanelOpen,
     roomDefs,
-    onPanelVisibilityChange
+    
 }: FloorPlanViewerGameProps) {
     
     const floorplanGame = useRef<Game>(undefined);
@@ -68,14 +67,10 @@ export default function FloorplanViewerGame({
         if (currentRoom !== roomId) {
             router.push(`/house_layout/${roomId}`);
         }
-        // Ensure details panel is visible (non-fullscreen)
-        if (!isPanelOpen) {
-            onPanelVisibilityChange(true);
-        }
         setSelectedRoomId(roomId);
         // Emit pin with folded mode and selected room
         floorplanGame.current?.events.emit('pin', 'folded', roomId);
-    }, [router, pathname, isPanelOpen, onPanelVisibilityChange]);
+    }, [router, pathname]);
 
     const handleRoomInteractionLatest = useLatest(handleRoomClick);
 
@@ -137,25 +132,26 @@ export default function FloorplanViewerGame({
         }
     }, [containerWidth, containerHeight]);
 
-    // Notify scene to pin/center on mode or selection changes (scene handles resize itself)
+    // Notify scene to pin/center on selection changes.
+    // Derive mode from whether a room is selected to avoid waiting for panel visibility.
     useEffect(() => {
         if (!floorplanGame.current) return;
-        const mode: ViewerMode = isPanelOpen ? ViewerMode.Folded : ViewerMode.Fullscreen;
+        const mode: ViewerMode = selectedRoomId ? ViewerMode.Folded : ViewerMode.Fullscreen;
         floorplanGame.current?.events.emit('pin', mode, selectedRoomId);
-    }, [isPanelOpen, selectedRoomId]);
+    }, [selectedRoomId]);
 
-    // Handle route-based room navigation: when the URL encodes a room id, select it
-    useMount(() => {
+    // Sync selection from the URL path whenever it changes
+    useEffect(() => {
         const parts = pathname.split("/");
-        if (parts.length > 2) {
-            const elementId = parts[2];
-            const rid = decodeURI(elementId);
-            setSelectedRoomId(rid);
-            // Ensure folded mode and emit pin for selected room
-            if (!isPanelOpen) onPanelVisibilityChange(true);
-            setTimeout(() => floorplanGame.current?.events.emit('pin', ViewerMode.Folded, rid), 0);
+        if (parts.length > 2 && parts[2]) {
+            const rid = decodeURI(parts[2]);
+            if (rid !== selectedRoomId) {
+                setSelectedRoomId(rid);
+            }
+        } else if (selectedRoomId !== undefined) {
+            setSelectedRoomId(undefined);
         }
-    });
+    }, [pathname]);
 
     return (
         <div className="relative w-full h-full overflow-hidden" ref={assignRef} />
