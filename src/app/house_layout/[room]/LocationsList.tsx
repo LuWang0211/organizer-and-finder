@@ -64,7 +64,7 @@ export default function LocationsList({ className, locations, roomId }: Location
 
   return (
     <div className={cn("rounded-2xl p-6", className)}>
-      <div className="flex flex-wrap gap-4 justify-start pointer-events-auto">
+      <div className="grid grid-cols-3 gap-4 pointer-events-auto">
         {locations.map((location) => (
           <Tooltip
             key={location.id}

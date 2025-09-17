@@ -42,7 +42,7 @@ export default function Tooltip({
       {children}
       <div
         className={cn(
-          "absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50",
+          "absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-500",
           positionClasses[position],
           contentClassName
         )}
