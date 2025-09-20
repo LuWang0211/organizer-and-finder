@@ -276,28 +276,65 @@ export default function UIStyleShowcase() {
       {/* TOOLTIP */}
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <h2 className="text-2xl font-bold">Tooltip</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start justify-items-center">
+        <h3 className="text-lg font-semibold text-white/80">Bubble Variant</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full items-start justify-items-center">
           <Tooltip 
-            arrow 
-            arrowClassName="bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]"
-            content={<Bubble variant="primary" size="sm"><p className="text-white">Bottom tooltip content</p></Bubble>}>
+            variant="bubble"
+            content={<p>Bottom tooltip content</p>}>
             <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (bottom)</Bubble>
           </Tooltip>
 
           <Tooltip 
             position="top"
-            arrow
-            arrowClassName="bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]"
-            content={<Bubble variant="primary" size="sm"><p className="text-white">Top tooltip content</p></Bubble>}>
+            variant="bubble"
+            content={<p>Top tooltip content</p>}>
             <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (top)</Bubble>
           </Tooltip>
 
           <Tooltip 
             position="right"
-            arrow
-            arrowClassName="bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]"
-            content={<Bubble variant="primary" size="sm"><p className="text-white">Right tooltip content</p></Bubble>}>
+            variant="bubble"
+            content={<p>Right tooltip content</p>}>
             <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (right)</Bubble>
+          </Tooltip>
+
+          <Tooltip 
+            position="left"
+            variant="bubble"
+            content={<p>Left tooltip content</p>}>
+            <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (Left)</Bubble>
+          </Tooltip>
+        </div>
+
+        <h3 className="text-lg font-semibold text-white/80 mt-6">Card Variant</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 w-full items-start justify-items-center">
+          <Tooltip 
+            variant="card"
+            content={"Bottom card tooltip"}
+            avoidCollisions={false}
+            >
+            <Bubble variant="default" size="sm" className="cursor-pointer">Hover me (bottom)</Bubble>
+          </Tooltip>
+
+          <Tooltip 
+            position="top"
+            variant="card"
+            content={"Top card tooltip"}>
+            <Bubble variant="default" size="sm" className="cursor-pointer">Hover me (top)</Bubble>
+          </Tooltip>
+
+          <Tooltip 
+            position="right"
+            variant="card"
+            content={"Right card tooltip"}>
+            <Bubble variant="default" size="sm" className="cursor-pointer">Hover me (right)</Bubble>
+          </Tooltip>
+
+          <Tooltip 
+            position="left"
+            variant="card"
+            content={"Left card tooltip"}>
+            <Bubble variant="default" size="sm" className="cursor-pointer">Hover me (left)</Bubble>
           </Tooltip>
         </div>
       </section>
