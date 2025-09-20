@@ -6,7 +6,7 @@ import { cn } from "@/utils/tailwind"
 const cardVariants = cva(
   [
     "rounded-3xl border-4 border-border text-text-main overflow-hidden transition-all duration-200 relative z-10",
-    "hover:scale-[1.02]"
+    "hover:scale-[1.02] card-content"
   ],
   {
     variants: {
@@ -26,6 +26,10 @@ const cardVariants = cva(
           "shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
           "hover:shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]"
         ]
+      },
+
+      innerShadow: {
+        none: "shadow-none hover:shadow-none"
       }
     },
     defaultVariants: {
@@ -36,19 +40,24 @@ const cardVariants = cva(
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+    VariantProps<typeof cardVariants> {
+  noInnerShadow?: boolean;
+}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, ...props }, ref) => (
-    <div className="relative group">
+  ({ className, variant, noInnerShadow , ...props }, ref) => (
+    <div className={"relative group"}>
       {/* Main Card */}
       <div
         ref={ref}
-        className={cn(cardVariants({ variant }), className)}
+        className={cn(
+          cardVariants({ variant, innerShadow: !!noInnerShadow ? 'none': undefined }),
+          className
+        )}
         {...props}
       />
       {/* Floating shadow */}
-      <div className="absolute inset-y-0 -inset-x-2 z-[1] bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 origin-bottom group-hover:translate-y-3 group-hover:-inset-x-4 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-200 ease-out" />
+      <div className="absolute inset-y-0 -inset-x-2 z-[1] bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 origin-bottom group-hover:translate-y-3 group-hover:-inset-x-4 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-200 ease-out pointer-events-none" />
     </div>
   )
 )
