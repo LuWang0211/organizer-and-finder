@@ -8,8 +8,7 @@ import AddLocationForm from './AddLocationForm'
 
 export default async function AddLocationPage({ searchParams }: { searchParams?: Promise<{ roomId?: string }> }) {
   const rooms = await fetchRoomsForCurrentUser()
-  const sp = await (searchParams ?? Promise.resolve({}))
-  const defaultRoomId = sp?.roomId
+  const defaultRoomId = searchParams ? (await searchParams)?.roomId : undefined
 
   async function addLocation(_prev: { ok: true } | { ok: false; error: string } | null, formData: FormData) {
     'use server'
@@ -52,3 +51,4 @@ export default async function AddLocationPage({ searchParams }: { searchParams?:
     </div>
   )
 }
+

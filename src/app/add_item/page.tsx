@@ -6,6 +6,8 @@ import { createItem } from '@/services/itemService'
 import { fetchAllLocationsForCurrentUser } from '@/services/locationService'
 import AddItemForm from './AddItemForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AddItemPage({ searchParams }: { searchParams?: Promise<{ locationId?: string | string[] }> }) {
   const locations = await fetchAllLocationsForCurrentUser()
   const sp = await (searchParams ?? Promise.resolve<{ locationId?: string | string[] }>({}))
@@ -58,3 +60,4 @@ export default async function AddItemPage({ searchParams }: { searchParams?: Pro
     </div>
   )
 }
+
