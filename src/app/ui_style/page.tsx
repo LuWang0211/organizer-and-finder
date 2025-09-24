@@ -7,6 +7,7 @@ import { Icon } from "@/ui/components/icon";
 import LoadingCard from "@/ui/components/loading-card";
 import Tooltip from "@/ui/components/tooltip";
 import { Smile, Heart, Star, Home, Settings, User, Bell, Mail } from "lucide-react";
+import DemoMenuSelect from "./DemoMenuSelect";
 
 export default function UIStyleShowcase() {
   return (
@@ -213,6 +214,20 @@ export default function UIStyleShowcase() {
             </Icon>
           </div>
         </div>
+
+        {/* Preset Keys sub-block */}
+        <div className="flex flex-col items-center gap-4 mt-4">
+          <h3 className="text-lg font-bold">Icons (Preset Keys)</h3>
+          <div className="flex gap-4 items-center justify-center flex-wrap">
+            <Icon variant="secondary" size="sm" iconKey="map-pin" />
+            <Icon variant="primary" size="sm" iconKey="bed-double" />
+            <Icon variant="orange" size="sm" iconKey="cooking-pot" />
+            <Icon variant="default" size="sm" iconKey="book" />
+          </div>
+          <p className="text-sm opacity-75 max-w-prose text-center">
+            Icons: pass Lucide components as children. Preset Keys: pass an iconKey (from icon-presets.ts) to resolve icons via a central registry; ideal when reading from DB.
+          </p>
+        </div>
       </section>
 
       {/* TABS */}
@@ -300,6 +315,12 @@ export default function UIStyleShowcase() {
             <Bubble variant="secondary" size="sm" className="cursor-pointer">Hover me (right)</Bubble>
           </Tooltip>
         </div>
+      </section>
+
+      {/* MENU SELECT (Dropdown demo) */}
+      <section className="flex flex-col items-center gap-6 w-full max-w-2xl">
+        <h2 className="text-2xl font-bold">Menu Select</h2>
+        <DemoMenuSelect />
       </section>
     </main>
   );

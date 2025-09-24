@@ -1,6 +1,6 @@
 import { getSession } from '@/auth';
 import prisma from '@/services/db';
-
+import type { IconKey } from '@/ui/icon-presets'
 
 export async function fetchItems(prismaClient = prisma) {
   try {
@@ -11,10 +11,36 @@ export async function fetchItems(prismaClient = prisma) {
   }
 }
 
-export async function createItem(name: string, prismaClient = prisma) {
+type PrismaLike = { item: { create: Function } }
+
+type CreateItemOptions = {
+  locationId?: string
+  icon?: IconKey
+  quantity?: number
+}
+
+export async function createItem(
+  name: string,
+  arg2?: CreateItemOptions | PrismaLike,
+  arg3?: PrismaLike
+) {
+  const looksLikePrisma = (v: any): v is PrismaLike => !!v && typeof v === 'object' && 'item' in v
+
+  const prismaClient = looksLikePrisma(arg2) ? arg2 : (arg3 ?? prisma)
+  const options: CreateItemOptions | undefined = looksLikePrisma(arg2) ? undefined : arg2
+
   try {
+    // Replace spaces with underscores in the name
+    const formattedName = name.replace(/\s+/g, '_');
+    
     const newItem = await prismaClient.item.create({
-      data: { name },
+      data: {
+        name: formattedName,
+        // Persist location if provided; icon is accepted for future use
+        locationid: options?.locationId ?? undefined,
+        quantity: typeof options?.quantity === 'number' ? options?.quantity : undefined,
+        iconKey: options?.icon ?? undefined,
+      },
     });
     return newItem;
   } catch (error) {
@@ -34,7 +60,7 @@ export async function fetchItemsByLocation(locationid: string, roomName?: string
     
     return await prismaInstance.item.findMany({
       where: { locationid: locationId, location: { room: { familyId: session?.dbUser.familyId! } } },
-      select: { id: true, name: true, quantity: true, inotherobject: true, otherobjectid: true },
+      select: { id: true, name: true, quantity: true, inotherobject: true, otherobjectid: true, iconKey: true },
     });
   } catch (error) {
     throw new Error('Error fetching items');

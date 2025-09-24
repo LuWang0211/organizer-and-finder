@@ -2,6 +2,8 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/utils/tailwind"
+import type { IconKey } from "@/ui/icon-presets"
+import { ICON_COMPONENTS } from "@/ui/icon-presets"
 
 const iconVariants = cva(
   [
@@ -76,19 +78,26 @@ export interface IconProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof iconVariants> {
   children?: React.ReactNode
+  iconKey?: IconKey
 }
 
 const Icon = React.forwardRef<HTMLDivElement, IconProps>(
-  ({ className, variant, size = "default", border, children, ...props }, ref) => {
+  ({ className, variant, size = "default", border, children, iconKey, ...props }, ref) => {
     const config = iconSizeConfig[size ?? "default"]
     
-    // Clone children and add size/stroke props if it's a React element
-    const iconChildren = React.isValidElement(children) 
-      ? React.cloneElement(children as React.ReactElement<any>, {
-          size: config.iconSize,
-          strokeWidth: config.strokeWidth
-        })
-      : children
+    // Resolve children from iconKey or clone given child to apply size
+    let resolvedChildren: React.ReactNode = children
+    if (!resolvedChildren && iconKey) {
+      const Comp = ICON_COMPONENTS[iconKey]
+      resolvedChildren = Comp ? (
+        <Comp size={config.iconSize} strokeWidth={config.strokeWidth} />
+      ) : null
+    } else if (React.isValidElement(resolvedChildren)) {
+      resolvedChildren = React.cloneElement(resolvedChildren as React.ReactElement<any>, {
+        size: config.iconSize,
+        strokeWidth: config.strokeWidth,
+      })
+    }
 
     return (
       <div className="relative group">
@@ -100,7 +109,7 @@ const Icon = React.forwardRef<HTMLDivElement, IconProps>(
           className={cn(iconVariants({ variant, size, border }), className)}
           {...props}
         >
-          {iconChildren}
+          {resolvedChildren}
         </div>
       </div>
     )
