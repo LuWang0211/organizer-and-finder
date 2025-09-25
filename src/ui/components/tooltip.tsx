@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { Ref } from "react";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { cn } from "@/utils/tailwind";
 import { Bubble } from "@/ui/components/bubble";
 import { Card } from "@/ui/components/card";
+import { HoverCardTriggerProps } from "@radix-ui/react-hover-card";
 
 type PositionOptions = "top" | "bottom" | "left" | "right";
 type TooltipVariant = "card" | "bubble";
@@ -47,6 +48,13 @@ type TooltipProps = {
   closeDelay?: number;
 } & Partial<Omit<React.ComponentProps<typeof HoverCard.Content>, 'content'>>;
 
+const TriggerWrapper = React.forwardRef<HTMLButtonElement, any>((props, forwardedRef) => {
+	return <button {...props} ref={forwardedRef} className="w-full" />
+});
+
+TriggerWrapper.displayName = 'TriggerWrapper';
+
+
 export default function Tooltip({
   children,
   content,
@@ -88,7 +96,9 @@ export default function Tooltip({
   return (
     <HoverCard.Root openDelay={openDelay} closeDelay={closeDelay}>
       <span className={cn("relative inline-block", className)}>
-        <HoverCard.Trigger asChild>{children}</HoverCard.Trigger>
+        <HoverCard.Trigger asChild>
+          <TriggerWrapper>{children}</TriggerWrapper>
+        </HoverCard.Trigger>
       </span>
 
       <HoverCard.Portal>
