@@ -19,6 +19,10 @@ import {
   Book,
   BookOpen,
   Laptop,
+  HousePlus,
+  FilePlus2,
+  Plus,
+  FileQuestionMark,
 } from 'lucide-react'
 
 export type IconKey =
@@ -43,29 +47,11 @@ export type IconKey =
   | 'book'
   | 'book-open'
   | 'laptop'
-
-// Default mixed options (legacy/generic)
-export const ICON_OPTIONS: { key: IconKey; label: string }[] = [
-  { key: 'box', label: 'Box' },
-  { key: 'package', label: 'Package' },
-  { key: 'archive', label: 'Archive' },
-  { key: 'map-pin', label: 'Map Pin' },
-  { key: 'folder', label: 'Folder' },
-  { key: 'tag', label: 'Tag' },
-  { key: 'bookmark', label: 'Bookmark' },
-  { key: 'star', label: 'Star' },
-  { key: 'bed-double', label: 'Bedroom' },
-  { key: 'cooking-pot', label: 'Kitchen' },
-  { key: 'sofa', label: 'Living Room' },
-  { key: 'shower-head', label: 'Bathroom' },
-  { key: 'washing-machine', label: 'Laundry' },
-  { key: 'shirt', label: 'Closet' },
-  { key: 'car', label: 'Garage' },
-  { key: 'utensils', label: 'Dining' },
-  { key: 'book', label: 'Book' },
-  { key: 'book-open', label: 'Books' },
-  { key: 'laptop', label: 'Laptop' },
-]
+  | 'file-question-mark'
+  // Action icons
+  | 'house-plus'
+  | 'file-plus-2'
+  | 'plus'
 
 // Focused gallery for Location selection
 export const LOCATION_ICON_OPTIONS: { key: IconKey; label: string }[] = [
@@ -94,8 +80,6 @@ export const ITEM_ICON_OPTIONS: { key: IconKey; label: string }[] = [
   { key: 'laptop', label: 'Laptop' },
 ]
 
-export type WithIcon<T = unknown> = T & { icon?: IconKey }
-
 export const ICON_COMPONENTS: Record<IconKey, LucideIcon> = {
   'box': Box,
   'package': Package,
@@ -118,4 +102,9 @@ export const ICON_COMPONENTS: Record<IconKey, LucideIcon> = {
   'book': Book,
   'book-open': BookOpen,
   'laptop': Laptop,
+  'file-question-mark': FileQuestionMark,
+  // Action icons
+  'house-plus': HousePlus,
+  'file-plus-2': FilePlus2,
+  'plus': Plus,
 }

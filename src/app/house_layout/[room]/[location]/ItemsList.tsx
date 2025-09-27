@@ -2,45 +2,34 @@ import { Bubble } from "@/ui/components/bubble";
 import { cn } from "@/utils/tailwind";
 import Link from 'next/link'
 import { Icon } from '@/ui/components/icon'
-import { Package } from 'lucide-react'
-import { getIconComponent } from '@/services/iconService'
-
 interface ItemsListProps {
     items?: { id: number; name: string; quantity: number | null; inotherobject: boolean | null; otherobjectid: number | null, iconKey?: string | null }[];
     className?: string;
-    locationName?: string;
     locationId?: string;
 }
 
-export default function ItemsList({ className, items = [], locationName = "", locationId }: ItemsListProps) {
+export default function ItemsList({ className, items = [], locationId }: ItemsListProps) {
   const hasItems = items.length > 0;
 
   if (!hasItems) {
     return (
       <div className={cn("pointer-events-auto", className)}>
-        <div className="text-center py-8 space-y-4">
-          <Bubble variant="default" className="inline-block">
-            <p className="text-gray-600 text-lg">No item found for this location.</p>
-          </Bubble>
-          <div className="flex justify-center">
+        <div className="grid grid-cols-3 gap-4 px-5 py-3">
             <Link className="pointer-events-auto" href={`/add_item${locationId ? `?locationId=${encodeURIComponent(locationId)}` : ''}`}>
               <Bubble
                 variant="default"
                 size="sm"
-                className="min-w-[220px] !bg-pink-400/20 !border-pink-300/50 cursor-pointer"
+                className="flex items-center justify-center !bg-orange-400/20 !border-orange-300/50 cursor-pointer"
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2">
-                    <Icon variant="default" size="tiny">
-                      <Package />
-                    </Icon>
-                    <h3 className="font-semibold text-gray-800 text-lg">Add Item</h3>
+                     <Icon variant="default" size="tiny" iconKey="file-plus-2" />
+                    <h3 className="font-semibold text-gray-800 text-lg">Create the first item</h3>
                   </div>
-                  <p className="text-base text-gray-600">Create the first item</p>
+                  <p className="text-base text-gray-600">No items found for this location.</p>
                 </div>
               </Bubble>
             </Link>
-          </div>
         </div>
       </div>
     );
@@ -50,7 +39,6 @@ export default function ItemsList({ className, items = [], locationName = "", lo
     <div className={cn("px-5 py-3", className)}>
       <div className="grid grid-cols-3 gap-4 pointer-events-auto">
         {items.map((item) => {
-          const ItemIcon = getIconComponent(item.iconKey as any) || Package
           return (
           <Bubble
             key={item.id}
@@ -61,9 +49,7 @@ export default function ItemsList({ className, items = [], locationName = "", lo
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <Icon variant="default" size="tiny">
-                    <ItemIcon />
-                  </Icon>
+                  <Icon variant="default" size="tiny" iconKey={item.iconKey as any || 'file-question-mark'} />
                   <h3 className="font-semibold text-gray-800 text-lg mb-1 truncate">{item.name}</h3>
                 </div>
                 <div className="text-base text-gray-600 flex items-center gap-2">
@@ -90,13 +76,11 @@ export default function ItemsList({ className, items = [], locationName = "", lo
           <Bubble
             variant="default"
             size="sm"
-            className="min-w-[220px] !bg-pink-400/20 !border-pink-300/50 cursor-pointer"
+            className="min-w-[220px] !bg-orange-400/20 !border-orange-300/50 cursor-pointer"
           >
             <div className="text-center">
               <div className="flex items-center justify-center gap-2">
-                <Icon variant="default" size="tiny">
-                  <Package />
-                </Icon>
+                <Icon variant="default" size="tiny" iconKey="file-plus-2" />
                 <h3 className="font-semibold text-gray-800 text-lg">Add Item</h3>
               </div>
               <p className="text-base text-gray-600">Create a new item</p>

@@ -4,8 +4,6 @@ import Tooltip from "@/ui/components/tooltip";
 import LinkWithReport from "./LinkWithReport";
 import Link from 'next/link'
 import { Icon } from '@/ui/components/icon'
-import { MapPin } from 'lucide-react'
-import { getIconComponent } from '@/services/iconService'
 
 type LocationItem = {
   id: number;
@@ -61,39 +59,31 @@ export default function LocationsList({ className, locations, roomId }: Location
   if (!hasLocations) {
     return (
       <div className={cn("pointer-events-auto", className)}>
-        <div className="text-center py-8 space-y-4">
-          <Bubble variant="default" className="inline-block">
-            <p className="text-gray-600 text-lg">No locations found for this room.</p>
-          </Bubble>
-          <div className="flex justify-center">
-              <Link className="pointer-events-auto" href={`/add_location?roomId=${encodeURIComponent(roomId)}`}>
-                <Bubble
-                  variant="secondary"
-                  size="sm"
-                  className="cursor-pointer min-w-[150px] hover:scale-105 transition-transform duration-200"
-                >
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <Icon variant="secondary" size="tiny">
-                        <MapPin />
-                      </Icon>
-                      <h3 className="font-semibold text-gray-800 text-lg mb-1">Add Location</h3>
-                    </div>
-                    <p className="text-base text-gray-600">Create the first location</p>
+        <div className="grid grid-cols-3 gap-4 px-5 py-3">
+            <Link className="pointer-events-auto" href={`/add_location?roomId=${encodeURIComponent(roomId)}`}>
+              <Bubble
+                variant="default"
+                size="sm"
+                className="flex items-center justify-center cursor-pointer !bg-orange-400/20 !border-orange-300/50 "
+              >
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <Icon variant="secondary" size="tiny" iconKey="plus" />
+                    <h3 className="font-semibold text-gray-800 text-lg">Create the first Location</h3>
                   </div>
-                </Bubble>
-              </Link>
-          </div>
+                  <p className="text-base text-gray-600">No locations found in this room.</p>
+                </div>
+              </Bubble>
+            </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={cn("rounded-2xl p-6", className)}>
+    <div className={cn("px-5 py-3", className)}>
       <div className="grid grid-cols-3 gap-4 pointer-events-auto">
         {locations.map((location) => {
-          const LocIcon = getIconComponent(location.iconKey as any) || MapPin
           return (
           <Tooltip
             key={location.id}
@@ -129,9 +119,7 @@ export default function LocationsList({ className, locations, roomId }: Location
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2">
-                    <Icon variant="secondary" size="tiny">
-                      <LocIcon />
-                    </Icon>
+                    <Icon variant="secondary" size="tiny" iconKey={location.iconKey as any || 'map-pin'} />
                     <h3 className="font-semibold text-gray-800 text-lg mb-1">{location.name}</h3>
                   </div>
                   <p className="text-base text-gray-600">{location.items?.length || 0} items</p>
@@ -143,17 +131,15 @@ export default function LocationsList({ className, locations, roomId }: Location
 
         {/* Add Location link as the last grid item */}
         <div className="relative inline-block group">
-          <Link className="py-2 px-4 text-gray-900 wrap-anywhere min-w-[150px]" href={`/add_location?roomId=${encodeURIComponent(roomId)}`}>
+          <Link className="py-3 px-5 text-gray-900 wrap-anywhere min-w-[150px]" href={`/add_location?roomId=${encodeURIComponent(roomId)}`}>
             <Bubble
               variant="secondary"
               size="sm"
-              className="cursor-pointer min-w-[150px] hover:scale-105 transition-transform duration-200"
+              className="cursor-pointer min-w-[150px] !bg-orange-400/20 !border-orange-300/50 "
             >
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2">
-                  <Icon variant="secondary" size="tiny">
-                    <MapPin />
-                  </Icon>
+                  <Icon variant="secondary" size="tiny" iconKey="plus" />
                   <h3 className="font-semibold text-gray-800 text-lg mb-1">Add Location</h3>
                 </div>
                 <p className="text-base text-gray-600">Create a new location</p>
