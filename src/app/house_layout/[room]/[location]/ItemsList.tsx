@@ -2,13 +2,15 @@ import { Bubble } from "@/ui/components/bubble";
 import { cn } from "@/utils/tailwind";
 import Link from 'next/link'
 import { Icon } from '@/ui/components/icon'
+import { ItemType } from "@/services/itemService";
 interface ItemsListProps {
-    items?: { id: number; name: string; quantity: number | null; inotherobject: boolean | null; otherobjectid: number | null, iconKey?: string | null }[];
+    items?: Array<ItemType>;
     className?: string;
     locationId?: string;
+    locationName?: string;
 }
 
-export default function ItemsList({ className, items = [], locationId }: ItemsListProps) {
+export default function ItemsList({ className, items = [], locationId, locationName }: ItemsListProps) {
   const hasItems = items.length > 0;
 
   if (!hasItems) {
@@ -49,7 +51,7 @@ export default function ItemsList({ className, items = [], locationId }: ItemsLi
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <Icon variant="default" size="tiny" iconKey={item.iconKey as any || 'file-question-mark'} />
+                  <Icon variant="default" size="tiny" iconKey={item.iconKey || 'file-question-mark'} />
                   <h3 className="font-semibold text-gray-800 text-lg mb-1 truncate">{item.name}</h3>
                 </div>
                 <div className="text-base text-gray-600 flex items-center gap-2">

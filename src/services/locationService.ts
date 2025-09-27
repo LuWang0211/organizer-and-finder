@@ -34,7 +34,14 @@ export async function fetchLocationsByRoom(roomId: string, prismaInstance = pris
       throw new Error('Locations not found');
     }
 
-    return locations;
+    const locationsTyped = (locations ?? []).map(({ iconKey, ...otherProps }) => 
+      ({
+        iconKey: iconKey as IconKey | null,
+        ...otherProps
+      })
+    );
+
+    return locationsTyped;
   } catch (error) {
     console.error('Error in fetchLocationsByRoom:', error);
     throw new Error('Error fetching locations');
@@ -102,3 +109,5 @@ export async function createLocation(
     throw new Error('Error creating location');
   }
 }
+
+export type LocationType = Awaited<ReturnType<typeof fetchLocationsByRoom>>[0];

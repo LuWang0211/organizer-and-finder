@@ -4,6 +4,7 @@ import Tooltip from "@/ui/components/tooltip";
 import LinkWithReport from "./LinkWithReport";
 import Link from 'next/link'
 import { Icon } from '@/ui/components/icon'
+import { LocationType } from "@/services/locationService";
 
 type LocationItem = {
   id: number;
@@ -36,21 +37,8 @@ function ItemsPreview({ items }: { items?: LocationItem[] }) {
 
 interface LocationsListProps {
     roomId: string;
-    locations: { 
-        id: string;
-        name: string;
-        iconKey?: string | null;
-        items: { 
-          id: number;
-          name: string;
-          quantity: number | null;
-          inotherobject: boolean | null;
-          otherobjectid: number | null;
-          iconKey?: string | null;
-        }[];
-      }[]; 
+    locations: Array<LocationType>;
     className?: string;
-    loading: boolean;
 }
 
 export default function LocationsList({ className, locations, roomId }: LocationsListProps) {
@@ -119,7 +107,7 @@ export default function LocationsList({ className, locations, roomId }: Location
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2">
-                    <Icon variant="secondary" size="tiny" iconKey={location.iconKey as any || 'map-pin'} />
+                    <Icon variant="secondary" size="tiny" iconKey={location.iconKey || 'map-pin'} />
                     <h3 className="font-semibold text-gray-800 text-lg mb-1">{location.name}</h3>
                   </div>
                   <p className="text-base text-gray-600">{location.items?.length || 0} items</p>

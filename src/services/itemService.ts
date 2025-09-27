@@ -58,11 +58,20 @@ export async function fetchItemsByLocation(locationid: string, roomName?: string
     // If roomName is provided, construct the location ID
     const locationId = roomName ? `${roomName}_${locationid}` : locationid;
     
-    return await prismaInstance.item.findMany({
+    const results = await prismaInstance.item.findMany({
       where: { locationid: locationId, location: { room: { familyId: session?.dbUser.familyId! } } },
       select: { id: true, name: true, quantity: true, inotherobject: true, otherobjectid: true, iconKey: true },
     });
+    const resultTyped = (results ?? []).map(({ iconKey, ...otherProps }) => 
+      ({
+        iconKey: iconKey as IconKey | null,
+        ...otherProps
+      })
+    );
+    return resultTyped;
   } catch (error) {
     throw new Error('Error fetching items');
   }
 }
+
+export type ItemType = Awaited<ReturnType<typeof fetchItemsByLocation>>[0];
