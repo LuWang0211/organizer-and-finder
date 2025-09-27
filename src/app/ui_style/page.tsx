@@ -260,16 +260,10 @@ export default function UIStyleShowcase() {
       {/* LOADING CARD */}
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <h2 className="text-2xl font-bold">Loading Card</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start">
-          <div className="h-28 w-full">
-            <LoadingCard />
-          </div>
-          <div className="h-28 w-full">
-            <LoadingCard label="Fetching items…" />
-          </div>
-          <div className="h-28 w-full">
-            <LoadingCard label="Please wait" />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-center ">
+          <LoadingCard />
+          <LoadingCard label="Fetching items…" />
+          <LoadingCard label="Please wait" />
         </div>
       </section>
 
