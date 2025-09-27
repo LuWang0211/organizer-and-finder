@@ -108,6 +108,14 @@ export class FloorplanViewerScene extends Phaser.Scene {
             this.isDragging = false;
         });
 
+        this.input.on('pointerupoutside', () => {
+            this.isDragging = false;
+        });
+
+        this.input.on(Phaser.Input.Events.GAME_OUT, () => {
+            this.isDragging = false;
+        });
+
         // Mouse wheel zoom
         this.input.on('wheel', (pointer: any, gameObjects: any[], deltaX: number, deltaY: number) => {
             const zoomFactor = deltaY > 0 ? 0.9 : 1.1;
