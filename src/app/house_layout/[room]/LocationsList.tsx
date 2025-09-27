@@ -39,9 +39,10 @@ interface LocationsListProps {
     roomId: string;
     locations: Array<LocationType>;
     className?: string;
+    loading: boolean;
 }
 
-export default function LocationsList({ className, locations, roomId }: LocationsListProps) {
+export default function LocationsList({ className, locations, roomId}: LocationsListProps) {
   const hasLocations = Boolean(locations && locations.length > 0);
 
   if (!hasLocations) {
