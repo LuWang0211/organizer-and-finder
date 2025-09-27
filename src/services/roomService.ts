@@ -52,3 +52,19 @@ export async function fetchRoomForFamily(roomId: string, prismaInstance = prisma
         throw new Error('Error fetching rooms For family');
     }
 }
+
+export async function fetchRoomsForCurrentUser(prismaInstance = prisma) : Promise<room[]> {
+    const session = await getSession();
+    if (!session) {
+        throw new Error('Unauthorized');
+    }
+    try {
+        const rooms = await prismaInstance.room.findMany({
+            where: { familyId: session.dbUser.familyId! },
+            orderBy: { name: 'asc' },
+        });
+        return rooms;
+    } catch (error) {
+        throw new Error('Error fetching rooms for current user');
+    }
+}

@@ -60,6 +60,7 @@ model location {
   room   room      @relation(fields: [roomId], references: [id])
   familyId Int     @default(1)
   family  family?  @relation(fields: [familyId], references: [id])
+  iconKey String?  @db.VarChar(64)
 }
 
 model item {
@@ -70,4 +71,5 @@ model item {
   inotherobject Boolean?  @default(false)
   otherobjectid Int?
   location      location? @relation(fields: [locationid], references: [id], onUpdate: Cascade)
+  iconKey       String?   @db.VarChar(64)
 }
