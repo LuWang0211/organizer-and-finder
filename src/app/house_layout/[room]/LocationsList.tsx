@@ -77,27 +77,21 @@ export default function LocationsList({ className, locations, roomId}: Locations
           <Tooltip
             key={location.id}
             position="bottom"
-            arrow
-            arrowClassName="bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]"
+            variant="bubble"
             content={
-              <Bubble
-                variant="primary"
-                size="sm"
-                className="inline-block w-auto min-w-[260px] max-w-[640px] whitespace-normal break-words"
-              >
-                <div className="text-white flex">
-                  {/* Left side - Location info */}
-                  <div className="w-1/2 pr-2 min-w-0">
-                    <p className="text-base text-white/90 break-words leading-snug">ID: {location.id}</p>
-                    <p className="text-base text-white/90 break-words leading-snug">Total: {location.items?.length || 0} items</p>
-                  </div>
-                  {/* Right side - Items list */}
-                  <div className="w-1/2 pl-2 border-l border-white/20 min-w-0">
-                    <p className="font-medium text-base mb-1">Items:</p>
-                    <ItemsPreview items={location.items as LocationItem[] | undefined} />
-                  </div>
+              <div className="flex w-full min-w-[260px] max-w-[640px] whitespace-normal break-words">
+                {/* Left side - Location info */}
+                <div className="w-1/2 pr-2 min-w-0">
+                  <h4 className="font-bold text-lg mb-1 break-words leading-snug">{location.name}</h4>
+                  <p className="text-base text-white/90 break-words leading-snug">ID: {location.id}</p>
+                  <p className="text-base text-white/90 break-words leading-snug">Total: {location.items?.length || 0} items</p>
                 </div>
-              </Bubble>
+                {/* Right side - Items list */}
+                <div className="w-1/2 pl-2 border-l border-white/20 min-w-0">
+                  <p className="font-medium text-base mb-1">Items:</p>
+                  <ItemsPreview items={location.items as LocationItem[] | undefined} />
+                </div>
+              </div>
             }
           >
             <LinkWithReport roomId={roomId} locationId={location.id} locationName={location.name}>
