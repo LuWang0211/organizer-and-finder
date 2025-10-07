@@ -20,6 +20,7 @@ export async function fetchRoomsForHouse(houseId: number) {
     try {
         const rooms = await prisma.room.findMany({
             where: { houseId },
+            orderBy: { name: 'asc' },
         });
 
         return rooms;
@@ -50,21 +51,5 @@ export async function fetchRoomForFamily(roomId: string, prismaInstance = prisma
         return rooms[0] || null;
     } catch (error) {
         throw new Error('Error fetching rooms For family');
-    }
-}
-
-export async function fetchRoomsForCurrentUser(prismaInstance = prisma) : Promise<room[]> {
-    const session = await getSession();
-    if (!session) {
-        throw new Error('Unauthorized');
-    }
-    try {
-        const rooms = await prismaInstance.room.findMany({
-            where: { familyId: session.dbUser.familyId! },
-            orderBy: { name: 'asc' },
-        });
-        return rooms;
-    } catch (error) {
-        throw new Error('Error fetching rooms for current user');
     }
 }

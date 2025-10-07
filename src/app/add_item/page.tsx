@@ -1,41 +1,26 @@
-import { revalidatePath } from 'next/cache'
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card'
 import { Icon } from '@/ui/components/icon'
 import { Package } from 'lucide-react'
-import { createItem } from '@/services/itemService'
-import { fetchAllLocationsForCurrentUser } from '@/services/locationService'
+import { fetchLocationsForHouse } from '@/services/locationService'
+import { fetchHouseForFamily } from '@/services/roomService'
+import { getSession } from '@/auth'
 import AddItemForm from './AddItemForm'
+import { addItem } from './actions'
+import AuthProtectedComponent from '@/AuthProtectedComponent'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AddItemPage({ searchParams }: { searchParams?: Promise<{ locationId?: string | string[] }> }) {
-  const locations = await fetchAllLocationsForCurrentUser()
+async function DataLoader({ searchParams }: { searchParams?: Promise<{ locationId?: string | string[] }> }) {
+  const session = await getSession()
+  if (!session) return null
+
+  const house = await fetchHouseForFamily(session.dbUser.familyId!)
+  if (!house) throw new Error('No house found for family')
+
+  const locations = await fetchLocationsForHouse(house.id)
   const sp = await (searchParams ?? Promise.resolve<{ locationId?: string | string[] }>({}))
   const raw = sp.locationId
   const defaultLocationId = Array.isArray(raw) ? raw[0] : raw
-
-  async function addItem(_prev: { ok: true } | { ok: false; error: string } | null, formData: FormData) {
-    'use server'
-    const name = formData.get('name')?.toString().trim()
-    const locationId = formData.get('locationId')?.toString().trim()
-    const icon = formData.get('icon')?.toString().trim()
-    const qtyRaw = formData.get('quantity')?.toString() ?? formData.get('__qty_fallback')?.toString()
-    let quantity = parseInt(qtyRaw || '1', 10)
-    if (!Number.isFinite(quantity) || quantity <= 0) quantity = 1
-
-    if (!name) {
-      return { ok: false as const, error: 'Name is required' }
-    }
-
-    try {
-      await createItem(name, { locationId: locationId || undefined, icon: (icon as any) || undefined, quantity })
-      revalidatePath('/')
-      return { ok: true as const }
-    } catch (e: any) {
-      const reason = (e?.message as string) || 'Error creating item'
-      return { ok: false as const, error: reason }
-    }
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
@@ -58,6 +43,14 @@ export default async function AddItemPage({ searchParams }: { searchParams?: Pro
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function AddItemPage({ searchParams }: { searchParams?: Promise<{ locationId?: string | string[] }> }) {
+  return (
+    <AuthProtectedComponent>
+      <DataLoader searchParams={searchParams} />
+    </AuthProtectedComponent>
   )
 }
 

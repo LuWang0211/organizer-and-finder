@@ -1,32 +1,21 @@
-import { revalidatePath } from 'next/cache'
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card'
 import { Icon } from '@/ui/components/icon'
 import { MapPin } from 'lucide-react'
-import { createLocation } from '@/services/locationService'
-import { fetchRoomsForCurrentUser } from '@/services/roomService'
+import { fetchRoomsForHouse, fetchHouseForFamily } from '@/services/roomService'
+import { getSession } from '@/auth'
 import AddLocationForm from './AddLocationForm'
+import { addLocation } from './actions'
+import AuthProtectedComponent from '@/AuthProtectedComponent'
 
-export default async function AddLocationPage({ searchParams }: { searchParams?: Promise<{ roomId?: string }> }) {
-  const rooms = await fetchRoomsForCurrentUser()
+async function DataLoader({ searchParams }: { searchParams?: Promise<{ roomId?: string }> }) {
+  const session = await getSession()
+  if (!session) return null
+
+  const house = await fetchHouseForFamily(session.dbUser.familyId!)
+  if (!house) throw new Error('No house found for family')
+
+  const rooms = await fetchRoomsForHouse(house.id)
   const defaultRoomId = searchParams ? (await searchParams)?.roomId : undefined
-
-  async function addLocation(_prev: { ok: true } | { ok: false; error: string } | null, formData: FormData) {
-    'use server'
-    const roomId = formData.get('roomId')?.toString().trim()
-    const name = formData.get('name')?.toString().trim()
-    const icon = formData.get('icon')?.toString().trim()
-
-    if (!roomId) return { ok: false as const, error: 'Room is required' }
-    if (!name) return { ok: false as const, error: 'Name is required' }
-
-    try {
-      await createLocation(roomId, name, { icon: (icon as any) || undefined })
-      revalidatePath('/house_layout')
-      return { ok: true as const }
-    } catch (e: any) {
-      return { ok: false as const, error: (e?.message as string) || 'Error creating location' }
-    }
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
@@ -49,6 +38,14 @@ export default async function AddLocationPage({ searchParams }: { searchParams?:
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function AddLocationPage({ searchParams }: { searchParams?: Promise<{ roomId?: string }> }) {
+  return (
+    <AuthProtectedComponent>
+      <DataLoader searchParams={searchParams} />
+    </AuthProtectedComponent>
   )
 }
 

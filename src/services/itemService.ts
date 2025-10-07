@@ -11,8 +11,6 @@ export async function fetchItems(prismaClient = prisma) {
   }
 }
 
-type PrismaLike = { item: { create: Function } }
-
 type CreateItemOptions = {
   locationId?: string
   icon?: IconKey
@@ -21,18 +19,13 @@ type CreateItemOptions = {
 
 export async function createItem(
   name: string,
-  arg2?: CreateItemOptions | PrismaLike,
-  arg3?: PrismaLike
+  options?: CreateItemOptions,
+  prismaClient = prisma
 ) {
-  const looksLikePrisma = (v: any): v is PrismaLike => !!v && typeof v === 'object' && 'item' in v
-
-  const prismaClient = looksLikePrisma(arg2) ? arg2 : (arg3 ?? prisma)
-  const options: CreateItemOptions | undefined = looksLikePrisma(arg2) ? undefined : arg2
-
   try {
     // Replace spaces with underscores in the name
     const formattedName = name.replace(/\s+/g, '_');
-    
+
     const newItem = await prismaClient.item.create({
       data: {
         name: formattedName,

@@ -48,7 +48,7 @@ export async function fetchLocationsByRoom(roomId: string, prismaInstance = pris
   }
 }
 
-export async function fetchAllLocationsForCurrentUser(prismaInstance = prisma) {
+export async function fetchLocationsForHouse(houseId: number, prismaInstance = prisma) {
   try {
     const session = await getSession();
     if (!session) {
@@ -58,6 +58,9 @@ export async function fetchAllLocationsForCurrentUser(prismaInstance = prisma) {
     const locations = await prismaInstance.location.findMany({
       where: {
         familyId: session.dbUser.familyId!,
+        room: {
+          houseId,
+        },
       },
       select: { id: true, name: true },
       orderBy: { name: 'asc' },
@@ -65,29 +68,24 @@ export async function fetchAllLocationsForCurrentUser(prismaInstance = prisma) {
 
     return locations;
   } catch (error) {
-    console.error('Error in fetchAllLocationsForCurrentUser:', error);
+    console.error('Error in fetchLocationsForHouse:', error);
     throw new Error('Error fetching locations');
   }
 }
 
-type PrismaLike = { location: { create: Function } }
 type CreateLocationOptions = { icon?: IconKey }
 
 export async function createLocation(
   roomId: string,
   name: string,
-  arg3?: CreateLocationOptions | PrismaLike,
-  arg4?: PrismaLike
+  options?: CreateLocationOptions,
+  prismaInstance = prisma
 ) {
   try {
     const session = await getSession();
     if (!session) {
       throw new Error('Unauthorized');
     }
-
-    const looksLikePrisma = (v: any): v is PrismaLike => !!v && typeof v === 'object' && 'location' in v
-    const prismaInstance = looksLikePrisma(arg3) ? arg3 : (arg4 ?? prisma)
-    const _options: CreateLocationOptions | undefined = looksLikePrisma(arg3) ? undefined : arg3
 
     // Replace spaces with underscores in the name
     const formattedName = name.replace(/\s+/g, '_');
@@ -99,7 +97,7 @@ export async function createLocation(
         name: formattedName,  // Use the formatted name here
         roomId,
         familyId: session.dbUser.familyId!,
-        iconKey: _options?.icon ?? undefined,
+        iconKey: options?.icon ?? undefined,
       },
     });
 
