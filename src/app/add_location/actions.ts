@@ -1,7 +1,6 @@
 'use server'
 
 import { z } from 'zod'
-import { revalidatePath } from 'next/cache'
 import { createLocation } from '@/services/locationService'
 import { getSession } from '@/auth'
 
@@ -37,7 +36,6 @@ export async function addLocation(_prev: ActionResult | null, formData: FormData
 
   try {
     await createLocation(roomId, name, { icon: (icon as any) || undefined })
-    revalidatePath('/house_layout')
     return { ok: true as const }
   } catch (e: any) {
     console.error('Error creating location:', e)

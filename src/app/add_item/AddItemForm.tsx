@@ -5,7 +5,7 @@ import { Icon } from '@/ui/components/icon'
 import { ICON_COMPONENTS, ITEM_ICON_OPTIONS, type IconKey } from '@/ui/icon-presets'
 import MenuSelect from '@/ui/components/menu-select'
 import { useRouter } from 'next/navigation'
-import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/feedback-overlay'
+import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/FeedbackOverlay'
 
 type LocationOption = { id: string; name: string }
 

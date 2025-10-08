@@ -1,7 +1,6 @@
 'use server'
 
 import { z } from 'zod'
-import { revalidatePath } from 'next/cache'
 import { createItem } from '@/services/itemService'
 import { getSession } from '@/auth'
 
@@ -46,7 +45,6 @@ export async function addItem(_prev: ActionResult | null, formData: FormData): P
       icon: (icon as any) || undefined,
       quantity
     })
-    revalidatePath('/')
     return { ok: true as const }
   } catch (e: any) {
     console.error('Error creating item:', e)

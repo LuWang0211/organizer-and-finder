@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/feedback-overlay'
+import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/FeedbackOverlay'
 import { Button } from '@/ui/components/button'
 
 export default function OverlayShowcaseClient() {
