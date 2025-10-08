@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Card, CardDescription } from '@/ui/components/card'
 import { createPortal } from 'react-dom'
-import { feedbackGameManager } from './FeedbackOverlay/FeedbackGame'
+import { feedbackGameManager } from './FeedbackGame'
 
 export type OverlayStatus = 'success' | 'error' | null
 
@@ -48,14 +48,16 @@ export default function FeedbackOverlay({
   useEffect(() => {
     if (!containerRef.current || !status) return
 
-    let cancelled = false
+    let cancelled = false;
 
-    // Initialize the singleton game instance (or resize if already exists)
-    feedbackGameManager.initialize(containerRef.current, widthPx, heightPx).then(() => {
+    (async () => {
+      // Initialize the singleton game instance (or resize if already exists)
+      await feedbackGameManager.initialize(containerRef.current!, widthPx, heightPx)
+
       if (!cancelled) {
         setIsGameReady(true)
       }
-    })
+    })()
 
     return () => {
       cancelled = true

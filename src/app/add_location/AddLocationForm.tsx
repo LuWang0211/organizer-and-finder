@@ -4,7 +4,7 @@ import { Button } from '@/ui/components/button'
 import { Icon } from '@/ui/components/icon'
 import { ICON_COMPONENTS, LOCATION_ICON_OPTIONS, type IconKey } from '@/ui/icon-presets'
 import MenuSelect from '@/ui/components/menu-select'
-import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/FeedbackOverlay'
+import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/FeedbackOverlay/FeedbackOverlay'
 
 type RoomOption = { id: string; name: string }
 

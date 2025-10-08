@@ -23,12 +23,28 @@ export async function createItem(
   prismaClient = prisma
 ) {
   try {
-    // Replace spaces with underscores in the name
-    const formattedName = name.replace(/\s+/g, '_');
+    const session = await getSession();
+    if (!session) {
+      throw new Error('Unauthorized');
+    }
+
+    // Verify the user has permission to add item to this location (if locationId provided)
+    if (options?.locationId) {
+      const location = await prismaClient.location.findFirst({
+        where: {
+          id: options.locationId,
+          familyId: session.dbUser.familyId!,
+        },
+      });
+
+      if (!location) {
+        throw new Error('Location not found or you do not have permission to add items to this location');
+      }
+    }
 
     const newItem = await prismaClient.item.create({
       data: {
-        name: formattedName,
+        name,  // Keep original user input for display
         // Persist location if provided; icon is accepted for future use
         locationid: options?.locationId ?? undefined,
         quantity: typeof options?.quantity === 'number' ? options?.quantity : undefined,

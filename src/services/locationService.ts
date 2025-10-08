@@ -87,14 +87,26 @@ export async function createLocation(
       throw new Error('Unauthorized');
     }
 
-    // Replace spaces with underscores in the name
-    const formattedName = name.replace(/\s+/g, '_');
-    const id = `${roomId}_${formattedName}`;
+    // Verify the user has permission to add location to this room
+    const room = await prismaInstance.room.findFirst({
+      where: {
+        id: roomId,
+        familyId: session.dbUser.familyId!,
+      },
+    });
+
+    if (!room) {
+      throw new Error('Room not found or you do not have permission to add locations to this room');
+    }
+
+    // Format only the ID, keep the display name as user input
+    const formattedIdPart = name.replace(/\s+/g, '_');
+    const id = `${roomId}_${formattedIdPart}`;
 
     const location = await prismaInstance.location.create({
       data: {
         id,
-        name: formattedName,  // Use the formatted name here
+        name,  // Keep original user input for display
         roomId,
         familyId: session.dbUser.familyId!,
         iconKey: options?.icon ?? undefined,
