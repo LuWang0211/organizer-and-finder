@@ -12,14 +12,17 @@ export async function fetchItems(prismaClient = prisma) {
 }
 
 type CreateItemOptions = {
-  locationId?: string
+  locationId: string  // Required - every item must have a location
+  // TODO: Implement "Unknown Location" feature - create an unknown location for each room
+  // Pattern: {roomId}_unknown (e.g., "kitchen_unknown")
+  // Need to: 1) Create migration/seed for existing rooms, 2) Auto-create on new room creation
   icon?: IconKey
   quantity?: number
 }
 
 export async function createItem(
   name: string,
-  options?: CreateItemOptions,
+  options: CreateItemOptions,
   prismaClient = prisma
 ) {
   try {
@@ -28,31 +31,37 @@ export async function createItem(
       throw new Error('Unauthorized');
     }
 
-    // Verify the user has permission to add item to this location (if locationId provided)
-    if (options?.locationId) {
-      const location = await prismaClient.location.findFirst({
-        where: {
-          id: options.locationId,
-          familyId: session.dbUser.familyId!,
-        },
-      });
+    // locationId is now required - throw error if missing
+    if (!options?.locationId) {
+      throw new Error('Location ID is required for creating an item');
+    }
 
-      if (!location) {
-        throw new Error('Location not found or you do not have permission to add items to this location');
-      }
+    // ALWAYS verify the user has permission to add item to this location
+    const location = await prismaClient.location.findFirst({
+      where: {
+        id: options.locationId,
+        familyId: session.dbUser.familyId!,
+      },
+    });
+
+    if (!location) {
+      throw new Error('Location not found or you do not have permission to add items to this location');
     }
 
     const newItem = await prismaClient.item.create({
       data: {
         name,  // Keep original user input for display
-        // Persist location if provided; icon is accepted for future use
-        locationid: options?.locationId ?? undefined,
+        locationid: options.locationId,  // Always required
         quantity: typeof options?.quantity === 'number' ? options?.quantity : undefined,
         iconKey: options?.icon ?? undefined,
       },
     });
     return newItem;
   } catch (error) {
+    // Re-throw specific errors with their original messages
+    if (error instanceof Error) {
+      throw error;
+    }
     throw new Error('Error creating item');
   }
 }

@@ -7,7 +7,7 @@ import { getSession } from '@/auth'
 // Validation schema
 const addItemSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
-  locationId: z.string().optional(),
+  locationId: z.string().min(1, 'Location is required'),  // Required field
   icon: z.string().optional(),
   quantity: z.number().int().positive('Quantity must be positive').min(1, 'Quantity must be at least 1').default(1)
 })
@@ -27,7 +27,7 @@ export async function addItem(_prev: ActionResult | null, formData: FormData): P
 
   const validationResult = addItemSchema.safeParse({
     name: formData.get('name')?.toString().trim(),
-    locationId: formData.get('locationId')?.toString().trim() || undefined,
+    locationId: formData.get('locationId')?.toString().trim(),  // No fallback - must be provided
     icon: formData.get('icon')?.toString().trim() || undefined,
     quantity: Number.isFinite(parsedQuantity) && parsedQuantity > 0 ? parsedQuantity : 1
   })
@@ -41,7 +41,7 @@ export async function addItem(_prev: ActionResult | null, formData: FormData): P
 
   try {
     await createItem(name, {
-      locationId: locationId || undefined,
+      locationId,  // Now guaranteed to be a non-empty string
       icon: (icon as any) || undefined,
       quantity
     })

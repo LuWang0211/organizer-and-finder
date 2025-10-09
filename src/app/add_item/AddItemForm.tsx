@@ -133,9 +133,10 @@ export default function AddItemForm({
       </div>
 
       <div>
+        {/* TODO: Add "Unknown Location" option back after creating real unknown locations for each room */}
         <MenuSelect
           label="Location Name"
-          items={[{ value: '', label: 'Unknown Location' }, ...locations.map(l => ({ value: l.id, label: l.name }))]}
+          items={locations.map(l => ({ value: l.id, label: l.name }))}
           value={locId}
           onChange={(v) => setLocId(v)}
           maxListHeight={150}
