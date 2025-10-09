@@ -87,6 +87,7 @@ export default function FloorplanViewerGame({
 
     // Track if game has been created to prevent recreation
     const gameCreated = useRef(false);
+    const gameReady = useRef(false);
     // Initialize Phaser game: ensure-on-render guard
     // Rationale: Next.js Fast Refresh may run effect cleanup (destroying the game)
     // without remounting this component or changing deps. Running this effect after
@@ -112,6 +113,7 @@ export default function FloorplanViewerGame({
                 const sceneManager = floorplanGame.current?.scene;
                 const mode: ViewerMode = isPanelOpen ? ViewerMode.Folded : ViewerMode.Fullscreen;
                 sceneManager?.start('FloorplanViewerScene', { houseDef, roomDefs, mode, selectedRoomId });
+                gameReady.current = true
             });
 
             // Listen for room click events from the Phaser scene and navigate
@@ -127,7 +129,7 @@ export default function FloorplanViewerGame({
 
     // Handle container size changes separately - just resize, don't recreate
     useLayoutEffect(() => {
-        if (floorplanGame.current && containerWidth > 0 && containerHeight > 0) {
+        if (floorplanGame.current && gameReady.current && containerWidth > 0 && containerHeight > 0) {
             floorplanGame.current.scale.resize(containerWidth, containerHeight);
         }
     }, [containerWidth, containerHeight]);
