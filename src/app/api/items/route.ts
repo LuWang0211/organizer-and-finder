@@ -24,13 +24,41 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { name } = await request.json();
-    const newItem = await createItem(name);
+    const body = await request.json();
+    const { name, locationId, icon, quantity } = body;
+
+    // Validate required fields
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
+      return new NextResponse(JSON.stringify({ error: 'Name is required' }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 400,
+      });
+    }
+
+    if (!locationId || typeof locationId !== 'string' || locationId.trim().length === 0) {
+      return new NextResponse(JSON.stringify({ error: 'Location ID is required' }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 400,
+      });
+    }
+
+    // Create item with required locationId - this will validate permissions
+    const newItem = await createItem(name.trim(), {
+      locationId: locationId.trim(),
+      icon: icon || undefined,
+      quantity: typeof quantity === 'number' && quantity > 0 ? quantity : undefined,
+    });
+
     return new NextResponse(JSON.stringify(newItem), {
       headers: { 'Content-Type': 'application/json' },
       status: 201,
     });
   } catch (error) {
-    return new NextResponse('Error creating item', { status: 500 });
+    // Return specific error messages from the service layer
+    const errorMessage = error instanceof Error ? error.message : 'Error creating item';
+    return new NextResponse(JSON.stringify({ error: errorMessage }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500,
+    });
   }
 }

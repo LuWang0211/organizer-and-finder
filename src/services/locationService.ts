@@ -1,5 +1,6 @@
 import { getSession } from "@/auth";
 import prisma from "./db";
+import type { IconKey } from "@/ui/icon-presets";
 
 export async function fetchLocationsByRoom(roomId: string, prismaInstance = prisma) {
   try {
@@ -23,6 +24,7 @@ export async function fetchLocationsByRoom(roomId: string, prismaInstance = pris
             quantity: true,
             inotherobject: true,
             otherobjectid: true,
+            iconKey: true,
           },
         },
       },
@@ -32,29 +34,82 @@ export async function fetchLocationsByRoom(roomId: string, prismaInstance = pris
       throw new Error('Locations not found');
     }
 
-    return locations;
+    const locationsTyped = (locations ?? []).map(({ iconKey, ...otherProps }) => 
+      ({
+        iconKey: iconKey as IconKey | null,
+        ...otherProps
+      })
+    );
+
+    return locationsTyped;
   } catch (error) {
     console.error('Error in fetchLocationsByRoom:', error);
     throw new Error('Error fetching locations');
   }
 }
 
-export async function createLocation(roomId: string, name: string, prismaInstance = prisma) {
+export async function fetchLocationsForHouse(houseId: number, prismaInstance = prisma) {
   try {
     const session = await getSession();
     if (!session) {
       throw new Error('Unauthorized');
     }
 
-    // Create location ID as roomId + name
-    const id = `${roomId}_${name}`;
+    const locations = await prismaInstance.location.findMany({
+      where: {
+        familyId: session.dbUser.familyId!,
+        room: {
+          houseId,
+        },
+      },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    });
+
+    return locations;
+  } catch (error) {
+    console.error('Error in fetchLocationsForHouse:', error);
+    throw new Error('Error fetching locations');
+  }
+}
+
+type CreateLocationOptions = { icon?: IconKey }
+
+export async function createLocation(
+  roomId: string,
+  name: string,
+  options?: CreateLocationOptions,
+  prismaInstance = prisma
+) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      throw new Error('Unauthorized');
+    }
+
+    // Verify the user has permission to add location to this room
+    const room = await prismaInstance.room.findFirst({
+      where: {
+        id: roomId,
+        familyId: session.dbUser.familyId!,
+      },
+    });
+
+    if (!room) {
+      throw new Error('Room not found or you do not have permission to add locations to this room');
+    }
+
+    // Format only the ID, keep the display name as user input
+    const formattedIdPart = name.replace(/\s+/g, '_');
+    const id = `${roomId}_${formattedIdPart}`;
 
     const location = await prismaInstance.location.create({
       data: {
         id,
-        name,
+        name,  // Keep original user input for display
         roomId,
         familyId: session.dbUser.familyId!,
+        iconKey: options?.icon ?? undefined,
       },
     });
 
@@ -64,3 +119,5 @@ export async function createLocation(roomId: string, name: string, prismaInstanc
     throw new Error('Error creating location');
   }
 }
+
+export type LocationType = Awaited<ReturnType<typeof fetchLocationsByRoom>>[0];

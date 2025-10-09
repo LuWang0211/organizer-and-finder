@@ -11,6 +11,6 @@ export default async function Location({ locationId, locationName }: LocationPro
     const itemsData = await fetchItemsByLocation(locationId);
 
     return (
-        <ItemsList items={itemsData} locationName={locationName}/>
+        <ItemsList items={itemsData} locationName={locationName} locationId={locationId}/>
     );
 }

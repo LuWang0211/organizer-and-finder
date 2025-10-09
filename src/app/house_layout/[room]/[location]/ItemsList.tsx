@@ -1,22 +1,37 @@
 import { Bubble } from "@/ui/components/bubble";
 import { cn } from "@/utils/tailwind";
-
+import Link from 'next/link'
+import { Icon } from '@/ui/components/icon'
+import { ItemType } from "@/services/itemService";
 interface ItemsListProps {
-    items?: { id: number; name: string; quantity: number | null; inotherobject: boolean | null; otherobjectid: number | null }[];
+    items?: Array<ItemType>;
     className?: string;
+    locationId?: string;
     locationName?: string;
 }
 
-export default function ItemsList({ className, items = [], locationName = "" }: ItemsListProps) {
+export default function ItemsList({ className, items = [], locationId, locationName }: ItemsListProps) {
   const hasItems = items.length > 0;
 
   if (!hasItems) {
     return (
-      <div className={className}>
-        <div className="text-center py-8">
-          <Bubble variant="default" className="inline-block">
-            <p className="text-gray-600 text-lg">No item found for this location.</p>
-          </Bubble>
+      <div className={cn("pointer-events-auto", className)}>
+        <div className="grid grid-cols-3 gap-4 px-5 py-3">
+            <Link className="pointer-events-auto" href={`/add_item${locationId ? `?locationId=${encodeURIComponent(locationId)}` : ''}`}>
+              <Bubble
+                variant="default"
+                size="sm"
+                className="flex items-center justify-center !bg-orange-400/20 !border-orange-300/50 cursor-pointer"
+              >
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2">
+                     <Icon variant="default" size="tiny" iconKey="file-plus-2" />
+                    <h3 className="font-semibold text-gray-800 text-lg">Create the first item</h3>
+                  </div>
+                  <p className="text-base text-gray-600">No items found for this location.</p>
+                </div>
+              </Bubble>
+            </Link>
         </div>
       </div>
     );
@@ -25,7 +40,8 @@ export default function ItemsList({ className, items = [], locationName = "" }: 
   return (
     <div className={cn("px-5 py-3", className)}>
       <div className="grid grid-cols-3 gap-4 pointer-events-auto">
-        {items.map((item) => (
+        {items.map((item) => {
+          return (
           <Bubble
             key={item.id}
             variant="default"
@@ -34,7 +50,10 @@ export default function ItemsList({ className, items = [], locationName = "" }: 
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-800 text-lg mb-1 truncate">{item.name}</h3>
+                <div className="flex items-center gap-2">
+                  <Icon variant="default" size="tiny" iconKey={item.iconKey || 'file-question-mark'} />
+                  <h3 className="font-semibold text-gray-800 text-lg mb-1 truncate">{item.name}</h3>
+                </div>
                 <div className="text-base text-gray-600 flex items-center gap-2">
                   <span className="opacity-70">ID: {item.id}</span>
                   {item.otherobjectid !== null && (
@@ -52,8 +71,27 @@ export default function ItemsList({ className, items = [], locationName = "" }: 
               </div>
             </div>
           </Bubble>
-        ))}
+        )})}
+
+        {/* Add Item link as the last grid item */}
+        <Link className="pointer-events-auto" href={`/add_item${locationId ? `?locationId=${encodeURIComponent(locationId)}` : ''}`}>
+          <Bubble
+            variant="default"
+            size="sm"
+            className="min-w-[220px] !bg-orange-400/20 !border-orange-300/50 cursor-pointer"
+          >
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-2">
+                <Icon variant="default" size="tiny" iconKey="file-plus-2" />
+                <h3 className="font-semibold text-gray-800 text-lg">Add Item</h3>
+              </div>
+              <p className="text-base text-gray-600">Create a new item</p>
+            </div>
+          </Bubble>
+        </Link>
       </div>
     </div>
   );
 }
+
+

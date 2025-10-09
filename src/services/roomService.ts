@@ -20,6 +20,7 @@ export async function fetchRoomsForHouse(houseId: number) {
     try {
         const rooms = await prisma.room.findMany({
             where: { houseId },
+            orderBy: { name: 'asc' },
         });
 
         return rooms;
