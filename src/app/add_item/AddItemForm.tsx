@@ -133,7 +133,6 @@ export default function AddItemForm({
       </div>
 
       <div>
-        {/* TODO: Add "Unknown Location" option back after creating real unknown locations for each room */}
         <MenuSelect
           label="Location Name"
           items={locations.map(l => ({ value: l.id, label: l.name }))}

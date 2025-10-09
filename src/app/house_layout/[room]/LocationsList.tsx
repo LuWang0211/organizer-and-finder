@@ -1,7 +1,6 @@
 import { cn } from "@/utils/tailwind";
 import { Bubble } from "@/ui/components/bubble";
 import Tooltip from "@/ui/components/tooltip";
-import LinkWithReport from "./LinkWithReport";
 import Link from 'next/link'
 import { Icon } from '@/ui/components/icon'
 import { LocationType } from "@/services/locationService";
@@ -94,7 +93,10 @@ export default function LocationsList({ className, locations, roomId}: Locations
               </div>
             }
           >
-            <LinkWithReport roomId={roomId} locationId={location.id} locationName={location.name}>
+            <Link
+              className="py-2 px-4 text-gray-900 wrap-anywhere"
+              href={`/house_layout/${roomId}/${location.id.replace(`${roomId}_`, '')}`}
+            >
               <Bubble
                 variant="secondary"
                 size="sm"
@@ -108,7 +110,7 @@ export default function LocationsList({ className, locations, roomId}: Locations
                   <p className="text-base text-gray-600">{location.items?.length || 0} items</p>
                 </div>
               </Bubble>
-            </LinkWithReport>
+            </Link>
           </Tooltip>
         )})}
 

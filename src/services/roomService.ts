@@ -37,10 +37,10 @@ export interface RoomMetadataType {
     }>
 }
 
-export async function fetchRoomForFamily(roomId: string, prismaInstance = prisma) : Promise<room | null> {
+export async function fetchRoomForFamily(roomId: string) : Promise<room | null> {
     const session = await getSession();
     try {
-        const rooms = await prismaInstance.room.findMany({
+        const rooms = await prisma.room.findMany({
             where: { familyId: session?.dbUser.familyId!,id: roomId, },
         });
 

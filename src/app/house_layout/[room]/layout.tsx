@@ -1,7 +1,6 @@
 // src/app/house_layout/[room]/layout.tsx
 import React from "react";
 import { PropsWithChildren } from "react";
-import LocationSelectionContextProvider from "./LocationSelectionContext";
 import { getSession } from "@/auth";
 import { fetchRoomForFamily } from "@/services/roomService";
 import { redirect } from "next/navigation";
@@ -43,13 +42,11 @@ export default async function RoomLayout(props: PropsWithChildren<{ params: Prom
         </Card>
       </div>
       <div className="flex-1 flex flex-col">
-        <LocationSelectionContextProvider>
-          <div className="h-1/2 overflow-x-hidden overflow-y-auto">
-            <Suspense fallback={<LoadingCard label="Loading locations…" />}>
-              <LocationsPanel roomId={roomId} />
-            </Suspense>
-          </div>
-        </LocationSelectionContextProvider>
+        <div className="h-1/2 overflow-x-hidden overflow-y-auto">
+          <Suspense fallback={<LoadingCard label="Loading locations…" />}>
+            <LocationsPanel roomId={roomId} />
+          </Suspense>
+        </div>
         <div className="h-1/2 overflow-visible">
           {children}
         </div>
