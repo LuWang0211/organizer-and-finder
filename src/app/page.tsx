@@ -1,56 +1,12 @@
-'use client'; // Mark this component as a client component
-import { Button } from '@/ui/components/button';
-import { useState } from 'react'; 
-
-
 export default function Home() {
-  // State for managing the name input field
-  const [name, setName] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
-
-  // Function to handle form submission
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent default form submission behavior
-
-    try {
-      // Send a POST request to the API route with the item name
-      const response = await fetch('/api/items', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }), // Send the name as JSON
-      });
-
-      if (!response.ok) throw new Error('Error adding item'); // Throw error if response is not OK
-
-      const data = await response.json(); // Parse the response JSON
-      setResponseMessage(`Item added: ${data.name}`); // Update response message state
-      setName(''); // Clear the input field after successful submission
-    } catch (error) {
-      setResponseMessage('Failed to add item'); // Update response message state in case of error
-      console.error(error); // Log the error for debugging
-    }
-  };
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <Button variant={"secondary"}>Add a new item</Button>
+        <h1 className="text-2xl font-bold">Organizer and Finder</h1>
       </div>
 
       <div className="relative z-10 flex place-items-center before:absolute before:h-[300px] before:w-full ...">
-      <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-4 z-20">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter item name"
-          required
-          className="border border-gray-300 text-black p-2 rounded-md"
-        />
-        <Button variant={"primary"} type="submit">Add Item</Button>
-
-        {responseMessage && <p className="mt-4 text-green-600">{responseMessage}</p>}
-      </form>
+        <h2 className="text-xl">Welcome to your home organization app</h2>
       </div>
 
 
