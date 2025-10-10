@@ -23,35 +23,63 @@ import {
   FilePlus2,
   Plus,
   FileQuestionMark,
+  Smile,
+  Heart,
+  Home,
+  Settings,
+  User,
+  Bell,
+  Mail,
+  Magnet,
+  Search,
+  ArrowLeft,
 } from 'lucide-react'
 
-export type IconKey =
-  | 'box'
-  | 'package'
-  | 'archive'
-  | 'map-pin'
-  | 'folder'
-  | 'tag'
-  | 'bookmark'
-  | 'star'
+
+
+const ICON_COMPONENTS_RAW = {
+  'box': Box,
+  'package': Package,
+  'archive': Archive,
+  'map-pin': MapPin,
+  'folder': Folder,
+  'tag': Tag,
+  'bookmark': Bookmark,
+  'star': Star,
   // Location-related
-  | 'bed-double'
-  | 'cooking-pot'
-  | 'sofa'
-  | 'shower-head'
-  | 'washing-machine'
-  | 'car'
-  | 'shirt'
-  | 'utensils'
+  'bed-double': BedDouble,
+  'cooking-pot': CookingPot,
+  'sofa': Sofa,
+  'shower-head': ShowerHead,
+  'washing-machine': WashingMachine,
+  'car': Car,
+  'shirt': Shirt,
+  'utensils': Utensils,
   // Item-related
-  | 'book'
-  | 'book-open'
-  | 'laptop'
-  | 'file-question-mark'
+  'book': Book,
+  'book-open': BookOpen,
+  'laptop': Laptop,
+  'file-question-mark': FileQuestionMark,
   // Action icons
-  | 'house-plus'
-  | 'file-plus-2'
-  | 'plus'
+  'house-plus': HousePlus,
+  'file-plus-2': FilePlus2,
+  'plus': Plus,
+  // UI/General icons
+  'smile': Smile,
+  'heart': Heart,
+  'home': Home,
+  'settings': Settings,
+  'user': User,
+  'bell': Bell,
+  'mail': Mail,
+  'magnet': Magnet,
+  'search': Search,
+  'arrow-left': ArrowLeft,
+} as const
+
+export type IconKey = keyof typeof ICON_COMPONENTS_RAW
+
+export const ICON_COMPONENTS: Record<IconKey, LucideIcon> = ICON_COMPONENTS_RAW;
 
 // Focused gallery for Location selection
 export const LOCATION_ICON_OPTIONS: { key: IconKey; label: string }[] = [
@@ -79,32 +107,3 @@ export const ITEM_ICON_OPTIONS: { key: IconKey; label: string }[] = [
   { key: 'book-open', label: 'Books' },
   { key: 'laptop', label: 'Laptop' },
 ]
-
-export const ICON_COMPONENTS: Record<IconKey, LucideIcon> = {
-  'box': Box,
-  'package': Package,
-  'archive': Archive,
-  'map-pin': MapPin,
-  'folder': Folder,
-  'tag': Tag,
-  'bookmark': Bookmark,
-  'star': Star,
-  // Location-related
-  'bed-double': BedDouble,
-  'cooking-pot': CookingPot,
-  'sofa': Sofa,
-  'shower-head': ShowerHead,
-  'washing-machine': WashingMachine,
-  'car': Car,
-  'shirt': Shirt,
-  'utensils': Utensils,
-  // Item-related
-  'book': Book,
-  'book-open': BookOpen,
-  'laptop': Laptop,
-  'file-question-mark': FileQuestionMark,
-  // Action icons
-  'house-plus': HousePlus,
-  'file-plus-2': FilePlus2,
-  'plus': Plus,
-}

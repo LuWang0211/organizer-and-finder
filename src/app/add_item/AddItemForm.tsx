@@ -2,7 +2,7 @@
 import { useMemo, useState, useActionState, useEffect, useRef } from 'react'
 import { Button } from '@/ui/components/button'
 import { Icon } from '@/ui/components/icon'
-import { ICON_COMPONENTS, ITEM_ICON_OPTIONS, type IconKey } from '@/ui/icon-presets'
+import { ITEM_ICON_OPTIONS, type IconKey } from '@/ui/icon-presets'
 import MenuSelect from '@/ui/components/menu-select'
 import { useRouter } from 'next/navigation'
 import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/FeedbackOverlay/FeedbackOverlay'
@@ -33,8 +33,6 @@ export default function AddItemForm({
   const [triedBelowMin, setTriedBelowMin] = useState(false)
 
   const invalidQty = useMemo(() => !Number.isFinite(qty) || qty < 1, [qty])
-
-  const IconPreview = icon ? ICON_COMPONENTS[icon] : null
 
   // When server action returns, pop overlay and navigate on success
   const onSubmitCapture: React.FormEventHandler<HTMLFormElement> = () => {
@@ -160,9 +158,7 @@ export default function AddItemForm({
             ))}
           </select>
           <div className="min-w-[64px]">
-            <Icon variant="secondary" size="default">
-              {IconPreview ? <IconPreview /> : null}
-            </Icon>
+            <Icon variant="secondary" size="default" iconKey={icon || undefined} />
           </div>
         </div>
       </div>
