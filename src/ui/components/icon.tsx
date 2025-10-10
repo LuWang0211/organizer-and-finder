@@ -77,27 +77,18 @@ const iconSizeConfig = {
 export interface IconProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof iconVariants> {
-  children?: React.ReactNode
   iconKey?: IconKey
 }
 
 const Icon = React.forwardRef<HTMLDivElement, IconProps>(
-  ({ className, variant, size = "default", border, children, iconKey, ...props }, ref) => {
+  ({ className, variant, size = "default", border, iconKey, ...props }, ref) => {
     const config = iconSizeConfig[size ?? "default"]
-    
-    // Resolve children from iconKey or clone given child to apply size
-    let resolvedChildren: React.ReactNode = children
-    if (!resolvedChildren && iconKey) {
-      const Comp = ICON_COMPONENTS[iconKey]
-      resolvedChildren = Comp ? (
-        <Comp size={config.iconSize} strokeWidth={config.strokeWidth} />
-      ) : null
-    } else if (React.isValidElement(resolvedChildren)) {
-      resolvedChildren = React.cloneElement(resolvedChildren as React.ReactElement<any>, {
-        size: config.iconSize,
-        strokeWidth: config.strokeWidth,
-      })
-    }
+
+    // Resolve icon from iconKey (if provided)
+    const IconComponent = iconKey ? ICON_COMPONENTS[iconKey] : null
+    const iconElement = IconComponent ? (
+      <IconComponent size={config.iconSize} strokeWidth={config.strokeWidth} />
+    ) : null
 
     return (
       <div className="relative group">
@@ -109,7 +100,7 @@ const Icon = React.forwardRef<HTMLDivElement, IconProps>(
           className={cn(iconVariants({ variant, size, border }), className)}
           {...props}
         >
-          {resolvedChildren}
+          {iconElement}
         </div>
       </div>
     )

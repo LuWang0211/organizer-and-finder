@@ -6,7 +6,6 @@ import { Bubble } from "@/ui/components/bubble";
 import { Icon } from "@/ui/components/icon";
 import LoadingCard from "@/ui/components/loading-card";
 import Tooltip from "@/ui/components/tooltip";
-import { Smile, Heart, Star, Home, Settings, User, Bell, Mail } from "lucide-react";
 import DemoMenuSelect from "./DemoMenuSelect";
 
 export default function UIStyleShowcase() {
@@ -136,97 +135,47 @@ export default function UIStyleShowcase() {
           <div className="flex flex-col items-center gap-4">
             <h3 className="text-lg font-bold">Color Variants</h3>
             <div className="flex gap-4 items-center justify-center">
-              <Icon variant="secondary">
-                <Smile />
-              </Icon>
-              <Icon variant="primary">
-                <Heart />
-              </Icon>
-              <Icon variant="orange">
-                <Star />
-              </Icon>
+              <Icon variant="secondary" iconKey="smile" />
+              <Icon variant="primary" iconKey="heart" />
+              <Icon variant="orange" iconKey="star" />
             </div>
           </div>
           
           <div className="flex flex-col items-center gap-4">
             <h3 className="text-lg font-bold">Size Variants</h3>
             <div className="flex gap-4 items-center justify-center">
-              <Icon variant="primary" size="tiny">
-                <Home />
-              </Icon>
-              <Icon variant="primary" size="sm">
-                <Settings />
-              </Icon>
-              <Icon variant="primary" size="default">
-                <User />
-              </Icon>
-              <Icon variant="primary" size="lg">
-                <Bell />
-              </Icon>
+              <Icon variant="primary" size="tiny" iconKey="home" />
+              <Icon variant="primary" size="sm" iconKey="settings" />
+              <Icon variant="primary" size="default" iconKey="user" />
+              <Icon variant="primary" size="lg" iconKey="bell" />
             </div>
           </div>
           
           <div className="flex flex-col items-center gap-4">
             <h3 className="text-lg font-bold">Different Icons</h3>
             <div className="flex gap-4 items-center justify-center">
-              <Icon variant="default">
-                <Bell />
-              </Icon>
-              <Icon variant="secondary">
-                <Mail />
-              </Icon>
-              <Icon variant="primary">
-                <Smile />
-              </Icon>
+              <Icon variant="default" iconKey="bell" />
+              <Icon variant="secondary" iconKey="mail" />
+              <Icon variant="primary" iconKey="smile" />
             </div>
           </div>
         </div>
         
         <div className="flex gap-4 items-center justify-center flex-wrap">
-          <Icon variant="secondary" size="lg">
-            <Smile />
-          </Icon>
-          <Icon variant="primary" size="lg">
-            <Heart />
-          </Icon>
-          <Icon variant="orange" size="lg">
-            <Star />
-          </Icon>
-          <Icon variant="default" size="lg">
-            <Home />
-          </Icon>
+          <Icon variant="secondary" size="lg" iconKey="smile" />
+          <Icon variant="primary" size="lg" iconKey="heart" />
+          <Icon variant="orange" size="lg" iconKey="star" />
+          <Icon variant="default" size="lg" iconKey="home" />
         </div>
         
         <div className="flex flex-col items-center gap-4">
           <h3 className="text-lg font-bold">Borderless Variants</h3>
           <div className="flex gap-4 items-center justify-center flex-wrap">
-            <Icon variant="secondary" border="none">
-              <Smile />
-            </Icon>
-            <Icon variant="primary" border="none">
-              <Heart />
-            </Icon>
-            <Icon variant="orange" border="none">
-              <Star />
-            </Icon>
-            <Icon variant="default" border="none">
-              <Home />
-            </Icon>
+            <Icon variant="secondary" border="none" iconKey="smile" />
+            <Icon variant="primary" border="none" iconKey="heart" />
+            <Icon variant="orange" border="none" iconKey="star" />
+            <Icon variant="default" border="none" iconKey="home" />
           </div>
-        </div>
-
-        {/* Preset Keys sub-block */}
-        <div className="flex flex-col items-center gap-4 mt-4">
-          <h3 className="text-lg font-bold">Icons (Preset Keys)</h3>
-          <div className="flex gap-4 items-center justify-center flex-wrap">
-            <Icon variant="secondary" size="sm" iconKey="map-pin" />
-            <Icon variant="primary" size="sm" iconKey="bed-double" />
-            <Icon variant="orange" size="sm" iconKey="cooking-pot" />
-            <Icon variant="default" size="sm" iconKey="book" />
-          </div>
-          <p className="text-sm opacity-75 max-w-prose text-center">
-            Icons: pass Lucide components as children. Preset Keys: pass an iconKey (from icon-presets.ts) to resolve icons via a central registry; ideal when reading from DB.
-          </p>
         </div>
       </section>
 

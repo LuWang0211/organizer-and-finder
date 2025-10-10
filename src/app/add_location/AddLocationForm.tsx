@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useActionState } from 'react'
 import { Button } from '@/ui/components/button'
 import { Icon } from '@/ui/components/icon'
-import { ICON_COMPONENTS, LOCATION_ICON_OPTIONS, type IconKey } from '@/ui/icon-presets'
+import { LOCATION_ICON_OPTIONS, type IconKey } from '@/ui/icon-presets'
 import MenuSelect from '@/ui/components/menu-select'
 import FeedbackOverlay, { type OverlayStatus } from '@/ui/components/FeedbackOverlay/FeedbackOverlay'
 
@@ -37,8 +37,6 @@ export default function AddLocationForm({
       wasPendingRef.current = false
     }
   }, [isPending, result])
-
-  const IconPreview = icon ? ICON_COMPONENTS[icon] : null
 
   return (
     <>
@@ -84,9 +82,7 @@ export default function AddLocationForm({
             ))}
           </select>
           <div className="min-w-[64px]">
-            <Icon variant="secondary" size="default">
-              {IconPreview ? <IconPreview /> : null}
-            </Icon>
+            <Icon variant="secondary" size="default" iconKey={icon || undefined} />
           </div>
         </div>
       </div>
