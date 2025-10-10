@@ -1,4 +1,4 @@
-import layouts, { layoutIds } from '@/data/layouts';
+import layouts, { layoutIds } from "@/data/layouts";
 
 export interface LayoutOption {
   id: string;
@@ -41,11 +41,11 @@ export interface LayoutData {
 
 export function getLayoutOptions(): LayoutOption[] {
   const options: LayoutOption[] = [];
-  
+
   for (const layoutId of layoutIds) {
     try {
       const layoutData = layouts[layoutId];
-      
+
       // Extract UI metadata from imported JSON data
       options.push({
         id: layoutId,
@@ -53,13 +53,13 @@ export function getLayoutOptions(): LayoutOption[] {
         description: layoutData.ui.description,
         roomCount: layoutData.rooms.length,
         features: layoutData.ui.features,
-        floorplanPicture: layoutData.house.floorplanPicture
+        floorplanPicture: layoutData.house.floorplanPicture,
       });
     } catch (error) {
       console.warn(`Failed to process layout ${layoutId}:`, error);
     }
   }
-  
+
   return options.sort((a, b) => a.name.localeCompare(b.name));
 }
 

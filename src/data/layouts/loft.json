@@ -8,7 +8,12 @@
   "ui": {
     "name": "Loft",
     "description": "Multi-level loft with separate areas",
-    "features": ["Two levels", "Multiple bedrooms", "Spacious layout", "Unique design"]
+    "features": [
+      "Two levels",
+      "Multiple bedrooms",
+      "Spacious layout",
+      "Unique design"
+    ]
   },
   "rooms": [
     {

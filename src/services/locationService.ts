@@ -1,20 +1,20 @@
 import { getSession } from "@/auth";
+import type { IconKey } from "@/ui/iconPresets";
 import prisma from "./db";
-import type { IconKey } from "@/ui/icon-presets";
 
 export async function fetchLocationsByRoom(roomId: string) {
   try {
     const session = await getSession();
     if (!session) {
-      throw new Error('Unauthorized');
+      throw new Error("Unauthorized");
     }
 
     const locations = await prisma.location.findMany({
       where: {
         roomId,
         room: {
-          familyId: session.dbUser.familyId!
-        }
+          familyId: session.dbUser.familyId!,
+        },
       },
       include: {
         items: {
@@ -31,20 +31,20 @@ export async function fetchLocationsByRoom(roomId: string) {
     });
 
     if (!locations) {
-      throw new Error('Locations not found');
+      throw new Error("Locations not found");
     }
 
-    const locationsTyped = (locations ?? []).map(({ iconKey, ...otherProps }) =>
-      ({
+    const locationsTyped = (locations ?? []).map(
+      ({ iconKey, ...otherProps }) => ({
         iconKey: iconKey as IconKey | null,
-        ...otherProps
-      })
+        ...otherProps,
+      }),
     );
 
     return locationsTyped;
   } catch (error) {
-    console.error('Error in fetchLocationsByRoom:', error);
-    throw new Error('Error fetching locations');
+    console.error("Error in fetchLocationsByRoom:", error);
+    throw new Error("Error fetching locations");
   }
 }
 
@@ -52,7 +52,7 @@ export async function fetchLocationsForHouse(houseId: number) {
   try {
     const session = await getSession();
     if (!session) {
-      throw new Error('Unauthorized');
+      throw new Error("Unauthorized");
     }
 
     const locations = await prisma.location.findMany({
@@ -63,27 +63,27 @@ export async function fetchLocationsForHouse(houseId: number) {
         },
       },
       select: { id: true, name: true },
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
     });
 
     return locations;
   } catch (error) {
-    console.error('Error in fetchLocationsForHouse:', error);
-    throw new Error('Error fetching locations');
+    console.error("Error in fetchLocationsForHouse:", error);
+    throw new Error("Error fetching locations");
   }
 }
 
-type CreateLocationOptions = { icon?: IconKey }
+type CreateLocationOptions = { icon?: IconKey };
 
 export async function createLocation(
   roomId: string,
   name: string,
-  options?: CreateLocationOptions
+  options?: CreateLocationOptions,
 ) {
   try {
     const session = await getSession();
     if (!session) {
-      throw new Error('Unauthorized');
+      throw new Error("Unauthorized");
     }
 
     // Verify the user has permission to add location to this room
@@ -95,17 +95,19 @@ export async function createLocation(
     });
 
     if (!room) {
-      throw new Error('Room not found or you do not have permission to add locations to this room');
+      throw new Error(
+        "Room not found or you do not have permission to add locations to this room",
+      );
     }
 
     // Format only the ID, keep the display name as user input
-    const formattedIdPart = name.replace(/\s+/g, '_');
+    const formattedIdPart = name.replace(/\s+/g, "_");
     const id = `${roomId}_${formattedIdPart}`;
 
     const location = await prisma.location.create({
       data: {
         id,
-        name,  // Keep original user input for display
+        name, // Keep original user input for display
         roomId,
         familyId: session.dbUser.familyId!,
         iconKey: options?.icon ?? undefined,
@@ -114,8 +116,8 @@ export async function createLocation(
 
     return location;
   } catch (error) {
-    console.error('Error in createLocation:', error);
-    throw new Error('Error creating location');
+    console.error("Error in createLocation:", error);
+    throw new Error("Error creating location");
   }
 }
 

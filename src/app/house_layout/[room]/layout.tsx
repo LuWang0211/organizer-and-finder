@@ -1,33 +1,31 @@
 // src/app/house_layout/[room]/layout.tsx
-import React from "react";
-import { PropsWithChildren } from "react";
+
+import { redirect } from "next/navigation";
+import React, { type PropsWithChildren, Suspense } from "react";
 import { getSession } from "@/auth";
 import { fetchRoomForFamily } from "@/services/roomService";
-import { redirect } from "next/navigation";
-import { Card, CardHeader, CardTitle } from "@/ui/components/card";
-import { Suspense } from "react";
+import { Card, CardHeader, CardTitle } from "@/ui/components/Card";
+import LoadingCard from "@/ui/components/LoadingCard";
 import LocationsPanel from "./LocationsPanel";
-import LoadingCard from "@/ui/components/loading-card";
 
-
-export default async function RoomLayout(props: PropsWithChildren<{ params: Promise<{ room: string }> }>) {
+export default async function RoomLayout(
+  props: PropsWithChildren<{ params: Promise<{ room: string }> }>,
+) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const session = await getSession();
 
   if (!session) {
-      return null;
+    return null;
   }
 
   const roomId = params.room;
   const roomInfo = await fetchRoomForFamily(roomId);
 
   if (!roomInfo) {
-    redirect('/house_layout_404');
+    redirect("/house_layout_404");
   }
 
   return (
@@ -36,7 +34,9 @@ export default async function RoomLayout(props: PropsWithChildren<{ params: Prom
         <Card className="hover:scale-100 hover:[&>div]:scale-100 hover:[&>div]:shadow-none">
           <CardHeader className="py-4 items-center text-center">
             <CardTitle>
-              {roomInfo.name ? `${roomInfo.name} is now selected` : "No room selected"}
+              {roomInfo.name
+                ? `${roomInfo.name} is now selected`
+                : "No room selected"}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -47,9 +47,7 @@ export default async function RoomLayout(props: PropsWithChildren<{ params: Prom
             <LocationsPanel roomId={roomId} />
           </Suspense>
         </div>
-        <div className="h-1/2 overflow-visible">
-          {children}
-        </div>
+        <div className="h-1/2 overflow-visible">{children}</div>
       </div>
     </div>
   );

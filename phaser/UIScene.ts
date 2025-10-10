@@ -1,105 +1,128 @@
-
 // You can write more code here
 import { DecoBackground1 } from "@/app/phaserui/components/DecoBackground1";
 import { MarqueeSearch } from "@/app/phaserui/components/MarqueeSearch";
 import { SketchBackground } from "@/app/phaserui/components/SketchBackground";
-import { createLetterFall } from "@/app/phaserui/letterfall";
+import { createLetterFall } from "@/app/phaserui/Letterfall";
 
-export
-/* START OF COMPILED CODE */
+export /* START OF COMPILED CODE */
 
 class UIScene extends Phaser.Scene {
+  constructor() {
+    super("UIScene");
 
-	constructor() {
-		super("UIScene");
+    /* START-USER-CTR-CODE */
+    // Write your code here.
+    /* END-USER-CTR-CODE */
+  }
 
-		/* START-USER-CTR-CODE */
-		// Write your code here.
-		/* END-USER-CTR-CODE */
-	}
+  editorCreate(): void {
+    // InputBoxBg
+    const inputBoxBg = this.add.nineslice(
+      0,
+      0,
+      "search_bar",
+      undefined,
+      596,
+      0,
+      72,
+      111,
+      0,
+      0,
+    );
 
-	editorCreate(): void {
+    // deco1
+    const deco1 = this.add.nineslice(
+      0,
+      0,
+      "Decoration1",
+      undefined,
+      1379,
+      0,
+      736,
+      559,
+      0,
+      0,
+    );
+    deco1.alpha = 0;
 
-		// InputBoxBg
-		const inputBoxBg = this.add.nineslice(0, 0, "search_bar", undefined, 596, 0, 72, 111, 0, 0);
+    this.inputBoxBg = inputBoxBg;
+    this.deco1 = deco1;
 
-		// deco1
-		const deco1 = this.add.nineslice(0, 0, "Decoration1", undefined, 1379, 0, 736, 559, 0, 0);
-		deco1.alpha = 0;
+    this.events.emit("scene-awake");
+  }
 
-		this.inputBoxBg = inputBoxBg;
-		this.deco1 = deco1;
+  private inputBoxBg!: Phaser.GameObjects.NineSlice;
+  private deco1!: Phaser.GameObjects.NineSlice;
 
-		this.events.emit("scene-awake");
-	}
+  /* START-USER-CODE */
 
-	private inputBoxBg!: Phaser.GameObjects.NineSlice;
-	private deco1!: Phaser.GameObjects.NineSlice;
+  // Write your code here
 
-	/* START-USER-CODE */
+  public start() {
+    new SketchBackground(this);
 
-	// Write your code here
+    this.editorCreate();
 
-	public start() {
-		new SketchBackground(this);
+    new DecoBackground1(this, this.deco1);
 
-		this.editorCreate();
+    new MarqueeSearch(this);
 
-		new DecoBackground1(this, this.deco1);
+    const inputText = this.add
+      .rexInputText(0, -12, 200, 20, {
+        text: "hello wawa",
+        fontSize: "24px",
+        color: "#000000",
+        align: "center",
+      })
+      .on("textchange", (inputText: { text: string }) => {
+        createLetterFall(this, inputText.text);
+      });
 
-		new MarqueeSearch(this);
+    const sizer = this.rexUI.add.overlapSizer({
+      x: 0,
+      y: 0,
+      height: 117,
+      anchor: {
+        top: "top+50",
+        centerX: "center",
+        width: "90%",
+      },
+    });
 
-		const inputText = this.add.rexInputText(0, -12, 200, 20, {
-			text: 'hello wawa',
-			fontSize: '24px',
-			color: '#000000',
-			align: 'center',
-		}).on('textchange', (inputText: {text: string} ) => {
-			createLetterFall(this, inputText.text)
-		});;
+    this.inputBoxBg.depth = 1;
 
-		const sizer = this.rexUI.add.overlapSizer({
-			x: 0,
-			y: 0,
-			height : 117,
-			anchor: {
-				top: 'top+50',
-				centerX: 'center',
-				width: '90%',
-			},
+    sizer.add(this.inputBoxBg, {
+      minWidth: 30,
+      minHeight: 5.8,
+      align: "center",
+      key: "inputBoxBg",
+      expand: { width: true },
+      aspectRatio: 0,
+    });
 
-		})
+    sizer.add(inputText, {
+      minWidth: 30,
+      minHeight: 5.8,
+      align: "center-center",
+      key: "input",
+      expand: { width: true },
+      padding: { left: 65, right: 115, bottom: 25 },
+      aspectRatio: 0,
+    });
 
-		this.inputBoxBg.depth = 1;
+    sizer.layout();
+  }
 
-		sizer.add(this.inputBoxBg, {
-			minWidth: 30,
-			minHeight: 5.8,
-			align: 'center',
-			key: 'inputBoxBg',
-			expand: { width: true},
-			aspectRatio: 0
-		});
+  preload() {
+    this.load.pack("all", "assets/asset-pack.json");
+    this.load.atlas(
+      "items",
+      "assets/texture/items.png",
+      "assets/texture/items.json",
+    );
+  }
 
-		sizer.add(inputText, {
-			minWidth: 30,
-			minHeight: 5.8,
-			align: 'center-center',
-			key: 'input',
-			expand: { width: true},
-			padding: { left: 65, right: 115, bottom: 25},
-			aspectRatio: 0
-		})
-
-		sizer.layout()
-	}
-
-	preload() {
-		this.load.pack("all", "assets/asset-pack.json");
-		this.load.atlas("items", "assets/texture/items.png", "assets/texture/items.json");
-	}
-
-	/* END-USER-CODE */
+  /* END-USER-CODE */
 }
 
 /* END OF COMPILED CODE */

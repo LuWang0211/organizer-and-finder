@@ -1,55 +1,53 @@
-import { UIScene } from "@phaser/UIScene";
+import type { UIScene } from "@phaser/UIScene";
 
 export class DecoBackground1 {
+  private scene: UIScene;
+  private deco1: Phaser.GameObjects.NineSlice;
 
-    private scene: UIScene;
-    private deco1: Phaser.GameObjects.NineSlice;
+  constructor(scene: UIScene, deco1: Phaser.GameObjects.NineSlice) {
+    this.scene = scene;
+    this.deco1 = deco1;
 
-    constructor(scene: UIScene, deco1: Phaser.GameObjects.NineSlice) {
-        this.scene = scene;
-        this.deco1 = deco1;
+    this.create();
+  }
 
-        this.create();
+  create() {
+    const viewportWidth = this.scene.scale.width;
+
+    if (viewportWidth > 800) {
+      this.createBackgroundForDesktop();
     }
+  }
 
-    create() {
-        const viewportWidth = this.scene.scale.width;
+  createBackgroundForDesktop() {
+    // Add decroative elements
+    const sizer = this.scene.rexUI.add.overlapSizer({
+      x: 0,
+      y: 0,
+      anchor: {
+        top: `top+${768 / 2 - this.deco1.height / 2}`,
+        centerX: "center",
+        width: "100%",
+      },
+    });
 
-        if (viewportWidth > 800) {
-            this.createBackgroundForDesktop();
-        }
-    }
+    sizer.add(this.deco1, {
+      minWidth: this.deco1.width,
+      minHeight: this.deco1.height,
+      align: "center",
+      key: "deco1",
+      expand: { width: true },
+      aspectRatio: 0,
+    });
 
-    createBackgroundForDesktop() {
-        // Add decroative elements
-        const sizer = this.scene.rexUI.add.overlapSizer({
-            x: 0,
-            y: 0,
-            anchor: {
-                top: `top+${768 / 2 - this.deco1.height / 2}`,
-                centerX: 'center',
-                width: '100%',
-            },
-        })
+    sizer.layout();
 
-        sizer.add(this.deco1, {
-            minWidth: this.deco1.width,
-            minHeight: this.deco1.height,
-            align: 'center',
-            key: 'deco1',
-            expand: { width: true},
-            aspectRatio: 0
-        });
-
-        sizer.layout();
-
-        this.scene.tweens.add({
-            targets: this.deco1,
-            alpha: 1,
-            duration: 1000,
-            ease: 'quart.out',
-            persist: false
-        });
-    }
+    this.scene.tweens.add({
+      targets: this.deco1,
+      alpha: 1,
+      duration: 1000,
+      ease: "quart.out",
+      persist: false,
+    });
+  }
 }
- 
