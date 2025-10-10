@@ -7,7 +7,7 @@ import { FloorplanV2Scene } from "./FloorplanV2Scene";
 import { UIScene } from "./UIScene";
 import { Button } from "@/ui/components/button";
 import { Icon } from "@/ui/components/icon";
-import { Magnet, ChevronDown, Upload, Download } from "lucide-react";
+import { ChevronDown, Upload, Download } from "lucide-react";
 import { FloorPlanColors, getHexColorByName } from "@/ui/colors";
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import AnchorPlugin from 'phaser3-rex-plugins/plugins/anchor-plugin';
@@ -416,9 +416,8 @@ export default function FloorplanV2Game() {
                             variant={snappingEnabled ? "primary" : "default"}
                             size="sm"
                             className="cursor-pointer"
-                        >
-                            <Magnet />
-                        </Icon>
+                            iconKey="magnet"
+                        />
                         {/* Tooltip */}
                         <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 delay-0 group-hover:delay-500 pointer-events-none z-50">
                             {snappingEnabled ? "Snapping: ON - Click to disable" : "Snapping: OFF - Click to enable"}

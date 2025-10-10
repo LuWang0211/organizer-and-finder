@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card'
 import { Icon } from '@/ui/components/icon'
-import { Package } from 'lucide-react'
 import { fetchLocationsForHouse } from '@/services/locationService'
 import { fetchHouseForFamily } from '@/services/roomService'
 import { getSession } from '@/auth'
@@ -27,9 +26,7 @@ async function DataLoader({ searchParams }: { searchParams?: Promise<{ locationI
       <Card className="w-full max-w-md">
         <CardHeader className="pb-4 text-center">
           <div className="flex justify-center mb-6">
-            <Icon variant="secondary" size="lg">
-              <Package />
-            </Icon>
+            <Icon variant="secondary" size="lg" iconKey="package" />
           </div>
           <CardTitle className="text-3xl font-extrabold mb-2">Add Item</CardTitle>
           <p className="text-base text-text-main/80 font-medium">Create a new item and optionally link to a location.</p>

@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card'
 import { Icon } from '@/ui/components/icon'
-import { MapPin } from 'lucide-react'
 import { fetchRoomsForHouse, fetchHouseForFamily } from '@/services/roomService'
 import { getSession } from '@/auth'
 import AddLocationForm from './AddLocationForm'
@@ -22,9 +21,7 @@ async function DataLoader({ searchParams }: { searchParams?: Promise<{ roomId?: 
       <Card className="w-full max-w-md">
         <CardHeader className="pb-4 text-center">
           <div className="flex justify-center mb-6">
-            <Icon variant="orange" size="lg">
-              <MapPin />
-            </Icon>
+            <Icon variant="orange" size="lg" iconKey="map-pin" />
           </div>
           <CardTitle className="text-3xl font-extrabold mb-2">Add Location</CardTitle>
           <p className="text-base text-text-main/80 font-medium">Create a location under a room.</p>

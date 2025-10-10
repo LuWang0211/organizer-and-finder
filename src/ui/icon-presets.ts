@@ -23,6 +23,16 @@ import {
   FilePlus2,
   Plus,
   FileQuestionMark,
+  Smile,
+  Heart,
+  Home,
+  Settings,
+  User,
+  Bell,
+  Mail,
+  Magnet,
+  Search,
+  ArrowLeft,
 } from 'lucide-react'
 
 export type IconKey =
@@ -52,6 +62,17 @@ export type IconKey =
   | 'house-plus'
   | 'file-plus-2'
   | 'plus'
+  // UI/General icons
+  | 'smile'
+  | 'heart'
+  | 'home'
+  | 'settings'
+  | 'user'
+  | 'bell'
+  | 'mail'
+  | 'magnet'
+  | 'search'
+  | 'arrow-left'
 
 // Focused gallery for Location selection
 export const LOCATION_ICON_OPTIONS: { key: IconKey; label: string }[] = [
@@ -107,4 +128,15 @@ export const ICON_COMPONENTS: Record<IconKey, LucideIcon> = {
   'house-plus': HousePlus,
   'file-plus-2': FilePlus2,
   'plus': Plus,
+  // UI/General icons
+  'smile': Smile,
+  'heart': Heart,
+  'home': Home,
+  'settings': Settings,
+  'user': User,
+  'bell': Bell,
+  'mail': Mail,
+  'magnet': Magnet,
+  'search': Search,
+  'arrow-left': ArrowLeft,
 }
