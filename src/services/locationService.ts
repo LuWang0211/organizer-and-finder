@@ -2,19 +2,19 @@ import { getSession } from "@/auth";
 import prisma from "./db";
 import type { IconKey } from "@/ui/icon-presets";
 
-export async function fetchLocationsByRoom(roomId: string, prismaInstance = prisma) {
+export async function fetchLocationsByRoom(roomId: string) {
   try {
     const session = await getSession();
     if (!session) {
       throw new Error('Unauthorized');
     }
 
-    const locations = await prismaInstance.location.findMany({
-      where: { 
-        roomId, 
-        room: { 
-          familyId: session.dbUser.familyId! 
-        } 
+    const locations = await prisma.location.findMany({
+      where: {
+        roomId,
+        room: {
+          familyId: session.dbUser.familyId!
+        }
       },
       include: {
         items: {
@@ -34,7 +34,7 @@ export async function fetchLocationsByRoom(roomId: string, prismaInstance = pris
       throw new Error('Locations not found');
     }
 
-    const locationsTyped = (locations ?? []).map(({ iconKey, ...otherProps }) => 
+    const locationsTyped = (locations ?? []).map(({ iconKey, ...otherProps }) =>
       ({
         iconKey: iconKey as IconKey | null,
         ...otherProps
@@ -48,14 +48,14 @@ export async function fetchLocationsByRoom(roomId: string, prismaInstance = pris
   }
 }
 
-export async function fetchLocationsForHouse(houseId: number, prismaInstance = prisma) {
+export async function fetchLocationsForHouse(houseId: number) {
   try {
     const session = await getSession();
     if (!session) {
       throw new Error('Unauthorized');
     }
 
-    const locations = await prismaInstance.location.findMany({
+    const locations = await prisma.location.findMany({
       where: {
         familyId: session.dbUser.familyId!,
         room: {
@@ -78,8 +78,7 @@ type CreateLocationOptions = { icon?: IconKey }
 export async function createLocation(
   roomId: string,
   name: string,
-  options?: CreateLocationOptions,
-  prismaInstance = prisma
+  options?: CreateLocationOptions
 ) {
   try {
     const session = await getSession();
@@ -88,7 +87,7 @@ export async function createLocation(
     }
 
     // Verify the user has permission to add location to this room
-    const room = await prismaInstance.room.findFirst({
+    const room = await prisma.room.findFirst({
       where: {
         id: roomId,
         familyId: session.dbUser.familyId!,
@@ -103,7 +102,7 @@ export async function createLocation(
     const formattedIdPart = name.replace(/\s+/g, '_');
     const id = `${roomId}_${formattedIdPart}`;
 
-    const location = await prismaInstance.location.create({
+    const location = await prisma.location.create({
       data: {
         id,
         name,  // Keep original user input for display
