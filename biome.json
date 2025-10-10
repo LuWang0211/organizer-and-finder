@@ -22,7 +22,8 @@
       },
       "suspicious": {
         "noUnknownAtRules": "off",
-        "useIterableCallbackReturn": "off"
+        "useIterableCallbackReturn": "off",
+        "noShadowRestrictedNames": "off"
       },
       "style": {
         "useFilenamingConvention": {

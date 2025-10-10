@@ -1,25 +1,42 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/components/card';
-import { Button } from '@/ui/components/button';
-import { createHouse } from './actions';
-import { LayoutOption } from './layout-service';
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { Button } from "@/ui/components/Button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/ui/components/Card";
+import { createHouse } from "./actions";
+import LayoutOptionCard from "./LayoutOptionCard";
+import type { LayoutOption } from "./layoutService";
 
-import LayoutOptionCard from './LayoutOptionCard';
-
-function SubmitButton({ selectedLayout, houseName, success }: { selectedLayout: string | null, houseName: string, success?: boolean }) {
+function SubmitButton({
+  selectedLayout,
+  houseName,
+  success,
+}: {
+  selectedLayout: string | null;
+  houseName: string;
+  success?: boolean;
+}) {
   const { pending } = useFormStatus();
-  
+
   return (
     <Button
       type="submit"
       disabled={!selectedLayout || !houseName.trim() || pending || success}
       size="lg"
     >
-      {success ? 'Redirecting...' : pending ? 'Creating House...' : 'Create House'}
+      {success
+        ? "Redirecting..."
+        : pending
+          ? "Creating House..."
+          : "Create House"}
     </Button>
   );
 }
@@ -35,14 +52,14 @@ type FormState = {
 
 export default function NewHouseClient({ layoutOptions }: NewHouseClientProps) {
   const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
-  const [houseName, setHouseName] = useState('');
+  const [houseName, setHouseName] = useState("");
   const [state, formAction] = useActionState(createHouse, {} as FormState);
   const router = useRouter();
 
   // Handle client-side redirect on success
   useEffect(() => {
     if (state?.success) {
-      router.push('/house_layout');
+      router.push("/house_layout");
     }
   }, [state?.success, router]);
 
@@ -50,14 +67,18 @@ export default function NewHouseClient({ layoutOptions }: NewHouseClientProps) {
     <div className="min-h-screen p-6 ">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Your House</h1>
-          <p className="text-xl text-gray-600">Choose a layout type to get started organizing your space</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Create Your House
+          </h1>
+          <p className="text-xl text-gray-600">
+            Choose a layout type to get started organizing your space
+          </p>
         </div>
 
         <form action={formAction}>
-          <input type="hidden" name="layoutType" value={selectedLayout || ''} />
+          <input type="hidden" name="layoutType" value={selectedLayout || ""} />
           <input type="hidden" name="houseName" value={houseName} />
-          
+
           <div className="mb-8">
             <Card>
               <CardHeader>
@@ -96,7 +117,11 @@ export default function NewHouseClient({ layoutOptions }: NewHouseClientProps) {
           )}
 
           <div className="text-center">
-            <SubmitButton selectedLayout={selectedLayout} houseName={houseName} success={state?.success} />
+            <SubmitButton
+              selectedLayout={selectedLayout}
+              houseName={houseName}
+              success={state?.success}
+            />
           </div>
         </form>
       </div>

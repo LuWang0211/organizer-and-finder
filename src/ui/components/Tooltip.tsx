@@ -1,11 +1,11 @@
 "use client";
 
-import React, { Ref } from "react";
 import * as HoverCard from "@radix-ui/react-hover-card";
-import { cn } from "@/utils/tailwind";
-import { Bubble } from "@/ui/components/bubble";
-import { Card } from "@/ui/components/card";
 import { HoverCardTriggerProps } from "@radix-ui/react-hover-card";
+import React, { Ref } from "react";
+import { Bubble } from "@/ui/components/Bubble";
+import { Card } from "@/ui/components/Card";
+import { cn } from "@/utils/tailwind";
 
 type PositionOptions = "top" | "bottom" | "left" | "right";
 type TooltipVariant = "card" | "bubble";
@@ -16,26 +16,57 @@ const CONTENT_CONTAINER_CLASSES =
 
 const ARROW_CLASSES: Record<TooltipVariant, string> = {
   card: "fill-[hsl(var(--card))] drop-shadow-sm",
-  bubble: "fill-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] drop-shadow-sm",
+  bubble:
+    "fill-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] drop-shadow-sm",
 };
 
-const CARD_CONTENT_CLASSES = "tooltip-card-content [&_span:has(>_svg.tooltip-card-arrow)]:z-20";
+const CARD_CONTENT_CLASSES =
+  "tooltip-card-content [&_span:has(>_svg.tooltip-card-arrow)]:z-20";
 
-const CardArrowComponent = () => <svg
-  className="tooltip-card-arrow translate-y-[-10px] fill-[hsl(var(--card))] transition-transform duration-200 ease-out group-[&:has(.card-content:hover)]:translate-y-[-9px]"
-  width="18"
-  height="16"
-  viewBox="0 0 30 22"
-  preserveAspectRatio="none"
+const CardArrowComponent = () => (
+  <svg
+    className="tooltip-card-arrow translate-y-[-10px] fill-[hsl(var(--card))] transition-transform duration-200 ease-out group-[&:has(.card-content:hover)]:translate-y-[-9px]"
+    width="18"
+    height="16"
+    viewBox="0 0 30 22"
+    preserveAspectRatio="none"
   >
-  {/* base cover to blend seamlessly */}
-  <line x1="0" y1="5" x2="30" y2="5" stroke="hsl(var(--card))" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
-  {/* filled triangle */}
-  <polygon points="0,10 30,10 15,22" />
-  {/* slanted borders only */}
-  <line x1="0" y1="11" x2="15" y2="22" stroke="hsl(var(--border))" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-  <line x1="30" y1="11" x2="15" y2="22" stroke="hsl(var(--border))" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-</svg>;
+    {/* base cover to blend seamlessly */}
+    <line
+      x1="0"
+      y1="5"
+      x2="30"
+      y2="5"
+      stroke="hsl(var(--card))"
+      strokeWidth="12"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    {/* filled triangle */}
+    <polygon points="0,10 30,10 15,22" />
+    {/* slanted borders only */}
+    <line
+      x1="0"
+      y1="11"
+      x2="15"
+      y2="22"
+      stroke="hsl(var(--border))"
+      strokeWidth="5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <line
+      x1="30"
+      y1="11"
+      x2="15"
+      y2="22"
+      stroke="hsl(var(--border))"
+      strokeWidth="5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 type TooltipProps = {
   children: React.ReactNode;
@@ -46,14 +77,15 @@ type TooltipProps = {
   variant?: TooltipVariant;
   openDelay?: number;
   closeDelay?: number;
-} & Partial<Omit<React.ComponentProps<typeof HoverCard.Content>, 'content'>>;
+} & Partial<Omit<React.ComponentProps<typeof HoverCard.Content>, "content">>;
 
-const TriggerWrapper = React.forwardRef<HTMLButtonElement, any>((props, forwardedRef) => {
-	return <button {...props} ref={forwardedRef} className="w-full" />
-});
+const TriggerWrapper = React.forwardRef<HTMLButtonElement, any>(
+  (props, forwardedRef) => {
+    return <button {...props} ref={forwardedRef} className="w-full" />;
+  },
+);
 
-TriggerWrapper.displayName = 'TriggerWrapper';
-
+TriggerWrapper.displayName = "TriggerWrapper";
 
 export default function Tooltip({
   children,
@@ -69,7 +101,10 @@ export default function Tooltip({
   closeDelay = 150,
   ...otherHoverCardProps
 }: TooltipProps) {
-  const computedProps = React.useMemo(() => ({ align, sideOffset, alignOffset }), [align, sideOffset, alignOffset]);
+  const computedProps = React.useMemo(
+    () => ({ align, sideOffset, alignOffset }),
+    [align, sideOffset, alignOffset],
+  );
 
   const renderedContent = React.useMemo(() => {
     if (variant === "bubble") {
@@ -108,15 +143,15 @@ export default function Tooltip({
           sideOffset={computedProps.sideOffset}
           alignOffset={computedProps.alignOffset}
           className={cn(CONTENT_CONTAINER_CLASSES, {
-            [CARD_CONTENT_CLASSES]: variant === 'card'
+            [CARD_CONTENT_CLASSES]: variant === "card",
           })}
           {...otherHoverCardProps}
         >
           {renderedContent}
           {variant === "card" ? (
-              <HoverCard.Arrow asChild>
-                <CardArrowComponent />
-              </HoverCard.Arrow>
+            <HoverCard.Arrow asChild>
+              <CardArrowComponent />
+            </HoverCard.Arrow>
           ) : (
             <HoverCard.Arrow className={arrowClass} width={12} height={6} />
           )}

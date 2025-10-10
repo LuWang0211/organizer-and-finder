@@ -1,8 +1,10 @@
-import React, { PropsWithChildren } from "react";
-import { Card, CardHeader, CardTitle } from "@/ui/components/card";
+import React, { type PropsWithChildren } from "react";
+import { Card, CardHeader, CardTitle } from "@/ui/components/Card";
 
 export default async function LocationLayout(
-  props: PropsWithChildren<{ params: Promise<{ room: string; location: string }> }>
+  props: PropsWithChildren<{
+    params: Promise<{ room: string; location: string }>;
+  }>,
 ) {
   const params = await props.params;
   const { children } = props;
@@ -13,16 +15,15 @@ export default async function LocationLayout(
         <Card className="hover:scale-100 hover:[&>div]:scale-100 hover:[&>div]:shadow-none">
           <CardHeader className="py-4 items-center text-center">
             <CardTitle>
-              {params.location ? `${params.location} is now selected` : "No location is selected"}
+              {params.location
+                ? `${params.location} is now selected`
+                : "No location is selected"}
             </CardTitle>
           </CardHeader>
         </Card>
       </div>
 
-      <div className="flex-1 w-full overflow-auto">
-        {children}
-      </div>
+      <div className="flex-1 w-full overflow-auto">{children}</div>
     </div>
   );
 }
-

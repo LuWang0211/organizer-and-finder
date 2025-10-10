@@ -1,15 +1,23 @@
 import React from "react";
 import { cn } from "@/utils/tailwind";
-import { Card, CardContent } from "./card";
+import { Card, CardContent } from "./Card";
 
 type LoadingCardProps = {
   label?: string;
   className?: string;
 };
 
-export default function LoadingCard({ label = "Loading…", className }: LoadingCardProps) {
-  return (  
-    <div className={cn("w-full h-full flex items-center justify-center p-6", className)}>
+export default function LoadingCard({
+  label = "Loading…",
+  className,
+}: LoadingCardProps) {
+  return (
+    <div
+      className={cn(
+        "w-full h-full flex items-center justify-center p-6",
+        className,
+      )}
+    >
       <Card>
         <CardContent className="px-8 py-6">
           <div className="flex items-center gap-3">
@@ -18,7 +26,6 @@ export default function LoadingCard({ label = "Loading…", className }: Loading
           </div>
         </CardContent>
       </Card>
-    </div>  
+    </div>
   );
 }
-
