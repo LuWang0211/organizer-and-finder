@@ -14,11 +14,7 @@ import FeedbackOverlay, {
 } from "@/ui/components/FeedbackOverlay/FeedbackOverlay";
 import { Icon } from "@/ui/components/Icon";
 import MenuSelect from "@/ui/components/MenuSelect";
-import {
-  ICON_COMPONENTS,
-  type IconKey,
-  ITEM_ICON_OPTIONS,
-} from "@/ui/iconPresets";
+import { type IconKey, ITEM_ICON_OPTIONS } from "@/ui/iconPresets";
 
 type LocationOption = { id: string; name: string };
 
@@ -212,9 +208,11 @@ export default function AddItemForm({
               ))}
             </select>
             <div className="min-w-[64px]">
-              <Icon variant="secondary" size="default">
-                {IconPreview ? <IconPreview /> : null}
-              </Icon>
+              <Icon
+                variant="secondary"
+                size="default"
+                iconKey={icon || undefined}
+              />
             </div>
           </div>
         </div>

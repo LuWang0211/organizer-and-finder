@@ -89,9 +89,12 @@ export default function AddLocationForm({
         </div>
 
         <div>
-          <label className="block mb-1 font-semibold">Icon (optional)</label>
+          <label htmlFor={iconSelectionId} className="block mb-1 font-semibold">
+            Icon (optional)
+          </label>
           <div className="flex items-center gap-3">
             <select
+              id={iconSelectionId}
               name="icon"
               value={icon}
               onChange={(e) => setIcon((e.target.value as IconKey) || "")}

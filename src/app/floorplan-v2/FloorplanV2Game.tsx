@@ -345,7 +345,7 @@ export default function FloorplanV2Game() {
         floorplanV2Game.current = undefined;
       }
     };
-  }, [handleSetLabelRef.current, floorplanV2Config]);
+  }, [handleSetLabelRef.current, floorplanV2Config, handleSetLabelRef]);
 
   useEffect(() => {
     if (containerWidth > 0 && containerHeight > 0) {
