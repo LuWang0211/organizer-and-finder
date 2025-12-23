@@ -1,6 +1,11 @@
-import Image from 'next/image';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/ui/components/card';
-import { LayoutOption } from './layout-service';
+import Image from "next/image";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/ui/components/Card";
+import type { LayoutOption } from "./layoutService";
 
 interface LayoutOptionCardProps {
   option: LayoutOption;
@@ -9,7 +14,12 @@ interface LayoutOptionCardProps {
   onClick?: () => void;
 }
 
-export default function LayoutOptionCard({ option, layoutId, isSelected = false, onClick }: LayoutOptionCardProps) {
+export default function LayoutOptionCard({
+  option,
+  layoutId,
+  isSelected = false,
+  onClick,
+}: LayoutOptionCardProps) {
   return (
     <Card
       variant={isSelected ? "primary" : "default"}
@@ -34,7 +44,7 @@ export default function LayoutOptionCard({ option, layoutId, isSelected = false,
           <p>{option.description}</p>
           <div className="text-sm text-gray-500">
             <p>{option.roomCount} rooms</p>
-            <p className="text-xs">{option.features.join(' • ')}</p>
+            <p className="text-xs">{option.features.join(" • ")}</p>
           </div>
         </CardDescription>
       </CardHeader>

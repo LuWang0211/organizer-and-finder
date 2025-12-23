@@ -7,4 +7,3 @@ export default async function LocationsPanel({ roomId }: { roomId: string }) {
     <LocationsList locations={locationsData} roomId={roomId} loading={false} />
   );
 }
-

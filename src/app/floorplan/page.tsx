@@ -1,8 +1,10 @@
-import PageClient from "@/app/floorplan/PageClient";
 import AuthProtectedComponent from "@/AuthProtectedComponent";
+import PageClient from "@/app/floorplan/PageClient";
 
 export default function Page() {
-    return <AuthProtectedComponent>
-        <PageClient />;
+  return (
+    <AuthProtectedComponent>
+      <PageClient />;
     </AuthProtectedComponent>
+  );
 }

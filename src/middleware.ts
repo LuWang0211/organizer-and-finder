@@ -1,1 +1,1 @@
-export { middleware } from "@/auth"
+export { middleware } from "@/auth";
