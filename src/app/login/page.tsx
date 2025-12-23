@@ -39,7 +39,7 @@ export default async function Login() {
             }}
           >
             <div className={"col-span-2 flex items-center justify-center"}>
-              <button className="col-span-2" type={"button"}>
+              <button className="col-span-2" type={"submit"}>
                 Login with Microsoft
               </button>
             </div>
