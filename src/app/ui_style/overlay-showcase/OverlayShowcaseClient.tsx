@@ -1,12 +1,12 @@
 "use client";
-import React, { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Button } from "@/ui/components/Button";
 import FeedbackOverlay, {
-  type OverlayStatus,
+  type FeedbackOverlayRef,
 } from "@/ui/components/FeedbackOverlay/FeedbackOverlay";
 
 export default function OverlayShowcaseClient() {
-  const [status, setStatus] = useState<OverlayStatus>(null);
+  const overlayRef = useRef<FeedbackOverlayRef>(null);
   const [msg, setMsg] = useState<string>("Validation failed: Name is required");
   const [successMsg, setSuccessMsg] = useState<string>("Added successfully!");
   const successMessageId = useId();
@@ -19,14 +19,30 @@ export default function OverlayShowcaseClient() {
         <Button
           className="w-60 whitespace-nowrap"
           variant="primary"
-          onClick={() => setStatus("success")}
+          onClick={async () => {
+            if (overlayRef.current) {
+              await overlayRef.current.open({ message: successMsg });
+              await overlayRef.current.playAnimation("success", {
+                durationMs: 1400,
+              });
+              overlayRef.current.close();
+            }
+          }}
         >
           Play Success
         </Button>
         <Button
           className="w-60 whitespace-nowrap"
           variant="secondary"
-          onClick={() => setStatus("error")}
+          onClick={async () => {
+            if (overlayRef.current) {
+              await overlayRef.current.open({ message: msg });
+              await overlayRef.current.playAnimation("error", {
+                durationMs: 2000,
+              });
+              overlayRef.current.close();
+            }
+          }}
         >
           Play Error
         </Button>
@@ -53,13 +69,7 @@ export default function OverlayShowcaseClient() {
           onChange={(e) => setMsg(e.target.value)}
         />
       </div>
-      <FeedbackOverlay
-        status={status}
-        message={status === "error" ? msg : undefined}
-        successMessage={successMsg}
-        onDone={() => setStatus(null)}
-        durationMs={status === "success" ? 1400 : 2000}
-      />
+      <FeedbackOverlay ref={overlayRef} />
     </div>
   );
 }

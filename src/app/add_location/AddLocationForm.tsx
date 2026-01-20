@@ -1,16 +1,13 @@
 "use client";
 import { useActionState, useEffect, useId, useRef, useState } from "react";
+import { usePrevious } from "react-use";
 import { Button } from "@/ui/components/Button";
 import FeedbackOverlay, {
-  type OverlayStatus,
+  type FeedbackOverlayRef,
 } from "@/ui/components/FeedbackOverlay/FeedbackOverlay";
 import { Icon } from "@/ui/components/Icon";
 import MenuSelect from "@/ui/components/MenuSelect";
-import {
-  ICON_COMPONENTS,
-  type IconKey,
-  LOCATION_ICON_OPTIONS,
-} from "@/ui/iconPresets";
+import { type IconKey, LOCATION_ICON_OPTIONS } from "@/ui/iconPresets";
 
 type RoomOption = { id: string; name: string };
 
@@ -36,34 +33,40 @@ export default function AddLocationForm({
     ActionResult | null,
     FormData
   >(action, null);
-  const [overlay, setOverlay] = useState<OverlayStatus>(null);
-  const wasPendingRef = useRef<boolean>(false);
+  const overlayRef = useRef<FeedbackOverlayRef>(null);
+  const prevIsPending = usePrevious(isPending);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const nameId = useId();
   const iconSelectionId = useId();
 
   useEffect(() => {
-    if (isPending) {
-      wasPendingRef.current = true;
-      return;
+    if (prevIsPending && !isPending && result) {
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+
+      (async () => {
+        await overlay.open({
+          message: result.ok ? "Location added successfully!" : result.error,
+        });
+        await overlay.playAnimation(result.ok ? "success" : "error", {
+          durationMs: result.ok ? 1400 : 2000,
+        });
+        overlay.close();
+
+        if (result.ok) {
+          formRef.current?.reset();
+          setIcon("");
+          // keep selected room
+          nameRef.current?.focus();
+        }
+      })();
     }
-    if (!isPending && wasPendingRef.current && result) {
-      setOverlay(result.ok ? "success" : "error");
-      wasPendingRef.current = false;
-    }
-  }, [isPending, result]);
+  }, [isPending, result, prevIsPending]);
 
   return (
     <>
-      <form
-        ref={formRef}
-        action={formAction}
-        onSubmitCapture={() => {
-          wasPendingRef.current = false;
-        }}
-        className="space-y-4"
-      >
+      <form ref={formRef} action={formAction} className="space-y-4">
         <div>
           <label htmlFor={nameId} className="block mb-1 font-semibold">
             Name
@@ -131,23 +134,7 @@ export default function AddLocationForm({
           </Button>
         </div>
       </form>
-      <FeedbackOverlay
-        status={overlay}
-        message={!result || result.ok ? undefined : result.error}
-        successMessage="Location added successfully!"
-        widthPx={720}
-        heightPx={260}
-        onDone={() => {
-          if (result?.ok) {
-            formRef.current?.reset();
-            setIcon("");
-            // keep selected room
-            nameRef.current?.focus();
-          }
-          setOverlay(null);
-        }}
-        durationMs={overlay === "success" ? 1400 : 2000}
-      />
+      <FeedbackOverlay ref={overlayRef} />
     </>
   );
 }
