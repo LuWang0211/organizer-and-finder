@@ -1,7 +1,12 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { Card, CardDescription } from "@/ui/components/Card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/ui/components/Dialog";
 import { feedbackGameManager } from "./feedbackGame";
 
 export type OverlayStatus = "success" | "error" | null;
@@ -25,38 +30,18 @@ export default function FeedbackOverlay({
   widthPx = 560,
   heightPx = 240,
 }: FeedbackOverlayProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
+  const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null);
   const [isGameReady, setIsGameReady] = useState(false);
-
-  // Render overlay into body to avoid clipping by ancestor overflow/transform
-  // Keep portal mounted to preserve Phaser canvas between overlays
-  useEffect(() => {
-    const host = document.createElement("div");
-    host.setAttribute("data-feedback-overlay", "true");
-    document.body.appendChild(host);
-    setPortalEl(host);
-    // Only remove on component unmount (not when status changes)
-    return () => {
-      if (document.body.contains(host)) {
-        document.body.removeChild(host);
-      }
-    };
-  }, []);
 
   // Initialize game when container is ready and overlay is shown
   useEffect(() => {
-    if (!containerRef.current || !status) return;
+    if (!containerEl || !status) return;
 
     let cancelled = false;
 
     (async () => {
       // Initialize the singleton game instance (or resize if already exists)
-      await feedbackGameManager.initialize(
-        containerRef.current!,
-        widthPx,
-        heightPx,
-      );
+      await feedbackGameManager.initialize(containerEl, widthPx, heightPx);
 
       if (!cancelled) {
         setIsGameReady(true);
@@ -67,7 +52,7 @@ export default function FeedbackOverlay({
       cancelled = true;
       setIsGameReady(false);
     };
-  }, [status, widthPx, heightPx]);
+  }, [status, widthPx, heightPx, containerEl]);
 
   // Play animation when game is ready and status changes
   useEffect(() => {
@@ -76,31 +61,42 @@ export default function FeedbackOverlay({
     feedbackGameManager.playAnimation(status, durationMs, onDone);
   }, [status, isGameReady, durationMs, onDone]);
 
-  if (!status || !portalEl) return null;
-
   const displayMessage =
     status === "success"
       ? (successMessage ?? "Added successfully!")
       : message || "Something went wrong";
 
-  return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative max-w-[90vw]" style={{ width: widthPx }}>
-        <Card
-          className="w-full p-0 overflow-hidden"
-          style={{ height: heightPx }}
-        >
-          <div ref={containerRef} className="w-full h-full relative">
-            <div className="absolute inset-x-0 bottom-2 flex justify-center pointer-events-none">
-              <CardDescription className="text-[20px] font-extrabold text-text-main">
-                {displayMessage}
-              </CardDescription>
+  return (
+    <Dialog
+      open={!!status}
+      onOpenChange={(open) => !open && onDone()}
+      modal={true}
+    >
+      <DialogContent
+        className="max-w-none w-auto p-0 border-none bg-transparent shadow-none [&>button]:hidden"
+        overlayClassName="bg-transparent"
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
+        <DialogTitle className="sr-only">Feedback</DialogTitle>
+        <DialogDescription className="sr-only">
+          Status: {status}
+        </DialogDescription>
+        <div className="relative max-w-[90vw]" style={{ width: widthPx }}>
+          <Card
+            className="w-full p-0 overflow-hidden"
+            style={{ height: heightPx }}
+          >
+            <div ref={setContainerEl} className="w-full h-full relative">
+              <div className="absolute inset-x-0 bottom-2 flex justify-center pointer-events-none">
+                <CardDescription className="text-[20px] font-extrabold text-text-main">
+                  {displayMessage}
+                </CardDescription>
+              </div>
             </div>
-          </div>
-        </Card>
-      </div>
-    </div>,
-    portalEl,
+          </Card>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

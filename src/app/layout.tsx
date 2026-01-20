@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <PreloadResources />
       <body
-        className={`${inter.className}`}
+        className={`${inter.className} h-screen w-screen relative overflow-hidden`}
         style={{
           backgroundImage: "url(/assets/texture/background.png)",
           backgroundSize: "100vw 100vh",
