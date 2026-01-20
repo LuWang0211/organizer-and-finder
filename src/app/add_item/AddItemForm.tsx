@@ -10,6 +10,10 @@ import {
 } from "react";
 import { usePrevious } from "react-use";
 import { Button } from "@/ui/components/Button";
+import {
+  ControlledPopover,
+  type ControlledPopoverRef,
+} from "@/ui/components/ControlledPopover";
 import FeedbackOverlay, {
   type FeedbackOverlayRef,
 } from "@/ui/components/FeedbackOverlay/FeedbackOverlay";
@@ -45,8 +49,7 @@ export default function AddItemForm({
   const prevIsPending = usePrevious(isPending);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
-  const belowMinTimeoutRef = useRef<number | null>(null);
-  const [triedBelowMin, setTriedBelowMin] = useState(false);
+  const popoverRef = useRef<ControlledPopoverRef>(null);
 
   const invalidQty = useMemo(() => !Number.isFinite(qty) || qty < 1, [qty]);
 
@@ -78,16 +81,6 @@ export default function AddItemForm({
       })();
     }
   }, [isPending, result, prevIsPending]);
-
-  // Cleanup any hint timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (belowMinTimeoutRef.current) {
-        window.clearTimeout(belowMinTimeoutRef.current);
-        belowMinTimeoutRef.current = null;
-      }
-    };
-  }, []);
 
   const nameId = useId();
   const quantityId = useId();
@@ -126,41 +119,37 @@ export default function AddItemForm({
                 setQty((v) => {
                   const current = Number.isFinite(v) ? (v as number) : 1;
                   if (current <= 1) {
-                    if (belowMinTimeoutRef.current)
-                      window.clearTimeout(belowMinTimeoutRef.current);
-                    setTriedBelowMin(true);
-                    belowMinTimeoutRef.current = window.setTimeout(
-                      () => setTriedBelowMin(false),
-                      1600,
-                    );
+                    popoverRef.current?.show("Minimum quantity is 1", 1600);
                     return 1;
                   }
-                  return Math.max(1, current - 1);
+                  return current - 1;
                 });
               }}
             >
               -
             </Button>
-            <input
-              name="quantity"
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              min={1}
-              step={1}
-              value={Number.isFinite(qty) ? qty : ""}
-              onChange={(e) => {
-                const v = Number(e.target.value);
-                setQty(
-                  Number.isFinite(v)
-                    ? Math.floor(v)
-                    : e.target.value === ""
-                      ? NaN
-                      : NaN,
-                );
-              }}
-              className="w-24 text-center p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
-            />
+            <ControlledPopover ref={popoverRef} variant="primary">
+              <input
+                name="quantity"
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                min={1}
+                step={1}
+                value={Number.isFinite(qty) ? qty : ""}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  setQty(
+                    Number.isFinite(v)
+                      ? Math.floor(v)
+                      : e.target.value === ""
+                        ? NaN
+                        : NaN,
+                  );
+                }}
+                className="w-24 text-center p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+              />
+            </ControlledPopover>
             <Button
               type="button"
               variant="secondary"
@@ -172,7 +161,7 @@ export default function AddItemForm({
               +
             </Button>
           </div>
-          {(invalidQty || triedBelowMin) && (
+          {invalidQty && (
             <div className="text-red-600 text-sm mt-1">
               Please enter a valid quantity of at least 1.
             </div>
