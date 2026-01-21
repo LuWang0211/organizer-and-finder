@@ -68,11 +68,10 @@ class FeedbackGameManager {
    * Send event to Scene to play the specified animation type.
    * The Scene handles switching between success/error animations.
    */
-  playAnimation(
+  async playAnimation(
     type: FeedbackAnimationType,
     durationMs: number,
-    onComplete: () => void,
-  ) {
+  ): Promise<void> {
     if (!this.scene) {
       console.warn("[FeedbackGame] FeedbackScene not ready yet");
       return;
@@ -87,16 +86,18 @@ class FeedbackGameManager {
     // Send event notification to Scene to trigger the animation
     this.scene.events.emit("play-animation", { type, durationMs });
 
-    // Set timeout for completion callback
-    const effectiveDuration =
-      type === "success" ? Math.round(durationMs * 2.5) : durationMs;
-    this.timeoutId = window.setTimeout(
-      () => {
-        onComplete();
-        this.timeoutId = null;
-      },
-      Math.max(900, effectiveDuration),
-    );
+    // Return promise that resolves after duration
+    return new Promise((resolve) => {
+      const effectiveDuration =
+        type === "success" ? Math.round(durationMs * 2.5) : durationMs;
+      this.timeoutId = window.setTimeout(
+        () => {
+          this.timeoutId = null;
+          resolve();
+        },
+        Math.max(900, effectiveDuration),
+      );
+    });
   }
 
   /**

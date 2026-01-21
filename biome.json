@@ -33,7 +33,8 @@
             "requireAscii": true,
             "filenameCases": ["camelCase", "export"]
           }
-        }
+        },
+        "noNonNullAssertion": "off"
       }
     }
   },

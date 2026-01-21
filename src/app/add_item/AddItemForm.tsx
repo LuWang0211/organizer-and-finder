@@ -8,9 +8,10 @@ import {
   useRef,
   useState,
 } from "react";
+import { usePrevious } from "react-use";
 import { Button } from "@/ui/components/Button";
 import FeedbackOverlay, {
-  type OverlayStatus,
+  type FeedbackOverlayRef,
 } from "@/ui/components/FeedbackOverlay/FeedbackOverlay";
 import { Icon } from "@/ui/components/Icon";
 import MenuSelect from "@/ui/components/MenuSelect";
@@ -40,8 +41,8 @@ export default function AddItemForm({
     ActionResult | null,
     FormData
   >(action, null);
-  const [overlay, setOverlay] = useState<OverlayStatus>(null);
-  const wasPendingRef = useRef<boolean>(false);
+  const overlayRef = useRef<FeedbackOverlayRef>(null);
+  const prevIsPending = usePrevious(isPending);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const belowMinTimeoutRef = useRef<number | null>(null);
@@ -49,23 +50,34 @@ export default function AddItemForm({
 
   const invalidQty = useMemo(() => !Number.isFinite(qty) || qty < 1, [qty]);
 
-  // When server action returns, pop overlay and navigate on success
-  const onSubmitCapture: React.FormEventHandler<HTMLFormElement> = () => {
-    // Track a fresh pending cycle; overlay will trigger when pending finishes
-    wasPendingRef.current = false;
-  };
-
   // Trigger overlay only after a pending->settled transition to avoid using stale result
   useEffect(() => {
-    if (isPending) {
-      wasPendingRef.current = true;
-      return;
+    // If we were pending and now we are not, and we have a result, show feedback
+    if (prevIsPending && !isPending && result) {
+      const overlay = overlayRef.current;
+      if (!overlay) return;
+
+      (async () => {
+        await overlay.open({
+          message: result.ok ? "Item added successfully!" : result.error,
+        });
+        await overlay.playAnimation(result.ok ? "success" : "error", {
+          durationMs: result.ok ? 1400 : 2000,
+        });
+        overlay.close();
+
+        if (result.ok) {
+          // Stay on page; reset form for quick subsequent entries
+          formRef.current?.reset();
+          setQty(1);
+          setIcon("");
+          // keep location selection
+          // focus name for quick typing
+          nameRef.current?.focus();
+        }
+      })();
     }
-    if (!isPending && wasPendingRef.current && result) {
-      setOverlay(result.ok ? "success" : "error");
-      wasPendingRef.current = false;
-    }
-  }, [isPending, result]);
+  }, [isPending, result, prevIsPending]);
 
   // Cleanup any hint timeout on unmount
   useEffect(() => {
@@ -83,12 +95,7 @@ export default function AddItemForm({
 
   return (
     <>
-      <form
-        ref={formRef}
-        action={formAction}
-        onSubmitCapture={onSubmitCapture}
-        className="space-y-4"
-      >
+      <form ref={formRef} action={formAction} className="space-y-4">
         <div>
           <label htmlFor={nameId} className="block mb-1 font-semibold">
             Name
@@ -242,26 +249,7 @@ export default function AddItemForm({
           </Button>
         </div>
       </form>
-      <FeedbackOverlay
-        status={overlay}
-        message={!result || result.ok ? undefined : result.error}
-        widthPx={1000}
-        heightPx={260}
-        successMessage="Item added successfully!"
-        onDone={() => {
-          if (result?.ok) {
-            // Stay on page; reset form for quick subsequent entries
-            formRef.current?.reset();
-            setQty(1);
-            setIcon("");
-            // keep location selection
-            // focus name for quick typing
-            nameRef.current?.focus();
-          }
-          setOverlay(null);
-        }}
-        durationMs={overlay === "success" ? 1400 : 2000}
-      />
+      <FeedbackOverlay ref={overlayRef} />
     </>
   );
 }

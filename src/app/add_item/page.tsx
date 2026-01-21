@@ -1,4 +1,3 @@
-import { Package } from "lucide-react";
 import AuthProtectedComponent from "@/AuthProtectedComponent";
 import { getSession } from "@/auth";
 import { fetchLocationsForHouse } from "@/services/locationService";
