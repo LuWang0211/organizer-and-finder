@@ -1,4 +1,4 @@
-import { ArrowLeft, Home, Search } from "lucide-react";
+import { ArrowLeft, Home } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/ui/components/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/components/Card";

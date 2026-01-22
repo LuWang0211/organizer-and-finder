@@ -1,14 +1,3 @@
-import {
-  Bell,
-  Heart,
-  Home,
-  Mail,
-  Settings,
-  Smile,
-  Star,
-  User,
-} from "lucide-react";
-import React from "react";
 import { Bubble } from "@/ui/components/Bubble";
 import { Button } from "@/ui/components/Button";
 import {
