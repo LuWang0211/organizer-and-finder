@@ -2,14 +2,18 @@
 import { useRouter } from "next/navigation";
 import {
   useActionState,
+  useCallback,
   useEffect,
   useId,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import { usePrevious } from "react-use";
 import { Button } from "@/ui/components/Button";
+import {
+  ControlledPopover,
+  type ControlledPopoverRef,
+} from "@/ui/components/ControlledPopover";
 import FeedbackOverlay, {
   type FeedbackOverlayRef,
 } from "@/ui/components/FeedbackOverlay/FeedbackOverlay";
@@ -45,10 +49,7 @@ export default function AddItemForm({
   const prevIsPending = usePrevious(isPending);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
-  const belowMinTimeoutRef = useRef<number | null>(null);
-  const [triedBelowMin, setTriedBelowMin] = useState(false);
-
-  const invalidQty = useMemo(() => !Number.isFinite(qty) || qty < 1, [qty]);
+  const popoverRef = useRef<ControlledPopoverRef>(null);
 
   // Trigger overlay only after a pending->settled transition to avoid using stale result
   useEffect(() => {
@@ -79,19 +80,28 @@ export default function AddItemForm({
     }
   }, [isPending, result, prevIsPending]);
 
-  // Cleanup any hint timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (belowMinTimeoutRef.current) {
-        window.clearTimeout(belowMinTimeoutRef.current);
-        belowMinTimeoutRef.current = null;
-      }
-    };
-  }, []);
-
   const nameId = useId();
   const quantityId = useId();
   const iconSelectionId = useId();
+
+  const validateQuantity = useCallback((value: number) => {
+    if (!Number.isFinite(value) || value < 1) {
+      popoverRef.current?.show(
+        "Please enter a valid quantity of at least 1",
+        2000,
+      );
+      return false;
+    }
+    return true;
+  }, []);
+
+  const handleInvalid = useCallback(
+    (e: React.InvalidEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      validateQuantity(qty);
+    },
+    [qty, validateQuantity],
+  );
 
   return (
     <>
@@ -126,57 +136,53 @@ export default function AddItemForm({
                 setQty((v) => {
                   const current = Number.isFinite(v) ? (v as number) : 1;
                   if (current <= 1) {
-                    if (belowMinTimeoutRef.current)
-                      window.clearTimeout(belowMinTimeoutRef.current);
-                    setTriedBelowMin(true);
-                    belowMinTimeoutRef.current = window.setTimeout(
-                      () => setTriedBelowMin(false),
-                      1600,
-                    );
+                    popoverRef.current?.show("Minimum quantity is 1", 1600);
                     return 1;
                   }
-                  return Math.max(1, current - 1);
+                  return current - 1;
                 });
               }}
             >
               -
             </Button>
-            <input
-              name="quantity"
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              min={1}
-              step={1}
-              value={Number.isFinite(qty) ? qty : ""}
-              onChange={(e) => {
-                const v = Number(e.target.value);
-                setQty(
-                  Number.isFinite(v)
-                    ? Math.floor(v)
-                    : e.target.value === ""
-                      ? NaN
-                      : NaN,
-                );
-              }}
-              className="w-24 text-center p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
-            />
+            <ControlledPopover ref={popoverRef} variant="primary">
+              <input
+                name="quantity"
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                min={1}
+                step={1}
+                value={Number.isFinite(qty) ? qty : ""}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  setQty(
+                    Number.isFinite(v)
+                      ? Math.floor(v)
+                      : e.target.value === ""
+                        ? NaN
+                        : NaN,
+                  );
+                }}
+                onInvalid={handleInvalid}
+                className="w-24 text-center p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+              />
+            </ControlledPopover>
             <Button
               type="button"
               variant="secondary"
               size="icon"
               aria-label="Increase quantity"
               className="w-12 h-12 text-xl"
-              onClick={() => setQty((v) => (Number.isFinite(v) ? v + 1 : 1))}
+              onClick={() => {
+                setQty((v) => {
+                  return v + 1;
+                });
+              }}
             >
               +
             </Button>
           </div>
-          {(invalidQty || triedBelowMin) && (
-            <div className="text-red-600 text-sm mt-1">
-              Please enter a valid quantity of at least 1.
-            </div>
-          )}
         </div>
 
         <div>
@@ -228,7 +234,7 @@ export default function AddItemForm({
         <input
           type="hidden"
           name="__qty_fallback"
-          value={invalidQty ? "1" : String(qty)}
+          value={!Number.isFinite(qty) || qty < 1 ? "1" : String(qty)}
         />
 
         <div className="pt-2 flex justify-end gap-2">
@@ -240,11 +246,7 @@ export default function AddItemForm({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isPending || invalidQty}
-          >
+          <Button type="submit" variant="primary" disabled={isPending}>
             {isPending ? "Saving…" : "Save Item"}
           </Button>
         </div>
