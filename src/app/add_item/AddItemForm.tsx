@@ -2,9 +2,9 @@
 import { useRouter } from "next/navigation";
 import {
   useActionState,
+  useCallback,
   useEffect,
   useId,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -51,8 +51,6 @@ export default function AddItemForm({
   const formRef = useRef<HTMLFormElement | null>(null);
   const popoverRef = useRef<ControlledPopoverRef>(null);
 
-  const invalidQty = useMemo(() => !Number.isFinite(qty) || qty < 1, [qty]);
-
   // Trigger overlay only after a pending->settled transition to avoid using stale result
   useEffect(() => {
     // If we were pending and now we are not, and we have a result, show feedback
@@ -85,6 +83,25 @@ export default function AddItemForm({
   const nameId = useId();
   const quantityId = useId();
   const iconSelectionId = useId();
+
+  const validateQuantity = useCallback((value: number) => {
+    if (!Number.isFinite(value) || value < 1) {
+      popoverRef.current?.show(
+        "Please enter a valid quantity of at least 1",
+        2000,
+      );
+      return false;
+    }
+    return true;
+  }, []);
+
+  const handleInvalid = useCallback(
+    (e: React.InvalidEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      validateQuantity(qty);
+    },
+    [qty, validateQuantity],
+  );
 
   return (
     <>
@@ -147,6 +164,7 @@ export default function AddItemForm({
                         : NaN,
                   );
                 }}
+                onInvalid={handleInvalid}
                 className="w-24 text-center p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
               />
             </ControlledPopover>
@@ -156,16 +174,15 @@ export default function AddItemForm({
               size="icon"
               aria-label="Increase quantity"
               className="w-12 h-12 text-xl"
-              onClick={() => setQty((v) => (Number.isFinite(v) ? v + 1 : 1))}
+              onClick={() => {
+                setQty((v) => {
+                  return v + 1;
+                });
+              }}
             >
               +
             </Button>
           </div>
-          {invalidQty && (
-            <div className="text-red-600 text-sm mt-1">
-              Please enter a valid quantity of at least 1.
-            </div>
-          )}
         </div>
 
         <div>
@@ -217,7 +234,7 @@ export default function AddItemForm({
         <input
           type="hidden"
           name="__qty_fallback"
-          value={invalidQty ? "1" : String(qty)}
+          value={!Number.isFinite(qty) || qty < 1 ? "1" : String(qty)}
         />
 
         <div className="pt-2 flex justify-end gap-2">
@@ -229,11 +246,7 @@ export default function AddItemForm({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isPending || invalidQty}
-          >
+          <Button type="submit" variant="primary" disabled={isPending}>
             {isPending ? "Saving…" : "Save Item"}
           </Button>
         </div>

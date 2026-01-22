@@ -65,9 +65,6 @@ export const ControlledPopover = React.forwardRef<
           sideOffset={sideOffset}
           variant={variant}
           className={cn("w-auto", className)}
-          onPointerDownOutside={(e) => e.preventDefault()}
-          onFocusOutside={(e) => e.preventDefault()}
-          onInteractOutside={(e) => e.preventDefault()}
         >
           {message}
         </PopoverContent>
