@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ProfileButton } from "@/app/profile/ProfileButton";
+import { ProfileContainer } from "@/app/profile/ProfileContainer";
 
 export function ProfileWrapper() {
   const pathname = usePathname();
@@ -11,5 +11,5 @@ export function ProfileWrapper() {
     return null;
   }
 
-  return <ProfileButton />;
+  return <ProfileContainer />;
 }

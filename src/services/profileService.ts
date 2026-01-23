@@ -1,20 +1,17 @@
-import type { ProfileData } from "@/app/profile/types";
 import prisma from "@/services/db";
 
-export async function fetchProfileData(userId: number): Promise<ProfileData> {
-  // Fetch user with family relation
+export async function fetchUser(userId: number) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      username: true,
       family: {
-        include: {
-          house: true,
-          rooms: true,
-          locations: {
-            include: {
-              items: true,
-            },
-          },
+        select: {
+          id: true,
+          name: true,
         },
       },
     },
@@ -24,44 +21,22 @@ export async function fetchProfileData(userId: number): Promise<ProfileData> {
     throw new Error("User not found");
   }
 
-  // Calculate total items and rooms
-  let totalItems = 0;
-  let totalRooms = 0;
+  return user;
+}
 
-  if (user.family) {
-    // Count all locations and their items
-    const locations = await prisma.location.findMany({
-      where: { familyId: user.family.id },
-      include: {
-        items: true,
-      },
-    });
+export async function fetchRoomCountForFamily(familyId: number) {
+  return prisma.room.count({
+    where: { familyId },
+  });
+}
 
-    totalItems = locations.reduce((sum, loc) => sum + loc.items.length, 0);
-
-    // Count all rooms
-    totalRooms = await prisma.room.count({
-      where: { familyId: user.family.id },
-    });
-  }
-
-  // Get the first house if exists
-  const house =
-    user.family && user.family.house.length > 0
-      ? { id: user.family.house[0].id, name: user.family.house[0].name }
-      : null;
-
-  return {
-    user: {
-      name: user.name,
-      email: user.email,
-      username: user.username,
+export async function fetchItemCountForFamily(familyId: number) {
+  const locations = await prisma.location.findMany({
+    where: { familyId },
+    include: {
+      items: true,
     },
-    family: user.family ? { id: user.family.id, name: user.family.name } : null,
-    house,
-    stats: {
-      totalItems,
-      totalRooms,
-    },
-  };
+  });
+
+  return locations.reduce((sum, loc) => sum + loc.items.length, 0);
 }

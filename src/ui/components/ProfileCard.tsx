@@ -1,6 +1,6 @@
 "use client";
 
-import type { ProfileData } from "@/app/profile/types";
+import type { ProfileData } from "@/app/profile/actions";
 
 import { Button } from "@/ui/components/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/components/Card";
