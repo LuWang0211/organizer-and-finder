@@ -282,6 +282,8 @@ export default function FloorplanV2Game() {
   // Keep a ref to the latest handleSetLabel function to avoid closure issues
   const handleSetLabelRef = useLatest(handleSetLabel);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
+  // biome-ignore lint/correctness/useExhaustiveDependencies: handleSetLabelRef is a ref (useLatest), stable by design
   useLayoutEffect(() => {
     if (floorplanV2Game.current === undefined) {
       console.log("Creating floorplan v2 game");
@@ -345,7 +347,8 @@ export default function FloorplanV2Game() {
         floorplanV2Game.current = undefined;
       }
     };
-  }, [handleSetLabelRef.current, floorplanV2Config, handleSetLabelRef]);
+  }, [floorplanV2Config]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   useEffect(() => {
     if (containerWidth > 0 && containerHeight > 0) {
