@@ -134,18 +134,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* Height-based container query variants (using rem units) */
-@custom-variant @h-16 (@container (min-height: 16rem));
-@custom-variant @h-20 (@container (min-height: 20rem));
-@custom-variant @h-24 (@container (min-height: 24rem));
-@custom-variant @h-28 (@container (min-height: 28rem));
-@custom-variant @h-32 (@container (min-height: 32rem));
-@custom-variant @h-36 (@container (min-height: 36rem));
-@custom-variant @h-40 (@container (min-height: 40rem));
-@custom-variant @h-48 (@container (min-height: 48rem));
-@custom-variant @h-56 (@container (min-height: 56rem));
-@custom-variant @h-64 (@container (min-height: 64rem));
-@custom-variant @h-72 (@container (min-height: 72rem));
-@custom-variant @h-80 (@container (min-height: 80rem));
-@custom-variant @h-96 (@container (min-height: 96rem));
