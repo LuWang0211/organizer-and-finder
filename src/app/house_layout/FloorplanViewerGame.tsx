@@ -81,8 +81,8 @@ export default function FloorplanViewerGame({
       if (currentRoom !== roomId) {
         router.push(`/house_layout/${roomId}`);
       }
-      setSelectedRoomId(roomId);
-      // Emit pin with folded mode and selected room
+
+      // Immediately emit pin with folded mode and selected room
       floorplanGame.current?.events.emit("pin", "folded", roomId);
     },
     [router, pathname],
@@ -161,16 +161,6 @@ export default function FloorplanViewerGame({
       floorplanGame.current.scale.resize(containerWidth, containerHeight);
     }
   }, [containerWidth, containerHeight]);
-
-  // Notify scene to pin/center on selection changes.
-  // Derive mode from whether a room is selected to avoid waiting for panel visibility.
-  useEffect(() => {
-    if (!floorplanGame.current) return;
-    const mode: ViewerMode = selectedRoomId
-      ? ViewerMode.Folded
-      : ViewerMode.Fullscreen;
-    floorplanGame.current?.events.emit("pin", mode, selectedRoomId);
-  }, [selectedRoomId]);
 
   // Sync selection from the URL path whenever it changes
   useEffect(() => {
