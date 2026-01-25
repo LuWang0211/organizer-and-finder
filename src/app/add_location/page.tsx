@@ -24,27 +24,29 @@ async function DataLoader({
   const defaultRoomId = searchParams ? (await searchParams)?.roomId : undefined;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader className="pb-4 text-center">
-          <div className="flex justify-center mb-6">
-            <Icon variant="orange" size="lg" iconKey="map-pin" />
-          </div>
-          <CardTitle className="text-3xl font-extrabold mb-2">
-            Add Location
-          </CardTitle>
-          <p className="text-base text-text-main/80 font-medium">
-            Create a location under a room.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <AddLocationForm
-            rooms={rooms.map((r) => ({ id: r.id, name: r.name }))}
-            action={addLocation}
-            defaultRoomId={defaultRoomId}
-          />
-        </CardContent>
-      </Card>
+    <div className="min-h-svh h-full flex items-center justify-center p-6 @container-[size]">
+      <div className="scale-70 @h-28:scale-85 @h-32:scale-100">
+        <Card className="w-full max-w-md">
+          <CardHeader className="pb-4 text-center">
+            <div className="justify-center mb-6 hidden @h-36:flex">
+              <Icon variant="orange" size="lg" iconKey="map-pin" />
+            </div>
+            <CardTitle className="text-3xl font-extrabold mb-2 hidden @h-36:block">
+              Add Location
+            </CardTitle>
+            <p className="text-base text-text-main/80 font-medium">
+              Create a location under a room.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <AddLocationForm
+              rooms={rooms.map((r) => ({ id: r.id, name: r.name }))}
+              action={addLocation}
+              defaultRoomId={defaultRoomId}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
