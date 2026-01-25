@@ -1,4 +1,3 @@
-import React from "react";
 import { fetchItemsByLocation } from "@/services/itemService";
 import ItemsList from "./ItemsList";
 

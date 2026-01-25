@@ -1,7 +1,7 @@
 // src/app/house_layout/[room]/layout.tsx
 
 import { redirect } from "next/navigation";
-import React, { type PropsWithChildren, Suspense } from "react";
+import { type PropsWithChildren, Suspense } from "react";
 import { getSession } from "@/auth";
 import { fetchRoomForFamily } from "@/services/roomService";
 import { Card, CardHeader, CardTitle } from "@/ui/components/Card";

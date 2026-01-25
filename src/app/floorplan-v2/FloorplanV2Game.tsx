@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Download, Magnet, Upload } from "lucide-react";
+import { ChevronDown, Download, Upload } from "lucide-react";
 import { Game } from "phaser";
 import AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 import GesturesPlugin from "phaser3-rex-plugins/plugins/gestures-plugin";

@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { Card, CardHeader, CardTitle } from "@/ui/components/Card";
 
 export default async function LocationLayout(

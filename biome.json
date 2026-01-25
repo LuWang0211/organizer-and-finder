@@ -35,6 +35,9 @@
           }
         },
         "noNonNullAssertion": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "error"
       }
     }
   },

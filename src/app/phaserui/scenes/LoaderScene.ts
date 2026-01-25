@@ -1,4 +1,3 @@
-import { UIScene } from "@phaser/UIScene";
 import { sortBy } from "lodash";
 import type AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 
