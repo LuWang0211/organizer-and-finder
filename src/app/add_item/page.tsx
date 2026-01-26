@@ -27,27 +27,29 @@ async function DataLoader({
   const defaultLocationId = Array.isArray(raw) ? raw[0] : raw;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader className="pb-4 text-center">
-          <div className="flex justify-center mb-6">
-            <Icon variant="secondary" size="lg" iconKey="package" />
-          </div>
-          <CardTitle className="text-3xl font-extrabold mb-2">
-            Add Item
-          </CardTitle>
-          <p className="text-base text-text-main/80 font-medium">
-            Create a new item and optionally link to a location.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <AddItemForm
-            locations={locations}
-            action={addItem}
-            defaultLocationId={defaultLocationId}
-          />
-        </CardContent>
-      </Card>
+    <div className="min-h-svh h-full flex items-center justify-center p-6 @container-[size]">
+      <div className="scale-70 @h-28:scale-85 @h-32:scale-100">
+        <Card className="w-full max-w-md">
+          <CardHeader className="pb-4 text-center">
+            <div className="justify-center mb-6 hidden @h-48:flex">
+              <Icon variant="secondary" size="lg" iconKey="package" />
+            </div>
+            <CardTitle className="text-3xl font-extrabold mb-2 hidden @h-36:block">
+              Add Item
+            </CardTitle>
+            <p className="text-base text-text-main/80 font-medium">
+              Create a new item and optionally link to a location.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <AddItemForm
+              locations={locations}
+              action={addItem}
+              defaultLocationId={defaultLocationId}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
