@@ -50,43 +50,44 @@ export default function Layout({
       </Suspense>
 
       <div
+        onPointerDownCapture={stopAll}
+        onPointerUpCapture={stopAll}
         className={cn(
-          "absolute top-0 right-0 bottom-0 pointer-events-none transition-[width] duration-300",
+          "absolute top-0 right-0 bottom-0 transition-[width] duration-300",
           {
             "w-1/2": isPanelOpen,
             "w-0": !isPanelOpen,
           },
         )}
       >
-        {isPanelOpen && <div className="pointer-events-none">{children}</div>}
+        {isPanelOpen && <div>{children}</div>}
 
-        <div
-          className={cn(
-            "text-red-100 absolute top-2 z-10 pointer-events-auto p-4",
-            {
+        {isPanelOpen && (
+          <div
+            className={cn("text-red-100 absolute top-2 z-10 p-4", {
               "left-[-3em]": isPanelOpen,
               "right-5": !isPanelOpen,
-            },
-          )}
-          onPointerDownCapture={stopAll}
-          onPointerUpCapture={stopAll}
-        >
-          <Icon
-            icon={isPanelOpen ? menuUnFoldRight : menuFoldLeft}
-            className={"cursor-pointer shadow-lg w-8 h-8"}
-            width={"2em"}
-            height={"2em"}
-            onClick={(e) => {
-              stopAll(e);
-              // Folded state should only be entered via room click (route change).
-              // When closing the panel, navigate back to /house_layout without full refresh.
-              if (isPanelOpen) {
-                router.replace("/house_layout");
-              }
-              // If panel is closed, do nothing here; opening occurs when a room is clicked.
-            }}
-          />
-        </div>
+            })}
+            onPointerDownCapture={stopAll}
+            onPointerUpCapture={stopAll}
+          >
+            <Icon
+              icon={isPanelOpen ? menuUnFoldRight : menuFoldLeft}
+              className={"cursor-pointer shadow-lg w-8 h-8"}
+              width={"2em"}
+              height={"2em"}
+              onClick={(e) => {
+                stopAll(e);
+                // Folded state should only be entered via room click (route change).
+                // When closing the panel, navigate back to /house_layout without full refresh.
+                if (isPanelOpen) {
+                  router.replace("/house_layout");
+                }
+                // If panel is closed, do nothing here; opening occurs when a room is clicked.
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

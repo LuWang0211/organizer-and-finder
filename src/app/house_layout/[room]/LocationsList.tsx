@@ -119,9 +119,10 @@ export default function LocationsList({
                   </div>
                 </div>
               }
+              className="block"
             >
               <Link
-                className="py-2 px-4 text-gray-900 wrap-anywhere"
+                className="text-gray-900 wrap-anywhere"
                 href={`/house_layout/${roomId}/${location.id.replace(`${roomId}_`, "")}`}
               >
                 <Bubble
@@ -151,9 +152,9 @@ export default function LocationsList({
         })}
 
         {/* Add Location link as the last grid item */}
-        <div className="relative inline-block group">
+        <div className="relative block group">
           <Link
-            className="py-3 px-5 text-gray-900 wrap-anywhere min-w-[150px]"
+            className="block text-gray-900 wrap-anywhere min-w-[150px]"
             href={`/add_location?roomId=${encodeURIComponent(roomId)}`}
           >
             <Bubble

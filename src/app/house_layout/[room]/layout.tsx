@@ -29,23 +29,25 @@ export default async function RoomLayout(
   }
 
   return (
-    <div className="room-layout h-screen flex flex-col pointer-events-none backdrop-blur-lg">
-      <div className="flex-shrink-0 px-2 pt-2">
-        <Card className="hover:scale-100 hover:[&>div]:scale-100 hover:[&>div]:shadow-none">
-          <CardHeader className="py-4 items-center text-center">
-            <CardTitle>
-              {roomInfo.name
-                ? `${roomInfo.name} is now selected`
-                : "No room selected"}
-            </CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
-      <div className="flex-1 flex flex-col">
-        <div className="h-1/2 overflow-x-hidden overflow-y-auto">
-          <Suspense fallback={<LoadingCard label="Loading locations…" />}>
-            <LocationsPanel roomId={roomId} />
-          </Suspense>
+    <div className="room-layout h-screen flex flex-col backdrop-blur-lg">
+      <div className="flex-1 flex flex-col h-full">
+        <div className="h-1/2 overflow-visible flex flex-col @container-[size]">
+          <div className="p-0 @h-24:px-2 @h-24:pt-2">
+            <Card>
+              <CardHeader className="p-2 @h-24:p-6 @h-24:py-4 items-center text-center">
+                <CardTitle className="text-xl @h-24:text-2xl">
+                  {roomInfo.name
+                    ? `${roomInfo.name} is now selected`
+                    : "No room selected"}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          </div>
+          <div className="flex-1 w-full overflow-auto">
+            <Suspense fallback={<LoadingCard label="Loading locations…" />}>
+              <LocationsPanel roomId={roomId} />
+            </Suspense>
+          </div>
         </div>
         <div className="h-1/2 overflow-visible">{children}</div>
       </div>
