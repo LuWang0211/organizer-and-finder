@@ -29,9 +29,17 @@ export default async function RoomLayout(
   }
 
   return (
-    <div className="room-layout h-screen flex flex-col backdrop-blur-lg">
-      <div className="flex-1 flex flex-col h-full">
-        <div className="h-1/2 overflow-visible flex flex-col @container-[size]">
+    <div className="room-layout h-screen flex flex-col">
+      <div className="flex-1 flex flex-col h-full gap-2 p-2">
+        <div
+          className="h-1/2 overflow-visible flex flex-col @container-[size] rounded-xl
+          bg-linear-to-b from-white/20 via-white/10 to-white/5
+          backdrop-blur-xl backdrop-saturate-150
+          border border-white/30
+          shadow-[0_8px_32px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.4)]
+          p-2
+        "
+        >
           <div className="p-0 @h-24:px-2 @h-24:pt-2">
             <Card>
               <CardHeader className="p-2 @h-24:p-6 @h-24:py-4 items-center text-center">
@@ -43,14 +51,46 @@ export default async function RoomLayout(
               </CardHeader>
             </Card>
           </div>
-          <div className="flex-1 w-full overflow-auto">
+          <div className="flex-1 w-full overflow-auto custom-scrollbar">
             <Suspense fallback={<LoadingCard label="Loading locations…" />}>
               <LocationsPanel roomId={roomId} />
             </Suspense>
           </div>
         </div>
-        <div className="h-1/2 overflow-visible">{children}</div>
+        <div
+          className="h-1/2 overflow-visible rounded-xl
+          bg-linear-to-b from-white/20 via-white/10 to-white/5
+          backdrop-blur-xl backdrop-saturate-150
+          border border-white/30
+          shadow-[0_-8px_32px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.4)]
+          custom-scrollbar
+        "
+        >
+          {children}
+        </div>
       </div>
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.4);
+        }
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+        }
+      `}</style>
     </div>
   );
 }
