@@ -80,7 +80,6 @@ export default function ItemsList({
                     </h3>
                   </div>
                   <div className="text-base text-gray-600 flex items-center gap-2">
-                    {/* <span className="opacity-70">ID: {item.id}</span> */}
                     {item.otherobjectid !== null && (
                       <span className="opacity-70">
                         Ref: {item.otherobjectid}

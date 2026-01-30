@@ -26,28 +26,6 @@ export default async function LocationLayout(
       <div className="flex-1 w-full overflow-auto custom-scrollbar">
         {children}
       </div>
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 4px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.4);
-        }
-        .custom-scrollbar {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
-        }
-      `}</style>
     </div>
   );
 }

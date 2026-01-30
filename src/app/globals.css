@@ -40,6 +40,31 @@
   text-wrap: balance;
 }
 
+@utility custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+}
+
 @source "src/pages/**/*.{js,ts,jsx,tsx,mdx}";
 @source "src/components/**/*.{js,ts,jsx,tsx,mdx}";
 @source "src/app/**/*.{js,ts,jsx,tsx,mdx}";

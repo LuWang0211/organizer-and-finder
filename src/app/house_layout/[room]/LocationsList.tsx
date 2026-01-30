@@ -108,9 +108,6 @@ export default function LocationsList({
                     <h4 className="font-bold text-lg mb-1 break-words leading-snug text-gray-900">
                       {location.name}
                     </h4>
-                    {/* <p className="text-base text-gray-700 break-words leading-snug">
-                      ID: {location.id}
-                    </p> */}
                     <p className="text-base text-gray-700 break-words leading-snug">
                       Total: {location.items?.length || 0} items
                     </p>
