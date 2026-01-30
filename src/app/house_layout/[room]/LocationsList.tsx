@@ -20,11 +20,11 @@ function ItemsPreview({ items }: { items?: LocationItem[] }) {
           return (
             <div
               key={item.id}
-              className="grid grid-cols-[auto_1fr_auto] items-center gap-x-2 gap-y-1 text-base leading-snug"
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-x-2 gap-y-1 text-base leading-snug text-gray-800"
             >
               <span className="min-w-0 break-words">{item.name}</span>
               {item.quantity && (
-                <span className="justify-self-end bg-white/20 px-1 rounded text-base whitespace-nowrap flex-shrink-0">
+                <span className="justify-self-end bg-gray-200/60 px-1 rounded text-base whitespace-nowrap flex-shrink-0">
                   {item.quantity}
                 </span>
               )}
@@ -32,14 +32,14 @@ function ItemsPreview({ items }: { items?: LocationItem[] }) {
           );
         })}
         {items.length > 4 && (
-          <p className="text-base text-white/70 italic">
+          <p className="text-base text-gray-600 italic">
             +{items.length - 4} more
           </p>
         )}
       </div>
     );
   }
-  return <p className="text-base text-white/70 italic">No items</p>;
+  return <p className="text-base text-gray-600 italic">No items</p>;
 }
 
 interface LocationsListProps {
@@ -59,7 +59,7 @@ export default function LocationsList({
   if (!hasLocations) {
     return (
       <div className={cn("pointer-events-auto", className)}>
-        <div className="grid grid-cols-3 gap-4 px-5 py-3">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 px-5 py-3 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
           <Link
             className="pointer-events-auto"
             href={`/add_location?roomId=${encodeURIComponent(roomId)}`}
@@ -69,16 +69,21 @@ export default function LocationsList({
               size="sm"
               className="flex items-center justify-center cursor-pointer !bg-orange-400/20 !border-orange-300/50 "
             >
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2">
-                  <Icon variant="secondary" size="tiny" iconKey="plus" />
+              <div className="flex items-center gap-2">
+                <Icon
+                  variant="default"
+                  size="sm"
+                  iconKey="plus"
+                  className="border-2!"
+                />
+                <div className="flex flex-col text-left">
                   <h3 className="font-semibold text-gray-800 text-lg">
                     Create the first Location
                   </h3>
+                  <p className="text-base text-gray-600">
+                    No locations found in this room.
+                  </p>
                 </div>
-                <p className="text-base text-gray-600">
-                  No locations found in this room.
-                </p>
               </div>
             </Bubble>
           </Link>
@@ -89,7 +94,7 @@ export default function LocationsList({
 
   return (
     <div className={cn("px-5 py-3", className)}>
-      <div className="grid grid-cols-3 gap-4 pointer-events-auto">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 pointer-events-auto sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
         {locations.map((location) => {
           return (
             <Tooltip
@@ -100,19 +105,18 @@ export default function LocationsList({
                 <div className="flex w-full min-w-[260px] max-w-[640px] whitespace-normal break-words">
                   {/* Left side - Location info */}
                   <div className="w-1/2 pr-2 min-w-0">
-                    <h4 className="font-bold text-lg mb-1 break-words leading-snug">
+                    <h4 className="font-bold text-lg mb-1 break-words leading-snug text-gray-900">
                       {location.name}
                     </h4>
-                    <p className="text-base text-white/90 break-words leading-snug">
-                      ID: {location.id}
-                    </p>
-                    <p className="text-base text-white/90 break-words leading-snug">
+                    <p className="text-base text-gray-700 break-words leading-snug">
                       Total: {location.items?.length || 0} items
                     </p>
                   </div>
                   {/* Right side - Items list */}
-                  <div className="w-1/2 pl-2 border-l border-white/20 min-w-0">
-                    <p className="font-medium text-base mb-1">Items:</p>
+                  <div className="w-1/2 pl-2 border-l border-gray-300/60 min-w-0">
+                    <p className="font-medium text-base mb-1 text-gray-900">
+                      Items:
+                    </p>
                     <ItemsPreview
                       items={location.items as LocationItem[] | undefined}
                     />
@@ -128,22 +132,23 @@ export default function LocationsList({
                 <Bubble
                   variant="secondary"
                   size="sm"
-                  className="cursor-pointer min-w-[150px] hover:scale-105 transition-transform duration-200"
+                  className="min-w-[220px] cursor-pointer hover:scale-105 transition-transform duration-200"
                 >
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <Icon
-                        variant="secondary"
-                        size="tiny"
-                        iconKey={location.iconKey || "map-pin"}
-                      />
-                      <h3 className="font-semibold text-gray-800 text-lg mb-1">
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      variant="default"
+                      size="sm"
+                      iconKey={location.iconKey || "map-pin"}
+                      className="border-2!"
+                    />
+                    <div className="flex flex-col text-left min-w-0">
+                      <h3 className="font-semibold text-gray-800 text-lg truncate">
                         {location.name}
                       </h3>
+                      <p className="text-base text-gray-600">
+                        {location.items?.length || 0} items
+                      </p>
                     </div>
-                    <p className="text-base text-gray-600">
-                      {location.items?.length || 0} items
-                    </p>
                   </div>
                 </Bubble>
               </Link>
@@ -154,22 +159,29 @@ export default function LocationsList({
         {/* Add Location link as the last grid item */}
         <div className="relative block group">
           <Link
-            className="block text-gray-900 wrap-anywhere min-w-[150px]"
+            className="block text-gray-900 wrap-anywhere"
             href={`/add_location?roomId=${encodeURIComponent(roomId)}`}
           >
             <Bubble
               variant="secondary"
               size="sm"
-              className="cursor-pointer min-w-[150px] !bg-orange-400/20 !border-orange-300/50 "
+              className="cursor-pointer !bg-orange-400/20 !border-orange-300/50 "
             >
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2">
-                  <Icon variant="secondary" size="tiny" iconKey="plus" />
-                  <h3 className="font-semibold text-gray-800 text-lg mb-1">
+              <div className="flex items-center gap-2">
+                <Icon
+                  variant="default"
+                  size="sm"
+                  iconKey="plus"
+                  className="border-2!"
+                />
+                <div className="flex flex-col text-left">
+                  <h3 className="font-semibold text-gray-800 text-lg">
                     Add Location
                   </h3>
+                  <p className="text-base text-gray-600">
+                    Create a new location
+                  </p>
                 </div>
-                <p className="text-base text-gray-600">Create a new location</p>
               </div>
             </Bubble>
           </Link>
