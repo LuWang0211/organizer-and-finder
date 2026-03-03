@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!**/*/globals.css"]
+    "includes": ["**", "!**/*/globals.css", "!**/ui_style/navItems.ts"]
   },
   "formatter": {
     "enabled": true,
