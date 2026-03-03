@@ -105,3 +105,45 @@ export const ITEM_ICON_OPTIONS: { key: IconKey; label: string }[] = [
   { key: "book-open", label: "Books" },
   { key: "laptop", label: "Laptop" },
 ];
+
+// ============================================================
+// Image-based household item icons (PNG files in public folder)
+// ============================================================
+
+/** Type for household item image icons */
+export type HouseholdIconKey =
+  | "book"
+  | "bookshelf"
+  | "glasses"
+  | "mug"
+  | "nightstand"
+  | "pajamas"
+  | "remote"
+  | "laptop";
+
+/** Map household icon keys to their image paths (relative to public folder) */
+export const HOUSEHOLD_ICON_IMAGES: Record<HouseholdIconKey, string> = {
+  book: "/icons/household_items/icon-book.png",
+  bookshelf: "/icons/household_items/icon-bookshelf.png",
+  glasses: "/icons/household_items/icon-glasses.png",
+  mug: "/icons/household_items/icon-mug.png",
+  nightstand: "/icons/household_items/icon-nightstand.png",
+  pajamas: "/icons/household_items/icon-pajamas.png",
+  remote: "/icons/household_items/icon-remote.png",
+  laptop: "/icons/household_items/icon-laptop.png",
+};
+
+/** Convenience array for iteration/display purposes */
+export const HOUSEHOLD_ICON_OPTIONS: {
+  key: HouseholdIconKey;
+  label: string;
+}[] = [
+  { key: "book", label: "Book" },
+  { key: "bookshelf", label: "Bookshelf" },
+  { key: "glasses", label: "Glasses" },
+  { key: "mug", label: "Mug" },
+  { key: "nightstand", label: "Nightstand" },
+  { key: "pajamas", label: "Pajamas" },
+  { key: "remote", label: "Remote" },
+  { key: "laptop", label: "Laptop" },
+];
