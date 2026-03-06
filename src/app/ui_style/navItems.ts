@@ -1,5 +1,9 @@
 export const navItems = [
   {
+    "title": "GlassPanel",
+    "href": "/ui_style/GlassPanel"
+  },
+  {
     "title": "Generic",
     "href": "/ui_style/generic"
   },

@@ -101,6 +101,10 @@
     width: 1em;
     height: 1em;
   }
+
+  .glass-shadow {
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--color-black) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--color-white) 40%, transparent);
+  }
 }
 
 
