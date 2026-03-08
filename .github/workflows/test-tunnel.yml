@@ -1,0 +1,22 @@
+name: Test Cloudflare Tunnel Connection
+
+on:
+  push:
+    branches:
+      - baobao_branch
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to Cloudflare WARP
+        uses: Boostport/setup-cloudflare-warp@v1
+        with:
+          organization: ${{ secrets.CLOUDFLARE_ORG }}
+          auth_client_id: ${{ secrets.CLOUDFLARE_AUTH_CLIENT_ID }}
+          auth_client_secret: ${{ secrets.CLOUDFLARE_AUTH_CLIENT_SECRET }}
+
+      - name: Test connection to 192.168.50.240:2283
+        run: |
+          echo "Testing connection to 192.168.50.240:2283..."
+          curl -v --connect-timeout 10 http://192.168.50.240:2283
