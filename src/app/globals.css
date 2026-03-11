@@ -12,10 +12,14 @@
   --color-confirm-raw: 97 58% 77%;
   --color-card-raw: 39 100% 95%;
   --color-shadow-raw: 175 19% 28%;
+
   --color-text-main-raw: 247 28% 23%;
   --color-border-raw: 324 70% 15%;
 
-  
+  /* ObjectCard detail and extra info text colors */
+  --color-text-detail-raw: 216 15% 35%;
+  --color-text-footnote-raw: 35 20% 35%;
+
   /* Tailwind utilities with hsl() wrapper */
   --color-background: hsl(var(--color-background-raw));
   --color-foreground: hsl(var(--color-foreground-raw));
@@ -30,20 +34,61 @@
   --color-text-main: hsl(var(--color-text-main-raw));
   --color-border: hsl(var(--color-border-raw));
   
+  /* ObjectCard text colors */
+  --color-text-title: hsl(var(--color-text-title-raw));
+  --color-text-detail: hsl(var(--color-text-detail-raw));
+  --color-text-footnote: hsl(var(--color-text-footnote-raw));
+
+  /* IconV2 gradient base colors (HSL raw values for --value() access) */
+  --color-icon-default: 42 78% 92%;
+  --color-icon-primary: 1 73% 75%;
+  --color-icon-secondary: 120 52% 71%;
+  --color-icon-orange: 30 100% 76%;
+  --color-icon-blue: 200 80% 70%;
+
   --radius: 0.5rem;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  /* IconV2 shadows - spread values only (colors are generic) */
+  --shadow-layer-1-spread-tiny: 0 2px 3px 0;
+  --shadow-layer-2-spread-tiny: 2px -2px 3px 0;
+  --shadow-layer-1-spread-default: 0 3px 6px 0;
+  --shadow-layer-2-spread-default: 3px -3px 6px 0;
+  --shadow-layer-1-spread-lg: 0 4px 9px 0;
+  --shadow-layer-2-spread-lg: 4px -4px 9px 0;
+
+  /* IconV2 shadow colors (same for all sizes) */
+  --shadow-layer-1-color: color-mix(in oklch, black 10%, transparent);
+  --shadow-layer-2-color: color-mix(in oklch, black 15%, transparent);
+
+  /* IconV2 hover shadows - spread values */
+  --hover-shadow-layer-1-spread-tiny: 0 2px 5px 0;
+  --hover-shadow-layer-2-spread-tiny: 2px -2px 5px 0;
+  --hover-shadow-layer-1-spread-default: 0 3px 8px 0;
+  --hover-shadow-layer-2-spread-default: 3px -3px 8px 0;
+  --hover-shadow-layer-1-spread-lg: 0 4px 12px 0;
+  --hover-shadow-layer-2-spread-lg: 4px -4px 12px 0;
+
+  /* IconV2 hover shadow colors (same for all sizes) */
+  --hover-shadow-layer-1-color: color-mix(in oklch, black 15%, transparent);
+  --hover-shadow-layer-2-color: color-mix(in oklch, black 20%, transparent);
+
 }
 
 @utility text-balance {
   text-wrap: balance;
 }
 
+@utility font-hand {
+  font-family: 'Patrick Hand', cursive;
+}
+
 @utility custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
-
+color-icon
   &::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -62,6 +107,26 @@
 
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* IconV2 CSS-only gradient using color-mix with @utility */
+@utility icon-grad-* {
+  --via: --value(--color-icon-*);
+  --from: color-mix(in oklch, hsl(var(--via)) 10%, white);
+  --to: color-mix(in oklch, hsl(var(--via)) 85%, gray);
+  background: linear-gradient(to bottom left, var(--from), hsl(var(--via)), var(--to));
+  border-color: color-mix(in oklch, hsl(var(--via)) 95%, black);
+}
+
+/* IconV2 size-adaptive shadows - dynamic pattern using CSS variables */
+@utility icon-shadow-* {
+  box-shadow: --value(--shadow-layer-1-spread-*) var(--shadow-layer-1-color) inset,
+    --value(--shadow-layer-2-spread-*) var(--shadow-layer-2-color) inset;
+
+  @variant hover {
+    box-shadow: --value(--hover-shadow-layer-1-spread-*) var(--hover-shadow-layer-1-color) inset,
+      --value(--hover-shadow-layer-2-spread-*) var(--hover-shadow-layer-2-color) inset;
   }
 }
 

@@ -6,19 +6,19 @@ export default function ObjectCardDemoPage() {
   return (
     <div className="p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="font-['Patrick_Hand',cursive] text-4xl font-bold text-[#4a3b2a] text-center mb-8">
+        <h1 className="text-4xl font-bold text-text-main text-center mb-8">
           ObjectCard Component Demo
         </h1>
 
         {/* Info Variants - showing different info combinations */}
         <div className="mb-8">
-          <h2 className="font-['Patrick_Hand',cursive] text-2xl font-bold text-[#4a3b2a] mb-4 text-center">
+          <h2 className="text-2xl font-bold text-text-main mb-4 text-center">
             Info Variants
           </h2>
 
-          {/* Row 1: Full info - title + detail + extraInfo + extraInfo2 */}
+          {/* Row 1: Full info - title + detail + extraInfo + extraFootNote */}
           <div className="mb-6">
-            <h3 className="font-['Patrick_Hand',cursive] text-lg font-bold text-[#6b5d4f] mb-3 text-center">
+            <h3 className="text-lg font-bold text-white/80 mb-3 text-center">
               Full Info (all fields)
             </h3>
             <div className="flex flex-wrap gap-4 justify-center">
@@ -27,22 +27,22 @@ export default function ObjectCardDemoPage() {
                 title="Harry Potter Book"
                 detail="Reading"
                 extraInfo="x3"
-                extraInfo2="Ref: ABC123"
+                extraFootNote="Ref: ABC123"
               />
               <ObjectCard
                 iconKey="remote"
                 title="TV Remote"
                 detail="Living Room"
                 extraInfo="x1"
-                extraInfo2="In another object"
+                extraFootNote="In another object"
               />
             </div>
           </div>
 
-          {/* Row 2: Partial info - title + detail + extraInfo (no extraInfo2) */}
+          {/* Row 2: Partial info - title + detail + extraInfo (no extraFootNote) */}
           <div className="mb-6">
-            <h3 className="font-['Patrick_Hand',cursive] text-lg font-bold text-[#6b5d4f] mb-3 text-center">
-              Partial Info (no extraInfo2)
+            <h3 className="text-lg font-bold text-white/80 mb-3 text-center">
+              Partial Info (no extraFootNote)
             </h3>
             <div className="flex flex-wrap gap-4 justify-center">
               <ObjectCard
@@ -68,20 +68,20 @@ export default function ObjectCardDemoPage() {
 
           {/* Row 3: No extra info - only title + detail */}
           <div className="mb-6">
-            <h3 className="font-['Patrick_Hand',cursive] text-lg font-bold text-[#6b5d4f] mb-3 text-center">
+            <h3 className="text-lg font-bold text-white/80 mb-3 text-center">
               No Extra Info (title + detail only)
             </h3>
             <div className="flex flex-wrap gap-4 justify-center">
               <ObjectCard iconKey="laptop" title="Laptop" detail="Work Desk" />
               <ObjectCard iconKey="mug" title="Mug" detail="Ceramic" />
-              <ObjectCard iconKey="glasses" title="Glasses" />
+              <ObjectCard iconKey="glasses" title="Glasses( long content )" />
             </div>
           </div>
         </div>
 
         {/* Card Size Variants with Icons */}
         <div className="mb-10">
-          <h2 className="font-['Patrick_Hand',cursive] text-2xl font-bold text-[#4a3b2a] mb-6 text-center">
+          <h2 className="text-2xl font-bold text-text-main mb-6 text-center">
             Card Size Variants (all use iconRatio={1})
           </h2>
           <div className="flex flex-wrap gap-6 justify-center items-end">
@@ -89,26 +89,16 @@ export default function ObjectCardDemoPage() {
               size="sm"
               iconKey="pajamas"
               title="Small Card"
-              detail="90px height"
+              detail="default size"
             />
-            <ObjectCard
-              size="md"
-              iconKey="pajamas"
-              title="Medium Card"
-              detail="100px height"
-            />
-            <ObjectCard
-              size="lg"
-              iconKey="pajamas"
-              title="Large Card"
-              detail="110px height"
-            />
+            <ObjectCard size="md" iconKey="pajamas" title="Medium Card" />
+            <ObjectCard size="lg" iconKey="pajamas" title="Large Card" />
           </div>
         </div>
 
         {/* Icon Ratio Variants - all on same sm card to compare */}
         <div className="mb-8">
-          <h2 className="font-['Patrick_Hand',cursive] text-2xl font-bold text-[#4a3b2a] mb-4 text-center">
+          <h2 className="text-2xl font-bold text-text-main mb-4 text-center">
             Icon Ratio Variants (all on sm card)
           </h2>
           <div className="flex flex-wrap gap-4 items-start justify-center">
@@ -116,29 +106,29 @@ export default function ObjectCardDemoPage() {
               size="sm"
               iconKey="pajamas"
               iconRatio={0.6}
-              title="ratio 0.6"
-              detail="30px"
+              title="ratio 0.8"
+              detail="smalrer icon ratio/size"
             />
             <ObjectCard
               size="sm"
               iconKey="pajamas"
               iconRatio={1}
               title="ratio 1.0"
-              detail="50px"
+              detail="default icon ratio/size"
             />
             <ObjectCard
               size="sm"
               iconKey="pajamas"
               iconRatio={1.4}
               title="ratio 1.4"
-              detail="70px"
+              detail="larger icon ratio/size"
             />
           </div>
         </div>
 
         {/* Custom Icon Source */}
         <div className="mb-8">
-          <h2 className="font-['Patrick_Hand',cursive] text-2xl font-bold text-[#4a3b2a] mb-4 text-center">
+          <h2 className="text-2xl font-bold text-text-main mb-4 text-center">
             Custom Icon (using iconSrc prop)
           </h2>
           <div className="flex flex-wrap gap-4 justify-center">
@@ -146,11 +136,49 @@ export default function ObjectCardDemoPage() {
               size="lg"
               iconSrc="/icons/household_items/icon-book.png"
               title="Custom Icon"
-              detail="Using iconSrc"
+              detail="Using iconSrc, large icon size to show details"
               extraInfo="x1"
             />
           </div>
         </div>
+
+        {/* Usage Example */}
+        <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
+          <h2 className="text-2xl font-bold text-text-main">Usage Example</h2>
+          <div className="bg-card p-6 rounded-lg w-full">
+            <pre className="text-sm overflow-x-auto">
+              <code>{`import { ObjectCard } from "@/ui/components/ObjectCard";
+
+// Basic usage with household icon
+<ObjectCard iconKey="book" title="Harry Potter" detail="Reading" />
+
+// With size variants
+<ObjectCard size="sm" iconKey="mug" title="Coffee Mug" />
+<ObjectCard size="md" iconKey="mug" title="Coffee Mug" />
+<ObjectCard size="lg" iconKey="mug" title="Coffee Mug" />
+
+// With all info fields
+<ObjectCard
+  iconKey="remote"
+  title="TV Remote"
+  detail="Living Room"
+  extraInfo="x1"
+  extraFootNote="In another object"
+/>
+
+// With custom icon ratio
+<ObjectCard iconKey="book" iconRatio={0.6} title="Small icon" />
+<ObjectCard iconKey="book" iconRatio={1.4} title="Large icon" />
+
+// With custom icon source
+<ObjectCard
+  iconSrc="/icons/household_items/icon-book.png"
+  title="Custom Icon"
+  detail="Using iconSrc prop"
+/>`}</code>
+            </pre>
+          </div>
+        </section>
       </div>
     </div>
   );

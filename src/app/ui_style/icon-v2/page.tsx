@@ -16,7 +16,7 @@ const HOUSEHOLD_ICONS: HouseholdIconKey[] = [
 const FRAME_SHAPES = ["rounded", "circle"] as const;
 
 // Variant options
-const VARIANTS = ["default", "primary", "secondary", "orange", "wood"] as const;
+const VARIANTS = ["default", "primary", "secondary", "orange", "blue"] as const;
 
 // Size options
 const SIZES = ["tiny", "default", "lg"] as const;
@@ -99,7 +99,7 @@ export default function IconV2Page() {
               <IconV2
                 frameShape="circle"
                 border="none"
-                variant="wood"
+                variant="blue"
                 iconKey="pajamas"
               />
               <IconV2
@@ -239,8 +239,8 @@ export default function IconV2Page() {
 // With custom frame shape and variant
 <IconV2 frameShape="circle" variant="primary" iconKey="book" />
 
-// Borderless with wood variant
-<IconV2 frameShape="rounded" variant="wood" border="none" iconKey="glasses" />
+// Borderless with blue variant
+<IconV2 frameShape="rounded" variant="blue" border="none" iconKey="glasses" />
 
 // Different sizes
 <IconV2 size="tiny" iconKey="remote" />
