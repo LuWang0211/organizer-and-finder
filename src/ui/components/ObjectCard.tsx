@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import Image from "next/image";
 import type * as React from "react";
+import { IconImage } from "@/ui/components/IconImage";
 import { HOUSEHOLD_ICON_IMAGES, type HouseholdIconKey } from "@/ui/iconPresets";
 import { calculateIconSize } from "@/ui/iconUtils";
 import { cn } from "@/utils/tailwind";
@@ -131,14 +131,11 @@ const ObjectCard = ({
           style={{ height: "100%" }}
         >
           {imageSrc && (
-            <Image
+            <IconImage
               src={imageSrc}
               alt={iconAlt}
               width={iconSizeValue}
               height={iconSizeValue}
-              className="object-contain"
-              unoptimized
-              style={{ width: iconSizeValue, height: iconSizeValue }}
             />
           )}
         </div>

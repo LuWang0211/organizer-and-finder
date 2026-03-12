@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import Image from "next/image";
 import type { HTMLAttributes } from "react";
+import { IconImage } from "@/ui/components/IconImage";
 import { HOUSEHOLD_ICON_IMAGES, type HouseholdIconKey } from "@/ui/iconPresets";
 import { calculateIconSize } from "@/ui/iconUtils";
 import { cn } from "@/utils/tailwind";
@@ -53,9 +53,9 @@ const iconV2Variants = cva(baseIconStyles, {
 });
 
 const iconV2SizeConfig = {
-  tiny: { frameSize: 32, iconSize: 18 },
-  default: { frameSize: 48, iconSize: 28 },
-  lg: { frameSize: 64, iconSize: 38 },
+  tiny: 32,
+  default: 48,
+  lg: 64,
 };
 
 export interface IconV2Props
@@ -88,11 +88,7 @@ const IconV2 = ({
   // Calculate icon size based on iconRatio
   // Default ratio: 0.6 for tiny, 0.8 for default/lg
   const defaultRatio = size === "tiny" ? 0.6 : 0.8;
-  const finalIconSize = calculateIconSize(
-    config.frameSize,
-    iconRatio,
-    defaultRatio,
-  );
+  const finalIconSize = calculateIconSize(config, iconRatio, defaultRatio);
 
   // Resolve image source from iconKey or custom src
   const imageSrc =
@@ -109,19 +105,17 @@ const IconV2 = ({
           className,
         )}
         style={{
-          width: config.frameSize,
-          height: config.frameSize,
+          width: config,
+          height: config,
         }}
         {...props}
       >
         {imageSrc && (
-          <Image
+          <IconImage
             src={imageSrc}
             alt={alt}
             width={finalIconSize}
             height={finalIconSize}
-            className="object-contain"
-            unoptimized
           />
         )}
       </div>
