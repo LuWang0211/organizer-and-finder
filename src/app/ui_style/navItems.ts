@@ -4,8 +4,28 @@ export const navItems = [
     "href": "/ui_style/GlassPanel"
   },
   {
-    "title": "Generic",
-    "href": "/ui_style/generic"
+    "title": "Bubble",
+    "href": "/ui_style/bubble"
+  },
+  {
+    "title": "Buttons",
+    "href": "/ui_style/buttons"
+  },
+  {
+    "title": "Card",
+    "href": "/ui_style/card"
+  },
+  {
+    "title": "Icons",
+    "href": "/ui_style/icons"
+  },
+  {
+    "title": "Loading Card",
+    "href": "/ui_style/loading-card"
+  },
+  {
+    "title": "Menu Select",
+    "href": "/ui_style/menu-select"
   },
   {
     "title": "Icon V2",
@@ -18,5 +38,13 @@ export const navItems = [
   {
     "title": "Overlay",
     "href": "/ui_style/overlay-showcase"
+  },
+  {
+    "title": "Tabs",
+    "href": "/ui_style/tabs"
+  },
+  {
+    "title": "Tooltip",
+    "href": "/ui_style/tooltip"
   }
 ] as const;
