@@ -2,7 +2,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { HTMLAttributes } from "react";
 import { IconImage } from "@/ui/components/IconImage";
 import { HOUSEHOLD_ICON_IMAGES, type HouseholdIconKey } from "@/ui/iconPresets";
-import { calculateIconSize } from "@/ui/iconUtils";
 import { cn } from "@/utils/tailwind";
 
 // Re-export for convenience
@@ -83,16 +82,9 @@ const IconV2 = ({
   iconRatio,
   ...props
 }: IconV2Props) => {
-  const config = iconV2SizeConfig[size ?? "default"];
-
-  // Calculate icon size based on iconRatio
-  // Default ratio: 0.6 for tiny, 0.8 for default/lg
+  const iconSize = iconV2SizeConfig[size ?? "default"];
+  // Default ratio for calculating icon size: 0.6 for tiny, 0.8 for default/lg
   const defaultRatio = size === "tiny" ? 0.6 : 0.8;
-  const finalIconSize = calculateIconSize(config, iconRatio, defaultRatio);
-
-  // Resolve image source from iconKey or custom src
-  const imageSrc =
-    src || (iconKey ? HOUSEHOLD_ICON_IMAGES[iconKey] : undefined);
 
   return (
     <div className="relative group">
@@ -105,19 +97,18 @@ const IconV2 = ({
           className,
         )}
         style={{
-          width: config,
-          height: config,
+          width: iconSize,
+          height: iconSize,
         }}
         {...props}
       >
-        {imageSrc && (
-          <IconImage
-            src={imageSrc}
-            alt={alt}
-            width={finalIconSize}
-            height={finalIconSize}
-          />
-        )}
+        <IconImage
+          iconSrc={src}
+          iconKey={iconKey}
+          alt={alt}
+          baseSize={iconSize}
+          ratio={iconRatio ?? defaultRatio}
+        />
       </div>
     </div>
   );

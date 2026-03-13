@@ -1,8 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { IconImage } from "@/ui/components/IconImage";
-import { HOUSEHOLD_ICON_IMAGES, type HouseholdIconKey } from "@/ui/iconPresets";
-import { calculateIconSize } from "@/ui/iconUtils";
+import type { HouseholdIconKey } from "@/ui/iconPresets";
 import { cn } from "@/utils/tailwind";
 
 // Re-export for convenience (alias for ObjectCardIconKey)
@@ -37,17 +36,6 @@ const iconMaxSizes = {
   md: 60,
   lg: 70,
 } as const;
-
-/**
- * Calculate icon size based on card size and optional ratio.
- */
-function getIconSize(
-  iconRatio: number | undefined,
-  cardSize: "sm" | "md" | "lg",
-): number {
-  const maxIconSize = iconMaxSizes[cardSize];
-  return calculateIconSize(maxIconSize, iconRatio, 1.0);
-}
 
 export interface ObjectCardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -85,16 +73,11 @@ const ObjectCard = ({
   ref,
   ...props
 }: ObjectCardProps & React.RefAttributes<HTMLDivElement>) => {
-  // Resolve image source from iconKey or custom src
-  const imageSrc =
-    iconSrc || (iconKey ? HOUSEHOLD_ICON_IMAGES[iconKey] : undefined);
-  const iconSizeValue = getIconSize(iconRatio, size ?? "sm");
+  const baseIconSize = iconMaxSizes[size ?? "sm"];
   const hasExtraColumn = !!(extraInfo || extraFootNote);
 
   // Icon column width stays same - this keeps icon position fixed
-  const gridTemplateColumns = hasExtraColumn
-    ? `${iconSizeValue + 20}px 1fr 25%`
-    : `${iconSizeValue + 20}px 1fr 15px`;
+  const gridTemplateColumns = `min-content 1fr ${hasExtraColumn ? "25%" : "15px"}`;
 
   return (
     <div
@@ -130,14 +113,13 @@ const ObjectCard = ({
           className="flex items-center justify-center pl-5 pr-3"
           style={{ height: "100%" }}
         >
-          {imageSrc && (
-            <IconImage
-              src={imageSrc}
-              alt={iconAlt}
-              width={iconSizeValue}
-              height={iconSizeValue}
-            />
-          )}
+          <IconImage
+            iconSrc={iconSrc}
+            iconKey={iconKey}
+            alt={iconAlt}
+            baseSize={baseIconSize}
+            ratio={iconRatio ?? 1.0}
+          />
         </div>
 
         {/* Column 2: Main info */}
