@@ -11,7 +11,7 @@ export type IconImageProps = {
 };
 
 export function calculateIconSize(baseSize: number, iconRatio: number): number {
-  const ratio = Math.min(Math.max(iconRatio, 0.2), 1);
+  const ratio = Math.min(Math.max(iconRatio, 0.2), 1.5);
   return Math.round(baseSize * ratio);
 }
 
@@ -43,7 +43,7 @@ const IconImage = ({
       height={actualSize}
       className="object-contain"
       unoptimized
-      style={{ minWidth: actualSize, minHeight: actualSize }}
+      // style={{ minWidth: actualSize, minHeight: actualSize }}
     />
   );
 };

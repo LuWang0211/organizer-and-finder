@@ -77,7 +77,7 @@ const ObjectCard = ({
   const hasExtraColumn = !!(extraInfo || extraFootNote);
 
   // Icon column width stays same - this keeps icon position fixed
-  const gridTemplateColumns = `min-content 1fr ${hasExtraColumn ? "25%" : "15px"}`;
+  const gridTemplateColumns = `auto 1fr ${hasExtraColumn ? "25%" : "15px"}`;
 
   return (
     <div
