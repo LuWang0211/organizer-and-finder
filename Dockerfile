@@ -3,15 +3,14 @@ FROM node:25-bookworm-slim AS deps
 
 WORKDIR /app
 
-# Install prisma and node-gyp dependencies for bcrypt
+# Install native build dependencies needed during npm install
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
-    python3 \
     make \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Install libssl1.1 from bullseye (Prisma needs OpenSSL 1.1.x)
+# Install OpenSSL 1.1 compatibility libraries required by the current Prisma setup
 RUN echo 'deb http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list && \
     apt-get update && apt-get install -y --no-install-recommends libssl1.1 && \
     rm -rf /var/lib/apt/lists/*
@@ -24,7 +23,7 @@ FROM node:25-bookworm-slim AS builder
 
 WORKDIR /app
 
-# Install libssl1.1 from bullseye (Prisma needs OpenSSL 1.1.x)
+# Install OpenSSL 1.1 compatibility libraries required by the current Prisma setup
 RUN echo 'deb http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list && \
     apt-get update && apt-get install -y --no-install-recommends \
     libssl1.1 \
@@ -54,7 +53,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install libssl1.1 and libpq for Prisma
+# Install runtime libraries required by the current Prisma setup
 RUN echo 'deb http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list && \
     apt-get update && apt-get install -y --no-install-recommends \
     libssl1.1 \
