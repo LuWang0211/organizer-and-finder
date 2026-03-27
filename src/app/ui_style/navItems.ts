@@ -16,6 +16,14 @@ export const navItems = [
     "href": "/ui_style/card"
   },
   {
+    "title": "Colormap Image",
+    "href": "/ui_style/colormap-image"
+  },
+  {
+    "title": "Icon V2",
+    "href": "/ui_style/icon-v2"
+  },
+  {
     "title": "Icons",
     "href": "/ui_style/icons"
   },
@@ -26,10 +34,6 @@ export const navItems = [
   {
     "title": "Menu Select",
     "href": "/ui_style/menu-select"
-  },
-  {
-    "title": "Icon V2",
-    "href": "/ui_style/icon-v2"
   },
   {
     "title": "Object Card",

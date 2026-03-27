@@ -1,5 +1,5 @@
 import type { UIStylePageMeta } from "../common";
-import DemoMenuSelect from "../DemoMenuSelect";
+import DemoMenuSelect from "./DemoMenuSelect";
 
 export const metadata: UIStylePageMeta = {
   title: "Menu Select",
