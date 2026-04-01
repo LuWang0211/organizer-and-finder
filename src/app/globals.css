@@ -103,11 +103,13 @@
 }
 
 /* IconV2 size-adaptive shadows - dynamic pattern using CSS variables */
+@custom-variant icon-v2-group-hover (.icon-v2-group:hover &);
+
 @utility icon-shadow-* {
   box-shadow: --value(--shadow-layer-1-spread-*) var(--shadow-layer-1-color) inset,
     --value(--shadow-layer-2-spread-*) var(--shadow-layer-2-color) inset;
 
-  @variant hover {
+  @variant icon-v2-group-hover {
     box-shadow: --value(--hover-shadow-layer-1-spread-*) var(--hover-shadow-layer-1-color) inset,
       --value(--hover-shadow-layer-2-spread-*) var(--hover-shadow-layer-2-color) inset;
   }
@@ -123,6 +125,11 @@
 @layer base {
   body {
     @apply bg-background text-foreground;
+  }
+
+  button:focus-visible {
+    outline-offset: 4px;
+    outline-color: color-mix(in oklch, var(--color-card-secondary) 33%, transparent);
   }
 }
 

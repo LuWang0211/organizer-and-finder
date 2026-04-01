@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Archive,
   ArrowLeft,
+  ArrowRight,
   BedDouble,
   Bell,
   Book,
@@ -33,6 +34,7 @@ import {
   User,
   Utensils,
   WashingMachine,
+  X,
 } from "lucide-react";
 
 const ICON_COMPONENTS_RAW = {
@@ -72,7 +74,9 @@ const ICON_COMPONENTS_RAW = {
   mail: Mail,
   magnet: Magnet,
   search: Search,
+  cancel: X,
   "arrow-left": ArrowLeft,
+  "arrow-right": ArrowRight,
 } as const;
 
 export type IconKey = keyof typeof ICON_COMPONENTS_RAW;
@@ -132,6 +136,10 @@ export const HOUSEHOLD_ICON_IMAGES: Record<HouseholdIconKey, string> = {
   remote: "/icons/household_items/icon-remote.png",
   laptop: "/icons/household_items/icon-laptop.png",
 };
+
+export const HOUSEHOLD_ICON_KEYS = Object.keys(
+  HOUSEHOLD_ICON_IMAGES,
+) as HouseholdIconKey[];
 
 /** Convenience array for iteration/display purposes */
 export const HOUSEHOLD_ICON_OPTIONS: {
