@@ -71,7 +71,7 @@ export default function MenuSelect({
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           className={cn(
-            "w-full text-left p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none",
+            "w-full text-left p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none",
             disabled && "opacity-60 cursor-not-allowed",
           )}
         >
@@ -85,7 +85,7 @@ export default function MenuSelect({
           <div
             ref={menuRef}
             className={cn(
-              "absolute left-0 right-0 mt-2 z-50 rounded-xl border-4 border-border bg-card shadow-lg overflow-hidden",
+              "absolute left-0 right-0 mt-2 z-50 rounded-xl border-4 border-border bg-card-default shadow-lg overflow-hidden",
               menuClassName,
             )}
             role="listbox"
@@ -97,9 +97,9 @@ export default function MenuSelect({
                   type="button"
                   onClick={() => choose(it.value)}
                   className={cn(
-                    "w-full text-left px-3 py-2 hover:bg-[color-mix(in_oklch,hsl(var(--card)),black_6%)]",
+                    "w-full text-left px-3 py-2 hover:bg-[color-mix(in_oklch,var(--color-card-default),black_6%)]",
                     it.value === value &&
-                      "bg-[color-mix(in_oklch,hsl(var(--card)),black_8%)] font-semibold",
+                      "bg-[color-mix(in_oklch,var(--color-card-default),black_8%)] font-semibold",
                   )}
                   role="option"
                   aria-selected={it.value === value}
@@ -115,7 +115,7 @@ export default function MenuSelect({
                   setOpen(false);
                   footerAction.onClick();
                 }}
-                className="w-full text-left px-3 py-2 hover:bg-[color-mix(in_oklch,hsl(var(--card)),black_6%)] text-primary-accent font-semibold"
+                className="w-full text-left px-3 py-2 hover:bg-[color-mix(in_oklch,var(--color-card-default),black_6%)] text-primary-accent font-semibold"
               >
                 {footerAction.label}
               </button>

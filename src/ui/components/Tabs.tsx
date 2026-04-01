@@ -68,8 +68,8 @@ const TabsList = React.forwardRef<
           else if (ref) ref.current = node;
         }}
         className={cn(
-          "inline-flex h-14 items-stretch justify-center rounded-full border-4 border-border bg-card p-0 gap-0 relative",
-          "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,hsl(var(--card)),black_8%)_inset]",
+          "inline-flex h-14 items-stretch justify-center rounded-full border-4 border-border bg-card-default p-0 gap-0 relative",
+          "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-card-default),black_8%)_inset]",
           className,
         )}
         {...props}
@@ -106,8 +106,8 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex items-center justify-center whitespace-nowrap px-6 py-3 text-base font-extrabold transition-all duration-200 flex-1 h-full relative z-30",
-      "text-text-main/70 hover:text-text-main rounded-full",
-      "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-outline focus-visible:ring-offset-2",
+      "text-foreground/70 hover:text-foreground rounded-full",
+      "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
       "disabled:pointer-events-none disabled:opacity-60",
       "data-[state=active]:text-white",
       "data-[state=active]:[text-shadow:0.5px_0.5px_0_rgba(0,0,0,0.3),-0.5px_0.5px_0_rgba(0,0,0,0.3),0.5px_-0.5px_0_rgba(0,0,0,0.2),-0.5px_-0.5px_0_rgba(0,0,0,0.2)]",
@@ -125,7 +125,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-6 ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-outline focus-visible:ring-offset-2",
+      "mt-6 ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
       className,
     )}
     {...props}

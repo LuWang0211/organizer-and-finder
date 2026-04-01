@@ -116,7 +116,7 @@ export default function AddItemForm({
             required
             placeholder="e.g., Coffee Beans"
             ref={nameRef}
-            className="w-full p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+            className="w-full p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none"
           />
         </div>
 
@@ -165,7 +165,7 @@ export default function AddItemForm({
                   );
                 }}
                 onInvalid={handleInvalid}
-                className="w-24 text-center p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+                className="w-24 text-center p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none"
               />
             </ControlledPopover>
             <Button
@@ -211,7 +211,7 @@ export default function AddItemForm({
               name="icon"
               value={icon}
               onChange={(e) => setIcon((e.target.value as IconKey) || "")}
-              className="p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+              className="p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none"
             >
               <option value="">No icon</option>
               {ITEM_ICON_OPTIONS.map((opt) => (

@@ -125,7 +125,9 @@ const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
           />
 
           {/* Content with proper text styling for glass effect */}
-          <div className="relative z-[11] text-shadow">{children}</div>
+          <div className="relative z-[11] text-foreground-secondary">
+            {children}
+          </div>
         </div>
       </div>
     );

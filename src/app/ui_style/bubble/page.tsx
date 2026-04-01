@@ -14,10 +14,10 @@ export default function BubbleShowcase() {
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start">
           <Bubble variant="default">
-            <h3 className="text-xl font-bold mb-2 text-text-main">
+            <h3 className="text-xl font-bold mb-2 text-foreground">
               Default Bubble
             </h3>
-            <p className="text-text-main/80">
+            <p className="text-foreground/80">
               Rounded rectangle with realistic bubble appearance using
               box-shadow and shine effects.
             </p>
@@ -33,10 +33,10 @@ export default function BubbleShowcase() {
           </Bubble>
 
           <Bubble variant="secondary">
-            <h3 className="text-xl font-bold mb-2 text-text-main">
+            <h3 className="text-xl font-bold mb-2 text-foreground">
               Secondary Bubble
             </h3>
-            <p className="text-text-main/80">
+            <p className="text-foreground/80">
               Cyan variant inspired by your floor plan UI colors.
             </p>
           </Bubble>
@@ -44,13 +44,13 @@ export default function BubbleShowcase() {
 
         <div className="flex gap-4 items-center justify-center">
           <Bubble variant="default" size="sm">
-            <p className="text-sm font-medium text-text-main">Small</p>
+            <p className="text-sm font-medium text-foreground">Small</p>
           </Bubble>
           <Bubble variant="primary" size="default">
             <p className="text-base font-medium text-white">Default</p>
           </Bubble>
           <Bubble variant="secondary" size="lg">
-            <p className="text-lg font-medium text-text-main">Large</p>
+            <p className="text-lg font-medium text-foreground">Large</p>
           </Bubble>
         </div>
       </section>

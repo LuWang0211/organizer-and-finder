@@ -6,13 +6,13 @@ export default function ObjectCardDemoPage() {
   return (
     <div className="p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-text-main text-center mb-8">
+        <h1 className="text-4xl font-bold text-foreground text-center mb-8">
           ObjectCard Component Demo
         </h1>
 
         {/* Info Variants - showing different info combinations */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-text-main mb-4 text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-4 text-center">
             Info Variants
           </h2>
 
@@ -81,7 +81,7 @@ export default function ObjectCardDemoPage() {
 
         {/* Card Size Variants with Icons */}
         <div className="mb-10">
-          <h2 className="text-2xl font-bold text-text-main mb-6 text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-6 text-center">
             Card Size Variants (all use iconRatio={1})
           </h2>
           <div className="flex flex-wrap gap-6 justify-center items-end">
@@ -98,7 +98,7 @@ export default function ObjectCardDemoPage() {
 
         {/* Icon Ratio Variants - all on same sm card to compare */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-text-main mb-4 text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-4 text-center">
             Icon Ratio Variants (all on sm card)
           </h2>
           <div className="flex flex-wrap gap-4 items-start justify-center">
@@ -128,7 +128,7 @@ export default function ObjectCardDemoPage() {
 
         {/* Custom Icon Source */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-text-main mb-4 text-center">
+          <h2 className="text-2xl font-bold text-foreground mb-4 text-center">
             Custom Icon (using iconSrc prop)
           </h2>
           <div className="flex flex-wrap gap-4 justify-center">
@@ -144,8 +144,8 @@ export default function ObjectCardDemoPage() {
 
         {/* Usage Example */}
         <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
-          <h2 className="text-2xl font-bold text-text-main">Usage Example</h2>
-          <div className="bg-card p-6 rounded-lg w-full">
+          <h2 className="text-2xl font-bold text-foreground">Usage Example</h2>
+          <div className="bg-card-default p-6 rounded-lg w-full">
             <pre className="text-sm overflow-x-auto">
               <code>{`import { ObjectCard } from "@/ui/components/ObjectCard";
 

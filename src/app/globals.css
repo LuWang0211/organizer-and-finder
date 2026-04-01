@@ -2,49 +2,39 @@
 
 @theme {
   /* Raw HSL values - single source of truth */
-  --color-background-raw: 199 100% 85%;
+  --color-background-raw: 200 80% 70%;
   --color-foreground-raw: 247 28% 23%;
-  --color-secondary-raw: 63 8% 99%;
+  --color-mute-raw: 63 8% 99%;
   --color-primary-accent-raw: 332 100% 77%;
-  --color-secondary-accent-raw: 48 100% 71%;
-  --color-highlight-raw: 32 100% 71%;
-  --color-outline-raw: 324 70% 15%;
-  --color-confirm-raw: 97 58% 77%;
-  --color-card-raw: 39 100% 95%;
+  --color-secondary-accent-raw: 120 52% 71%;
+  --color-highlight-raw: 30 100% 76%;
+  --color-card-default-raw: 39 100% 95%;
   --color-shadow-raw: 175 19% 28%;
 
-  --color-text-main-raw: 247 28% 23%;
   --color-border-raw: 324 70% 15%;
 
   /* ObjectCard detail and extra info text colors */
-  --color-text-detail-raw: 216 15% 35%;
-  --color-text-footnote-raw: 35 20% 35%;
+  --color-foreground-secondary-raw: 216 15% 35%;
+  --color-foreground-accent-raw: 35 20% 35%;
 
   /* Tailwind utilities with hsl() wrapper */
   --color-background: hsl(var(--color-background-raw));
   --color-foreground: hsl(var(--color-foreground-raw));
-  --color-secondary: hsl(var(--color-secondary-raw));
+  --color-mute: hsl(var(--color-mute-raw));
   --color-primary-accent: hsl(var(--color-primary-accent-raw));
   --color-secondary-accent: hsl(var(--color-secondary-accent-raw));
   --color-highlight: hsl(var(--color-highlight-raw));
-  --color-outline: hsl(var(--color-outline-raw));
-  --color-confirm: hsl(var(--color-confirm-raw));
-  --color-card: hsl(var(--color-card-raw));
+  --color-card-default: hsl(var(--color-card-default-raw));
+  --color-card-secondary: var(--color-cyan-300); /* Using Tailwind color directly for secondary card */
   --color-shadow: hsl(var(--color-shadow-raw));
-  --color-text-main: hsl(var(--color-text-main-raw));
   --color-border: hsl(var(--color-border-raw));
   
-  /* ObjectCard text colors */
-  --color-text-title: hsl(var(--color-text-title-raw));
-  --color-text-detail: hsl(var(--color-text-detail-raw));
-  --color-text-footnote: hsl(var(--color-text-footnote-raw));
+  /* Added since ObjectCard was introduced */
+  --color-foreground-secondary: hsl(var(--color-foreground-secondary-raw));
+  --color-foreground-accent: hsl(var(--color-foreground-accent-raw));
 
   /* IconV2 gradient base colors (HSL raw values for --value() access) */
-  --color-icon-default: 42 78% 92%;
-  --color-icon-primary: 1 73% 75%;
-  --color-icon-secondary: 120 52% 71%;
-  --color-icon-orange: 30 100% 76%;
-  --color-icon-blue: 200 80% 70%;
+  --color-icon-primary: hsl(1 73% 75%);
 
   --radius: 0.5rem;
   --radius-lg: var(--radius);
@@ -112,11 +102,11 @@ color-icon
 
 /* IconV2 CSS-only gradient using color-mix with @utility */
 @utility icon-grad-* {
-  --via: --value(--color-icon-*);
-  --from: color-mix(in oklch, hsl(var(--via)) 10%, white);
-  --to: color-mix(in oklch, hsl(var(--via)) 85%, gray);
-  background: linear-gradient(to bottom left, var(--from), hsl(var(--via)), var(--to));
-  border-color: color-mix(in oklch, hsl(var(--via)) 95%, black);
+  --via: --value(--color-*);
+  --from: color-mix(in oklch, var(--via) 10%, white);
+  --to: color-mix(in oklch, var(--via) 85%, gray);
+  background: linear-gradient(to bottom left, var(--from), var(--via), var(--to));
+  border-color: color-mix(in oklch, var(--via) 95%, black);
 }
 
 /* IconV2 size-adaptive shadows - dynamic pattern using CSS variables */
@@ -179,28 +169,24 @@ color-icon
     /* Reference raw values from @theme for color-mix compatibility */
     --background: var(--color-background-raw);
     --foreground: var(--color-foreground-raw);
-    --secondary: var(--color-secondary-raw);
+    --mute: var(--color-mute-raw);
     --primary-accent: var(--color-primary-accent-raw);
     --secondary-accent: var(--color-secondary-accent-raw);
     --highlight: var(--color-highlight-raw);
-    --outline: var(--color-outline-raw);
     --confirm: var(--color-confirm-raw);
-    --card: var(--color-card-raw);
     --shadow: var(--color-shadow-raw);
-    --text-main: var(--color-text-main-raw);
     --border: var(--color-border-raw);
   }
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+    --mute: 0 0% 14.9%;
+    --mute-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
     --accent: 0 0% 14.9%;

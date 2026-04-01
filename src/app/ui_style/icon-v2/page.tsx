@@ -16,7 +16,13 @@ const HOUSEHOLD_ICONS: HouseholdIconKey[] = [
 const FRAME_SHAPES = ["rounded", "circle"] as const;
 
 // Variant options
-const VARIANTS = ["default", "primary", "secondary", "orange", "blue"] as const;
+const VARIANTS = [
+  "default",
+  "primary",
+  "secondary-accent",
+  "highlight",
+  "background",
+] as const;
 
 // Size options
 const SIZES = ["tiny", "default", "lg"] as const;
@@ -60,7 +66,7 @@ export default function IconV2Page() {
                 <IconV2 frameShape={shape} variant="primary" iconKey="book" />
                 <IconV2
                   frameShape={shape}
-                  variant="secondary"
+                  variant="secondary-accent"
                   iconKey="glasses"
                 />
               </div>
@@ -90,7 +96,7 @@ export default function IconV2Page() {
             <div className="flex gap-4">
               <IconV2 border="none" variant="default" iconKey="nightstand" />
               <IconV2 border="none" variant="primary" iconKey="bookshelf" />
-              <IconV2 border="none" variant="secondary" iconKey="mug" />
+              <IconV2 border="none" variant="secondary-accent" iconKey="mug" />
             </div>
             <span className="text-sm font-medium">Rounded Frame</span>
           </div>
@@ -99,19 +105,19 @@ export default function IconV2Page() {
               <IconV2
                 frameShape="circle"
                 border="none"
-                variant="blue"
+                variant="background"
                 iconKey="pajamas"
               />
               <IconV2
                 frameShape="circle"
                 border="none"
-                variant="secondary"
+                variant="secondary-accent"
                 iconKey="remote"
               />
               <IconV2
                 frameShape="circle"
                 border="none"
-                variant="orange"
+                variant="highlight"
                 iconKey="glasses"
               />
             </div>
@@ -140,7 +146,7 @@ export default function IconV2Page() {
           {VARIANTS.map((variant) => (
             <div
               key={variant}
-              className="flex flex-col items-center gap-3 p-4 rounded-lg bg-card/50"
+              className="flex flex-col items-center gap-3 p-4 rounded-lg bg-card-default/50"
             >
               <h4 className="text-sm font-semibold capitalize">{variant}</h4>
               <div className="flex gap-2 items-end">
@@ -165,7 +171,7 @@ export default function IconV2Page() {
           {VARIANTS.map((variant) => (
             <div
               key={variant}
-              className="flex flex-col items-center gap-3 p-4 rounded-lg bg-card/50"
+              className="flex flex-col items-center gap-3 p-4 rounded-lg bg-card-default/50"
             >
               <h4 className="text-sm font-semibold capitalize">{variant}</h4>
               <div className="flex gap-2">
@@ -191,7 +197,7 @@ export default function IconV2Page() {
           {VARIANTS.map((variant) => (
             <div
               key={variant}
-              className="flex flex-col items-center gap-3 p-4 rounded-lg bg-card/50"
+              className="flex flex-col items-center gap-3 p-4 rounded-lg bg-card-default/50"
             >
               <h4 className="text-sm font-semibold capitalize">{variant}</h4>
               <div className="flex gap-2">
@@ -229,7 +235,7 @@ export default function IconV2Page() {
       {/* Usage Example */}
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
         <h2 className="text-2xl font-bold">Usage Example</h2>
-        <div className="bg-card p-6 rounded-lg w-full">
+        <div className="bg-card-default p-6 rounded-lg w-full">
           <pre className="text-sm overflow-x-auto">
             <code>{`import { IconV2 } from "@/ui/components/IconV2";
 
@@ -239,8 +245,8 @@ export default function IconV2Page() {
 // With custom frame shape and variant
 <IconV2 frameShape="circle" variant="primary" iconKey="book" />
 
-// Borderless with blue variant
-<IconV2 frameShape="rounded" variant="blue" border="none" iconKey="glasses" />
+// Borderless with background variant
+<IconV2 frameShape="rounded" variant="background" border="none" iconKey="glasses" />
 
 // Different sizes
 <IconV2 size="tiny" iconKey="remote" />

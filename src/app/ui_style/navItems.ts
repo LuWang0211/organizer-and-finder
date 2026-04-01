@@ -20,6 +20,10 @@ export const navItems = [
     "href": "/ui_style/colormap-image"
   },
   {
+    "title": "Colors",
+    "href": "/ui_style/colors"
+  },
+  {
     "title": "Icon V2",
     "href": "/ui_style/icon-v2"
   },

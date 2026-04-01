@@ -37,7 +37,7 @@ async function DataLoader({
             <CardTitle className="text-3xl font-extrabold mb-2 hidden @h-36:block">
               Add Item
             </CardTitle>
-            <p className="text-base text-text-main/80 font-medium">
+            <p className="text-base text-foreground/80 font-medium">
               Create a new item and optionally link to a location.
             </p>
           </CardHeader>
