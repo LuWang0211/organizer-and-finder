@@ -23,10 +23,10 @@ const iconVariants = cva(
           "hover:shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
         ],
         secondary: [
-          "bg-linear-to-bl from-[color-mix(in_oklch,var(--color-cyan-300),white_80%)] via-cyan-300 to-cyan-300",
-          "text-cyan-600",
-          "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-cyan-300),black_15%)_inset]",
-          "hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.2)_inset,3px_-3px_8px_0_color-mix(in_oklch,var(--color-cyan-300),black_20%)_inset]",
+          "bg-linear-to-bl from-[color-mix(in_oklch,var(--color-card-secondary),white_80%)] via-card-secondary to-card-secondary",
+          "text-card-secondary-600",
+          "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-card-secondary),black_15%)_inset]",
+          "hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.2)_inset,3px_-3px_8px_0_color-mix(in_oklch,var(--color-card-secondary),black_20%)_inset]",
         ],
         orange: [
           "bg-linear-to-bl from-[color-mix(in_oklch,var(--color-orange-300),white_80%)] via-orange-300 to-orange-300",

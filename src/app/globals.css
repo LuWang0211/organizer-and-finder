@@ -65,6 +65,13 @@
   --hover-shadow-layer-1-color: color-mix(in oklch, black 15%, transparent);
   --hover-shadow-layer-2-color: color-mix(in oklch, black 20%, transparent);
 
+  /* Card-Secondary series */
+  --color-card-secondary-200: hsl(from var(--color-card-secondary) h s calc(l + 15));;
+  --color-card-secondary-300: var(--color-card-secondary);
+  --color-card-secondary-400: hsl(from var(--color-card-secondary) h calc(s + 65) calc(l - 25));
+  --color-card-secondary-600: hsl(from var(--color-card-secondary) h s calc(l - 33));
+  --color-card-secondary-700: hsl(from var(--color-card-secondary) h calc(s - 10) calc(l - 38));
+
 }
 
 @utility text-balance {

@@ -20,7 +20,7 @@ const PopoverArrow = React.forwardRef<
 >(({ className, variant = "default", ...props }, ref) => {
   const variantColors: Record<NonNullable<CardProps["variant"]>, string> = {
     default: "var(--color-card-default)",
-    secondary: "var(--color-cyan-300)",
+    secondary: "var(--color-card-secondary)",
     primary: "hsl(var(--primary-accent))",
   };
 

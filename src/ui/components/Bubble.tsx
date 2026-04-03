@@ -18,12 +18,12 @@ const bubbleVariants = cva(
           "hover:shadow-[0_25px_35px_rgba(0,0,0,0.25),inset_0px_12px_35px_8px_rgba(255,255,255,0.4)]",
         ],
         primary: [
-          "bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]",
+          "bg-primary-accent/35 border-primary-accent/70",
           "shadow-[0_20px_30px_rgba(0,0,0,0.2),inset_0px_10px_30px_5px_rgba(255,255,255,0.3)]",
           "hover:shadow-[0_25px_35px_rgba(0,0,0,0.25),inset_0px_12px_35px_8px_rgba(255,255,255,0.4)]",
         ],
         secondary: [
-          "bg-cyan-400/10 border border-cyan-300/15",
+          "bg-card-secondary-400/10 border border-card-secondary/15",
           "shadow-[0_20px_30px_rgba(0,0,0,0.2),inset_0px_10px_30px_5px_rgba(255,255,255,0.3)]",
           "hover:shadow-[0_25px_35px_rgba(0,0,0,0.25),inset_0px_12px_35px_8px_rgba(255,255,255,0.4)]",
         ],
