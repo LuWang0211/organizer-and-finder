@@ -13,8 +13,8 @@ const cardVariants = cva(
       variant: {
         default: [
           "bg-card-default",
-          "shadow-[0_2px_8px_0_hsl(var(--shadow)/20%)_inset,2px_-2px_8px_0_color-mix(in_oklch,var(--color-card-default),black_10%)_inset]",
-          "hover:shadow-[0_4px_12px_0_hsl(var(--shadow)/30%)_inset,3px_-3px_12px_0_color-mix(in_oklch,var(--color-card-default),black_15%)_inset]",
+          "shadow-[0_2px_8px_0_color-mix(in_oklch,var(--color-shadow)_20%,transparent)_inset,2px_-2px_8px_0_color-mix(in_oklch,var(--color-card-default),black_10%)_inset]",
+          "hover:shadow-[0_4px_12px_0_color-mix(in_oklch,var(--color-shadow)_30%,transparent)_inset,3px_-3px_12px_0_color-mix(in_oklch,var(--color-card-default),black_15%)_inset]",
         ],
         secondary: [
           "bg-card-secondary",
@@ -23,8 +23,8 @@ const cardVariants = cva(
         ],
         primary: [
           "bg-primary-accent text-white",
-          "shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
-          "hover:shadow-[-3px_3px_2px_1px_hsl(var(--highlight)/70%)_inset,3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--primary-accent)),black_30%)_inset]",
+          "shadow-[-3px_3px_2px_1px_color-mix(in_oklch,var(--color-highlight)_70%,transparent)_inset,3px_-3px_2px_1px_color-mix(in_oklch,var(--color-primary-accent),black_30%)_inset]",
+          "hover:shadow-[-3px_3px_2px_1px_color-mix(in_oklch,var(--color-highlight)_70%,transparent)_inset,3px_-3px_2px_1px_color-mix(in_oklch,var(--color-primary-accent),black_30%)_inset]",
         ],
       },
 

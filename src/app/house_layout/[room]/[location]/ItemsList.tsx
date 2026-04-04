@@ -15,7 +15,6 @@ export default function ItemsList({
   className,
   items = [],
   locationId,
-  locationName,
 }: ItemsListProps) {
   const hasItems = items.length > 0;
 
@@ -28,9 +27,9 @@ export default function ItemsList({
             href={`/add_item${locationId ? `?locationId=${encodeURIComponent(locationId)}` : ""}`}
           >
             <Bubble
-              variant="default"
+              variant="highlight"
               size="sm"
-              className="flex items-center justify-center !bg-orange-400/20 !border-orange-300/50 cursor-pointer"
+              className="flex items-center justify-center cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Icon
@@ -110,9 +109,9 @@ export default function ItemsList({
           href={`/add_item${locationId ? `?locationId=${encodeURIComponent(locationId)}` : ""}`}
         >
           <Bubble
-            variant="default"
+            variant="highlight"
             size="sm"
-            className="min-w-[220px] min-h-[90px] !bg-orange-400/20 !border-orange-300/50 cursor-pointer"
+            className="min-w-[220px] min-h-[90px] cursor-pointer"
           >
             <div className="flex items-center gap-2">
               <Icon

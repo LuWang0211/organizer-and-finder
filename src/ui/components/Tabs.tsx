@@ -78,10 +78,10 @@ const TabsList = React.forwardRef<
       <motion.div
         className="absolute rounded-full pointer-events-none z-20"
         style={{
-          background: "hsl(var(--primary-accent))",
-          outline: "3px solid hsl(var(--border))",
+          background: "var(--color-primary-accent)",
+          outline: "3px solid var(--color-border)",
           boxShadow:
-            "-2px 2px 1px 0.5px hsl(var(--highlight)/60%) inset, 2px -2px 1px 0.5px color-mix(in oklch, hsl(var(--primary-accent)), black 25%) inset",
+            "-2px 2px 1px 0.5px color-mix(in oklch, var(--color-highlight) 30%, transparent) inset, 2px -2px 1px 0.5px color-mix(in oklch, var(--color-primary-accent), black 25%) inset",
           left: indicatorStyle.left,
           width: indicatorStyle.width,
           top: "4px", // Offset to stay within container borders

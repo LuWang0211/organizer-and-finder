@@ -97,7 +97,9 @@ function ProfileStats({ totalRooms, totalItems }: ProfileStatsProps) {
         <p className="text-xs font-medium">Rooms</p>
       </div>
       <div className="text-center p-2 bg-card-secondary/20 rounded-2xl">
-        <p className="text-2xl font-extrabold text-card-secondary-600">{totalItems}</p>
+        <p className="text-2xl font-extrabold text-card-secondary-600">
+          {totalItems}
+        </p>
         <p className="text-xs font-medium">Items</p>
       </div>
     </div>
@@ -240,7 +242,9 @@ export function ProfileCard({
       >
         <Card variant="default" className="overflow-hidden">
           <CardHeader className="pb-4">
-            <CardTitle className="text-2xl text-card-secondary-700">My Profile</CardTitle>
+            <CardTitle className="text-2xl text-card-secondary-700">
+              My Profile
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ProfileCardContent

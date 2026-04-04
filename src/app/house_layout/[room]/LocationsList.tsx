@@ -65,9 +65,9 @@ export default function LocationsList({
             href={`/add_location?roomId=${encodeURIComponent(roomId)}`}
           >
             <Bubble
-              variant="default"
+              variant="highlight"
               size="sm"
-              className="flex items-center justify-center cursor-pointer !bg-orange-400/20 !border-orange-300/50 "
+              className="flex items-center justify-center cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Icon
@@ -162,11 +162,7 @@ export default function LocationsList({
             className="block text-gray-900 wrap-anywhere"
             href={`/add_location?roomId=${encodeURIComponent(roomId)}`}
           >
-            <Bubble
-              variant="secondary"
-              size="sm"
-              className="cursor-pointer !bg-orange-400/20 !border-orange-300/50 "
-            >
+            <Bubble variant="highlight" size="sm" className="cursor-pointer">
               <div className="flex items-center gap-2">
                 <Icon
                   variant="default"

@@ -12,7 +12,7 @@ export default function BubbleShowcase() {
       <h1 className="text-3xl font-extrabold mb-4">Bubble Components</h1>
 
       <section className="flex flex-col items-center gap-6 w-full max-w-4xl">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full items-start">
           <Bubble variant="default">
             <h3 className="text-xl font-bold mb-2 text-foreground">
               Default Bubble
@@ -29,6 +29,16 @@ export default function BubbleShowcase() {
             </h3>
             <p className="text-white/90">
               Primary variant with accent colors and enhanced bubble effects.
+            </p>
+          </Bubble>
+
+          <Bubble variant="highlight">
+            <h3 className="text-xl font-bold mb-2 text-foreground">
+              Highlight Bubble
+            </h3>
+            <p className="text-foreground/80">
+              Highlight-token variant using <code>--color-highlight</code> for a
+              warmer accent state.
             </p>
           </Bubble>
 
