@@ -1,10 +1,10 @@
 "use client";
 
+import type { VariantProps } from "class-variance-authority";
 import type { ProfileData } from "@/app/profile/actions";
-
 import { Button } from "@/ui/components/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/components/Card";
-import { Icon } from "@/ui/components/Icon";
+import { Icon, type iconVariants } from "@/ui/components/Icon";
 import { cn } from "@/utils/tailwind";
 
 // ==================== Sub-components ====================
@@ -49,7 +49,7 @@ function LogoutConfirm({
 
 interface ProfileInfoProps {
   iconKey: "user" | "home" | "smile";
-  variant?: "default" | "secondary" | "orange";
+  variant?: VariantProps<typeof iconVariants>["variant"];
   label: string;
   value: string;
   fontWeight?: "bold" | "medium";
@@ -133,7 +133,7 @@ function ProfileContent({ profileData, onLogout }: ProfileContentProps) {
       {profileData.house && (
         <ProfileInfo
           iconKey="smile"
-          variant="orange"
+          variant="highlight"
           label="House"
           value={profileData.house.name}
         />

@@ -28,7 +28,7 @@ const iconVariants = cva(
           "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-card-secondary),black_15%)_inset]",
           "hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.2)_inset,3px_-3px_8px_0_color-mix(in_oklch,var(--color-card-secondary),black_20%)_inset]",
         ],
-        orange: [
+        highlight: [
           "icon-grad-highlight-300",
           "text-highlight-600",
           "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-highlight-300),black_15%)_inset]",
