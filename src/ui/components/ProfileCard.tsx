@@ -96,8 +96,10 @@ function ProfileStats({ totalRooms, totalItems }: ProfileStatsProps) {
         </p>
         <p className="text-xs font-medium">Rooms</p>
       </div>
-      <div className="text-center p-2 bg-cyan-300/20 rounded-2xl">
-        <p className="text-2xl font-extrabold text-cyan-600">{totalItems}</p>
+      <div className="text-center p-2 bg-card-secondary/20 rounded-2xl">
+        <p className="text-2xl font-extrabold text-card-secondary-600">
+          {totalItems}
+        </p>
         <p className="text-xs font-medium">Items</p>
       </div>
     </div>
@@ -157,7 +159,7 @@ function ProfileContent({ profileData, onLogout }: ProfileContentProps) {
 function LoadingState() {
   return (
     <div className="flex items-center justify-center py-8">
-      <div className="animate-spin w-8 h-8 border-4 border-cyan-400 border-t-transparent rounded-full" />
+      <div className="animate-spin w-8 h-8 border-4 border-card-secondary-400 border-t-transparent rounded-full" />
     </div>
   );
 }
@@ -240,7 +242,9 @@ export function ProfileCard({
       >
         <Card variant="default" className="overflow-hidden">
           <CardHeader className="pb-4">
-            <CardTitle className="text-2xl text-cyan-700">My Profile</CardTitle>
+            <CardTitle className="text-2xl text-card-secondary-700">
+              My Profile
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ProfileCardContent

@@ -7,41 +7,41 @@ type ColorToken = {
 
 const colorTokens: ColorToken[] = [
   {
-    name: "--color-background-raw",
-    swatch: "hsl(var(--color-background-raw))",
+    name: "--color-background",
+    swatch: "var(--color-background)",
   },
   {
-    name: "--color-foreground-raw",
-    swatch: "hsl(var(--color-foreground-raw))",
+    name: "--color-foreground",
+    swatch: "var(--color-foreground)",
   },
   {
-    name: "--color-foreground-secondary-raw",
-    swatch: "hsl(var(--color-foreground-secondary-raw))",
+    name: "--color-foreground-secondary",
+    swatch: "var(--color-foreground-secondary)",
   },
   {
-    name: "--color-foreground-accent-raw",
-    swatch: "hsl(var(--color-foreground-accent-raw))",
+    name: "--color-foreground-accent",
+    swatch: "var(--color-foreground-accent)",
   },
-  { name: "--color-mute-raw", swatch: "hsl(var(--color-mute-raw))" },
+  { name: "--color-mute", swatch: "var(--color-mute)" },
   {
-    name: "--color-primary-accent-raw",
-    swatch: "hsl(var(--color-primary-accent-raw))",
+    name: "--color-primary-accent",
+    swatch: "var(--color-primary-accent)",
   },
   {
-    name: "--color-secondary-accent-raw",
-    swatch: "hsl(var(--color-secondary-accent-raw))",
+    name: "--color-secondary-accent",
+    swatch: "var(--color-secondary-accent)",
   },
-  { name: "--color-highlight-raw", swatch: "hsl(var(--color-highlight-raw))" },
+  { name: "--color-highlight", swatch: "var(--color-highlight)" },
   {
-    name: "--color-card-default-raw",
-    swatch: "hsl(var(--color-card-default-raw))",
+    name: "--color-card-default",
+    swatch: "var(--color-card-default)",
   },
   {
     name: "--color-card-secondary",
     swatch: "var(--color-card-secondary)",
   },
-  { name: "--color-shadow-raw", swatch: "hsl(var(--color-shadow-raw))" },
-  { name: "--color-border-raw", swatch: "hsl(var(--color-border-raw))" },
+  { name: "--color-shadow", swatch: "var(--color-shadow)" },
+  { name: "--color-border", swatch: "var(--color-border)" },
   { name: "--color-icon-primary", swatch: "var(--color-icon-primary)" },
 ];
 
@@ -52,10 +52,13 @@ export const metadata: UIStylePageMeta = {
 
 function ColorSwatch({ name, swatch }: ColorToken) {
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border-4 border-border bg-card-default p-4 shadow-md">
+    <div className="flex flex-col gap-3 rounded-2xl border-4 border-border bg-card-default p-4 shadow-md items-center">
       <div
-        className="h-24 w-24 rounded-xl border-2 border-black/10 shadow-inner"
-        style={{ background: swatch }}
+        className="h-24 w-24 rounded-xl border-5 shadow-inner"
+        style={{
+          background: swatch,
+          borderColor: `hsl(from ${swatch} h s calc(l - 10))`,
+        }}
       />
       <code className="break-all text-sm font-semibold text-foreground">
         {name}

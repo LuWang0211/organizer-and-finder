@@ -69,3 +69,4 @@ scripts/symbollink.js
 
 
 *.code-workspace
+.codex

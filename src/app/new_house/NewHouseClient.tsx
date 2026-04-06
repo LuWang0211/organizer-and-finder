@@ -67,10 +67,10 @@ export default function NewHouseClient({ layoutOptions }: NewHouseClientProps) {
     <div className="min-h-screen p-6 ">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-bold text-mute mb-2">
             Create Your House
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-card-default">
             Choose a layout type to get started organizing your space
           </p>
         </div>
@@ -91,7 +91,7 @@ export default function NewHouseClient({ layoutOptions }: NewHouseClientProps) {
                   value={houseName}
                   onChange={(e) => setHouseName(e.target.value)}
                   placeholder="e.g., My Home, Downtown Apartment, etc."
-                  className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                  className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-background focus:outline-none"
                   required
                 />
               </CardContent>
@@ -111,7 +111,7 @@ export default function NewHouseClient({ layoutOptions }: NewHouseClientProps) {
           </div>
 
           {state?.error && (
-            <div className="mb-8 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <div className="mb-8 p-4 bg-primary-accent/70 border border-primary-accent text-[hsl(from_var(--color-primary-accent)_h_s_calc(l_-_25))] rounded-lg">
               {state.error}
             </div>
           )}

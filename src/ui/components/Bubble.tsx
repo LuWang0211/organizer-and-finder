@@ -8,25 +8,18 @@ const bubbleVariants = cva(
     "relative rounded-3xl overflow-hidden transition-all duration-300",
     "hover:scale-[1.02]",
     "backdrop-blur-xs z-10",
+    "shadow-[0_20px_30px_color-mix(in_oklch,_var(--color-shadow)_45%,_transparent),inset_0px_10px_30px_5px_color-mix(in_oklch,_var(--color-mute)_30%,_transparent)]",
+    "hover:shadow-[0_25px_35px_color-mix(in_oklch,_var(--color-shadow)_60%,_transparent),inset_0px_12px_35px_8px_color-mix(in_oklch,_var(--color-mute)_40%,_transparent)]",
   ],
   {
     variants: {
       variant: {
-        default: [
-          "bg-white/10 border border-white/10",
-          "shadow-[0_20px_30px_rgba(0,0,0,0.2),inset_0px_10px_30px_5px_rgba(255,255,255,0.3)]",
-          "hover:shadow-[0_25px_35px_rgba(0,0,0,0.25),inset_0px_12px_35px_8px_rgba(255,255,255,0.4)]",
+        default: ["bg-white/10 border border-white/10"],
+        primary: ["bg-primary-accent/35 border-primary-accent/70"],
+        highlight: [
+          "bg-[color:var(--color-highlight)]/35 border border-[color:var(--color-highlight)]/70",
         ],
-        primary: [
-          "bg-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] border-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_30%)]",
-          "shadow-[0_20px_30px_rgba(0,0,0,0.2),inset_0px_10px_30px_5px_rgba(255,255,255,0.3)]",
-          "hover:shadow-[0_25px_35px_rgba(0,0,0,0.25),inset_0px_12px_35px_8px_rgba(255,255,255,0.4)]",
-        ],
-        secondary: [
-          "bg-cyan-400/10 border border-cyan-300/15",
-          "shadow-[0_20px_30px_rgba(0,0,0,0.2),inset_0px_10px_30px_5px_rgba(255,255,255,0.3)]",
-          "hover:shadow-[0_25px_35px_rgba(0,0,0,0.25),inset_0px_12px_35px_8px_rgba(255,255,255,0.4)]",
-        ],
+        secondary: ["bg-card-secondary-400/10 border border-card-secondary/15"],
       },
       size: {
         sm: "min-h-[80px] p-4",

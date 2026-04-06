@@ -17,7 +17,7 @@ const CONTENT_CONTAINER_CLASSES =
 const ARROW_CLASSES: Record<TooltipVariant, string> = {
   card: "fill-[var(--color-card-default)] drop-shadow-sm",
   bubble:
-    "fill-[color-mix(in_oklch,hsl(var(--primary-accent)),transparent_65%)] drop-shadow-sm",
+    "fill-[color-mix(in_oklch,var(--color-primary-accent),transparent_65%)] drop-shadow-sm",
 };
 
 const CARD_CONTENT_CLASSES =
