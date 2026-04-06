@@ -3,7 +3,7 @@ import { cn } from "@/utils/tailwind";
 export function LoadingState({ className }: { className?: string }) {
   return (
     <div className={cn(`flex items-center justify-center py-8`, className)}>
-      <div className="animate-spin w-8 h-8 border-4 border-cyan-400 border-t-transparent rounded-full" />
+      <div className="animate-spin w-8 h-8 border-4 border-card-secondary-400 border-t-transparent rounded-full" />
     </div>
   );
 }
