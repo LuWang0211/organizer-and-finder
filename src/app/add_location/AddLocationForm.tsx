@@ -77,7 +77,7 @@ export default function AddLocationForm({
             required
             placeholder="e.g., Pantry"
             ref={nameRef}
-            className="w-full p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+            className="w-full p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none"
           />
         </div>
 
@@ -101,7 +101,7 @@ export default function AddLocationForm({
               name="icon"
               value={icon}
               onChange={(e) => setIcon((e.target.value as IconKey) || "")}
-              className="p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+              className="p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none"
             >
               <option value="">No icon</option>
               {LOCATION_ICON_OPTIONS.map((opt) => (

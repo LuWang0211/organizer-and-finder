@@ -21,11 +21,11 @@ const iconV2Variants = cva(baseIconStyles, {
       circle: "rounded-full",
     },
     variant: {
-      default: ["icon-grad-default"],
-      primary: ["icon-grad-primary"],
-      secondary: ["icon-grad-secondary"],
-      orange: ["icon-grad-orange"],
-      blue: ["icon-grad-blue"],
+      default: ["icon-grad-card-default"],
+      primary: ["icon-grad-icon-primary"],
+      "secondary-accent": ["icon-grad-secondary-accent"],
+      highlight: ["icon-grad-highlight"],
+      background: ["icon-grad-background"],
     },
     size: {
       tiny: ["border-2", "icon-shadow-tiny"],

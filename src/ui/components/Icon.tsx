@@ -7,15 +7,15 @@ import { cn } from "@/utils/tailwind";
 const iconVariants = cva(
   [
     "relative inline-flex items-center justify-center rounded-full border-border transition-all duration-200",
-    "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,hsl(var(--card)),black_8%)_inset]",
+    "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-card-default),black_8%)_inset]",
     "hover:scale-[1.05] will-change-transform",
   ],
   {
     variants: {
       variant: {
         default: [
-          "bg-linear-to-bl from-[color-mix(in_oklch,hsl(var(--card)),white_80%)] via-card to-card",
-          "hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.15)_inset,3px_-3px_8px_0_color-mix(in_oklch,hsl(var(--card)),black_12%)_inset]",
+          "bg-linear-to-bl from-[color-mix(in_oklch,var(--color-card-default),white_80%)] via-card-default to-card-default",
+          "hover:shadow-[0_4px_8px_0_rgba(0,0,0,0.15)_inset,3px_-3px_8px_0_color-mix(in_oklch,var(--color-card-default),black_12%)_inset]",
         ],
         primary: [
           "bg-linear-to-bl from-[color-mix(in_oklch,hsl(var(--primary-accent)),white_80%)] via-primary-accent to-primary-accent text-white",

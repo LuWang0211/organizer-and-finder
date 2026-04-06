@@ -131,7 +131,7 @@ const FeedbackOverlay = forwardRef<FeedbackOverlayRef, FeedbackOverlayProps>(
             >
               <div ref={setContainerEl} className="w-full h-full relative">
                 <div className="absolute inset-x-0 bottom-2 flex justify-center pointer-events-none">
-                  <CardDescription className="text-[20px] font-extrabold text-text-main">
+                  <CardDescription className="text-[20px] font-extrabold text-foreground">
                     {displayMessage}
                   </CardDescription>
                 </div>

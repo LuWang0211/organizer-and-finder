@@ -53,7 +53,7 @@ export default function OverlayShowcaseClient() {
         </label>
         <input
           id={successMessageId}
-          className="flex-1 p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+          className="flex-1 p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none"
           value={successMsg}
           onChange={(e) => setSuccessMsg(e.target.value)}
         />
@@ -64,7 +64,7 @@ export default function OverlayShowcaseClient() {
         </label>
         <input
           id={errorMessageId}
-          className="flex-1 p-3 rounded-xl border-4 border-border bg-card text-text-main outline-none"
+          className="flex-1 p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none"
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
         />

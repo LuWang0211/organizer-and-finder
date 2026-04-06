@@ -133,12 +133,12 @@ const ObjectCard = ({
           style={{ paddingTop: 20, paddingBottom: 20, minHeight: 50 }}
         >
           {/* Main title */}
-          <div className="font-hand max-w-full text-md font-bold text-text-main truncate leading-normal">
+          <div className="font-hand max-w-full text-md font-bold text-foreground truncate leading-normal">
             {title}
           </div>
           {/* Detail info */}
           {detail && (
-            <div className="font-hand max-w-full text-sm text-text-detail truncate leading-normal">
+            <div className="font-hand max-w-full text-sm text-foreground-secondary truncate leading-normal">
               {detail}
             </div>
           )}
@@ -155,12 +155,12 @@ const ObjectCard = ({
             }}
           >
             {extraInfo && (
-              <div className="font-hand text-sm text-text-detail truncate leading-normal">
+              <div className="font-hand text-sm text-foreground-secondary truncate leading-normal">
                 {extraInfo}
               </div>
             )}
             {extraFootNote && (
-              <div className="font-hand text-xs text-text-footnote truncate leading-normal mt-3.5 rounded-2xl">
+              <div className="font-hand text-xs text-foreground-accent truncate leading-normal mt-3.5 rounded-2xl">
                 {extraFootNote}
               </div>
             )}

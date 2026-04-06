@@ -7,7 +7,7 @@ import { cn } from "@/utils/tailwind";
 // Base button styles
 const buttonBaseStyles = [
   "relative z-20 inline-flex items-center justify-center font-bold overflow-visible",
-  "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-outline focus-visible:ring-offset-2",
+  "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
   "transition-all duration-200 ease-out active:translate-y-0.5",
   "border-4 border-border rounded-full",
 ];
@@ -26,18 +26,18 @@ const buttonVariants = cva(buttonBaseStyles, {
         "disabled:shadow-[-2px_2px_1px_0px_hsl(var(--highlight)/25%)_inset,2px_-2px_1px_0px_color-mix(in_oklch,hsl(var(--primary-accent)),black_50%)_inset] disabled:hover:scale-100 disabled:active:translate-y-0 disabled:saturate-50",
       ],
       secondary: [
-        "bg-secondary text-text-main",
-        "shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
-        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
+        "bg-mute text-foreground",
+        "shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--mute)),black_30%)_inset]",
+        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--mute)),black_30%)_inset]",
         "disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed",
-        "disabled:shadow-[2px_-2px_1px_0px_color-mix(in_oklch,hsl(var(--secondary)),black_60%)_inset] disabled:hover:scale-100 disabled:active:translate-y-0",
+        "disabled:shadow-[2px_-2px_1px_0px_color-mix(in_oklch,hsl(var(--mute)),black_60%)_inset] disabled:hover:scale-100 disabled:active:translate-y-0",
       ],
       outline: [
         "bg-transparent text-white/90 border-2 border-current",
         "[text-shadow:0.5px_0.5px_0_rgba(255,255,255,0.8)]",
         "hover:bg-background/10",
-        "shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
-        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--secondary)),black_30%)_inset]",
+        "shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--mute)),black_30%)_inset]",
+        "hover:scale-[1.02] hover:shadow-[3px_-3px_2px_1px_color-mix(in_oklch,hsl(var(--mute)),black_30%)_inset]",
         "disabled:text-gray-500 disabled:border-gray-500 disabled:cursor-not-allowed disabled:opacity-50",
         "disabled:bg-transparent disabled:shadow-none disabled:hover:scale-100 disabled:hover:bg-transparent disabled:active:translate-y-0",
         "disabled:hover:shadow-none",

@@ -5,21 +5,21 @@ import { cn } from "@/utils/tailwind";
 
 const cardVariants = cva(
   [
-    "rounded-3xl border-4 border-border text-text-main overflow-hidden transition-all duration-200 relative z-10",
+    "rounded-3xl border-4 border-border text-foreground overflow-hidden transition-all duration-200 relative z-10",
     "hover:scale-[1.02] card-content",
   ],
   {
     variants: {
       variant: {
         default: [
-          "bg-card",
-          "shadow-[0_2px_8px_0_hsl(var(--shadow)/20%)_inset,2px_-2px_8px_0_color-mix(in_oklch,hsl(var(--card)),black_10%)_inset]",
-          "hover:shadow-[0_4px_12px_0_hsl(var(--shadow)/30%)_inset,3px_-3px_12px_0_color-mix(in_oklch,hsl(var(--card)),black_15%)_inset]",
+          "bg-card-default",
+          "shadow-[0_2px_8px_0_hsl(var(--shadow)/20%)_inset,2px_-2px_8px_0_color-mix(in_oklch,var(--color-card-default),black_10%)_inset]",
+          "hover:shadow-[0_4px_12px_0_hsl(var(--shadow)/30%)_inset,3px_-3px_12px_0_color-mix(in_oklch,var(--color-card-default),black_15%)_inset]",
         ],
         secondary: [
-          "bg-cyan-300",
-          "shadow-[0_2px_8px_0_rgba(0,0,0,0.15)_inset,2px_-2px_8px_0_color-mix(in_oklch,var(--color-cyan-300),black_15%)_inset]",
-          "hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.25)_inset,3px_-3px_12px_0_color-mix(in_oklch,var(--color-cyan-300),black_20%)_inset]",
+          "bg-card-secondary",
+          "shadow-[0_2px_8px_0_rgba(0,0,0,0.15)_inset,2px_-2px_8px_0_color-mix(in_oklch,var(--color-card-secondary),black_15%)_inset]",
+          "hover:shadow-[0_4px_12px_0_rgba(0,0,0,0.25)_inset,3px_-3px_12px_0_color-mix(in_oklch,var(--color-card-secondary),black_20%)_inset]",
         ],
         primary: [
           "bg-primary-accent text-white",

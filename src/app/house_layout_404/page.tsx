@@ -15,13 +15,13 @@ export default function HouseLayout404() {
           <CardTitle className="text-4xl font-extrabold mb-2">
             Room Not Found
           </CardTitle>
-          <p className="text-lg text-text-main/80 font-medium">
+          <p className="text-lg text-foreground/80 font-medium">
             Oops! This room doesn't exist in your house layout.
           </p>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <p className="text-base text-text-main/70 mb-6">
+          <p className="text-base text-foreground/70 mb-6">
             The room you're looking for might have been moved, deleted, or you
             may have entered the wrong room ID.
           </p>

@@ -22,9 +22,7 @@ function LogoutConfirm({
 }: LogoutConfirmProps) {
   return (
     <div className="space-y-3">
-      <p className="text-text-secondary text-base">
-        Are you sure you want to log out?
-      </p>
+      <p className="text-base">Are you sure you want to log out?</p>
       <div className="flex gap-2">
         <Button
           variant="primary"
@@ -74,8 +72,8 @@ function ProfileInfo({
           className="shrink-0"
         />
         <div className="flex-1 min-w-0">
-          <p className="text-sm text-text-secondary">{label}</p>
-          <p className={`font-${fontWeight} text-text-main truncate`}>
+          <p className="text-sm">{label}</p>
+          <p className={`font-${fontWeight} text-foreground truncate`}>
             {value}
           </p>
         </div>
@@ -96,11 +94,11 @@ function ProfileStats({ totalRooms, totalItems }: ProfileStatsProps) {
         <p className="text-2xl font-extrabold text-primary-accent">
           {totalRooms}
         </p>
-        <p className="text-xs text-text-secondary font-medium">Rooms</p>
+        <p className="text-xs font-medium">Rooms</p>
       </div>
       <div className="text-center p-2 bg-cyan-300/20 rounded-2xl">
         <p className="text-2xl font-extrabold text-cyan-600">{totalItems}</p>
-        <p className="text-xs text-text-secondary font-medium">Items</p>
+        <p className="text-xs font-medium">Items</p>
       </div>
     </div>
   );
