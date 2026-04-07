@@ -10,7 +10,7 @@ export default function HouseLayout404() {
       <Card className="w-full max-w-md text-center">
         <CardHeader className="pb-4">
           <div className="flex justify-center mb-6">
-            <Icon variant="orange" size="lg" iconKey="search" />
+            <Icon variant="highlight" size="lg" iconKey="search" />
           </div>
           <CardTitle className="text-4xl font-extrabold mb-2">
             Room Not Found

@@ -29,7 +29,7 @@ async function DataLoader({
         <Card className="w-full max-w-md">
           <CardHeader className="pb-4 text-center">
             <div className="justify-center mb-6 hidden @h-36:flex">
-              <Icon variant="orange" size="lg" iconKey="map-pin" />
+              <Icon variant="highlight" size="lg" iconKey="map-pin" />
             </div>
             <CardTitle className="text-3xl font-extrabold mb-2 hidden @h-36:block">
               Add Location

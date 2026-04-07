@@ -18,7 +18,7 @@ export default function IconsShowcase() {
             <div className="flex gap-4 items-center justify-center">
               <Icon variant="secondary" iconKey="smile" />
               <Icon variant="primary" iconKey="heart" />
-              <Icon variant="orange" iconKey="star" />
+              <Icon variant="highlight" iconKey="star" />
             </div>
           </div>
 
@@ -45,7 +45,7 @@ export default function IconsShowcase() {
         <div className="flex gap-4 items-center justify-center flex-wrap">
           <Icon variant="secondary" size="lg" iconKey="smile" />
           <Icon variant="primary" size="lg" iconKey="heart" />
-          <Icon variant="orange" size="lg" iconKey="star" />
+          <Icon variant="highlight" size="lg" iconKey="star" />
           <Icon variant="default" size="lg" iconKey="home" />
         </div>
 
@@ -54,7 +54,7 @@ export default function IconsShowcase() {
           <div className="flex gap-4 items-center justify-center flex-wrap">
             <Icon variant="secondary" border="none" iconKey="smile" />
             <Icon variant="primary" border="none" iconKey="heart" />
-            <Icon variant="orange" border="none" iconKey="star" />
+            <Icon variant="highlight" border="none" iconKey="star" />
             <Icon variant="default" border="none" iconKey="home" />
           </div>
         </div>
