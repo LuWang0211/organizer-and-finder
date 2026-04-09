@@ -1,83 +1,233 @@
-export default function Home() {
+import { Leaf } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import AuthProtectedComponent from "@/AuthProtectedComponent";
+import { getSession } from "@/auth";
+import { getHomeSummaryForFamily } from "@/services/homeSummaryService";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/components/Card";
+import { GlassPanel } from "@/ui/components/GlassPanel";
+import { Icon } from "@/ui/components/Icon";
+
+type ActionCardProps = {
+  href: string;
+  iconKey: "home" | "search" | "package";
+  title: string;
+  description: string;
+  accentClassName: string;
+};
+
+function ActionCard({
+  href,
+  iconKey,
+  title,
+  description,
+  accentClassName,
+}: ActionCardProps) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <h1 className="text-2xl font-bold">Organizer and Finder</h1>
-      </div>
-
-      <div className="relative z-10 flex place-items-center before:absolute before:h-[300px] before:w-full ...">
-        <h2 className="text-xl">Welcome to your home organization app</h2>
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
+    <Link href={href} className="block h-full">
+      <Card className="h-full min-h-[220px] overflow-hidden">
+        <div className={`h-14 w-full ${accentClassName}`} />
+        <CardHeader className="pb-3">
+          <div className="-mt-9 mb-2 flex">
+            <Icon variant="default" size="default" iconKey={iconKey} />
+          </div>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-1 flex-col justify-between pt-0">
+          <p className="text-base font-medium text-foreground-secondary">
+            {description}
           </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
+          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-foreground-secondary/70">
+            Open
           </p>
-        </a>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+function GettingStartedTips({
+  totalLocations,
+  totalItems,
+}: {
+  totalLocations: number;
+  totalItems: number;
+}) {
+  const tips =
+    totalLocations === 0
+      ? [
+          "Start by adding your first container or location so your house has a place to organize things.",
+          "Pick one easy spot first, like a drawer, shelf, or basket, to make setup feel lightweight.",
+          "Once your first location exists, the house layout and inventory tools become much more useful.",
+        ]
+      : totalItems === 0
+        ? [
+            "Add a few everyday items first so search has something real to find.",
+            "Good starter items are chargers, documents, pantry staples, or anything you regularly look for.",
+            "Keep the first pass simple: a handful of useful items is enough to validate your setup.",
+          ]
+        : [
+            "Try searching for a familiar item to test how quickly your setup helps you find it.",
+            "Open your house layout to refine rooms and locations as your organization system grows.",
+            "Keep momentum by updating inventory a little at a time instead of waiting for a perfect full reset.",
+          ];
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+  return (
+    <section className="space-y-4">
+      <Card className="rounded-3xl">
+        <CardContent className="pt-6">
+          <div className="space-y-1 flex items-center gap-3">
+            <Icon variant="highlight" size="sm" iconKey="star" />
+            <h2 className="text-2xl font-extrabold text-foreground">
+              Getting Started Tips
+            </h2>
+          </div>
+          <ul className="mt-4 list-disc space-y-2 pl-6 marker:text-foreground-secondary">
+            {tips.map((tip) => (
+              <li
+                key={tip}
+                className="text-sm leading-6 text-foreground-secondary"
+              >
+                {tip}
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
+async function DataLoader() {
+  const session = await getSession();
+
+  if (!session?.dbUser.familyId) {
+    redirect("/new_house");
+  }
+
+  const summary = await getHomeSummaryForFamily(session.dbUser.familyId);
+
+  if (!summary.hasHouse) {
+    redirect("/new_house");
+  }
+
+  return (
+    <main className="min-h-screen overflow-x-hidden px-6 py-10 sm:px-8 lg:px-12">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+        <section className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl space-y-4">
+            <div className="space-y-3">
+              <h1 className="flex items-center gap-3 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+                <Icon variant="highlight" iconKey="home" />
+                <span className="relative inline-block pr-4">
+                  <Leaf
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-3 right-0 z-20 h-8 w-8 rotate-18 text-emerald-300 drop-shadow-[0_4px_10px_rgba(52,211,153,0.35)] sm:-top-4 sm:right-1 sm:h-10 sm:w-10"
+                    strokeWidth={2.25}
+                  />
+                  <span className="text-white">Welcome to Your </span>
+                  <span className="relative z-10 bg-linear-to-r from-amber-400 to-pink-300 bg-clip-text text-transparent">
+                    {summary.houseName}
+                  </span>
+                </span>
+              </h1>
+
+              <p className="max-w-2xl text-base leading-7 text-mute/85 sm:text-lg">
+                Organize your space, track your containers, and find things
+                faster.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <GlassPanel
+            padding="lg"
+            variant="strong"
+            className="rounded-3xl shadow-md"
+          >
+            <div className="flex flex-col gap-3 text-foreground sm:flex-row sm:items-center">
+              <div className="flex items-center justify-center gap-4 sm:flex-1">
+                <Icon variant="secondary" size="sm" iconKey="home" />
+                <span className="inline-flex items-baseline gap-2 text-base font-semibold">
+                  <span className="text-2xl font-extrabold text-mute">
+                    {summary.totalRooms}
+                  </span>
+                  <span className="text-foreground-secondary">Rooms</span>
+                </span>
+              </div>
+              <div className="hidden text-mute/60 sm:block">|</div>
+              <div className="flex items-center justify-center gap-3 sm:flex-1">
+                <Icon variant="secondary" size="sm" iconKey="archive" />
+                <span className="inline-flex items-baseline gap-2 text-base font-semibold">
+                  <span className="text-2xl font-extrabold text-mute">
+                    {summary.totalLocations}
+                  </span>
+                  <span className="text-foreground-secondary">Containers</span>
+                </span>
+              </div>
+              <div className="hidden text-mute/60 sm:block">|</div>
+              <div className="flex items-center justify-center gap-3 sm:flex-1">
+                <Icon variant="secondary" size="sm" iconKey="package" />
+                <span className="inline-flex items-baseline gap-2 text-base font-semibold">
+                  <span className="text-2xl font-extrabold text-mute">
+                    {summary.totalItems}
+                  </span>
+                  <span className="text-foreground-secondary">Items</span>
+                </span>
+              </div>
+            </div>
+          </GlassPanel>
+        </section>
+
+        <section className="space-y-4">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-extrabold text-foreground">
+              Choose Your Next Move
+            </h2>
+            <p className="text-base text-foreground-secondary">
+              The main tools you’ll likely want most while organizing.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            <ActionCard
+              href="/house_layout"
+              iconKey="home"
+              title="View House"
+              description="Browse rooms, locations, and items on the map so you can understand the whole layout at a glance."
+              accentClassName="bg-linear-to-r from-card-secondary-300 via-sky-200 to-white/60"
+            />
+            <ActionCard
+              href="/phaserui"
+              iconKey="search"
+              title="Search Items"
+              description="Quickly find where something is stored when you need an answer instead of another scavenger hunt."
+              accentClassName="bg-linear-to-r from-amber-200 via-highlight-100 to-primary-accent/35"
+            />
+            <ActionCard
+              href="/add_item"
+              iconKey="package"
+              title="Manage Inventory"
+              description="Add items now and keep building a searchable inventory that can grow with the rest of your house."
+              accentClassName="bg-linear-to-r from-primary-accent/75 via-[hsl(from_var(--color-primary-accent)_h_s_calc(l_+_12))] to-yellow-100"
+            />
+          </div>
+        </section>
+
+        <GettingStartedTips
+          totalLocations={summary.totalLocations}
+          totalItems={summary.totalItems}
+        />
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthProtectedComponent>
+      <DataLoader />
+    </AuthProtectedComponent>
   );
 }

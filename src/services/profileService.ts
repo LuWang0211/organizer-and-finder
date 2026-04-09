@@ -30,13 +30,18 @@ export async function fetchRoomCountForFamily(familyId: number) {
   });
 }
 
-export async function fetchItemCountForFamily(familyId: number) {
-  const locations = await prisma.location.findMany({
+export async function fetchLocationCountForFamily(familyId: number) {
+  return prisma.location.count({
     where: { familyId },
-    include: {
-      items: true,
+  });
+}
+
+export async function fetchItemCountForFamily(familyId: number) {
+  return prisma.item.count({
+    where: {
+      location: {
+        familyId,
+      },
     },
   });
-
-  return locations.reduce((sum, loc) => sum + loc.items.length, 0);
 }
