@@ -28,7 +28,7 @@ function ActionCard({
       <Card className="h-full min-h-[220px] overflow-hidden">
         <div className={`h-14 w-full ${accentClassName}`} />
         <CardHeader className="pb-3">
-          <div className="-mt-9 mb-2 flex">
+          <div className="-mt-14 mb-2 flex">
             <Icon variant="default" size="default" iconKey={iconKey} />
           </div>
           <CardTitle>{title}</CardTitle>
@@ -107,7 +107,7 @@ async function DataLoader() {
 
   const summary = await getHomeSummaryForFamily(session.dbUser.familyId);
 
-  if (!summary.hasHouse) {
+  if (!summary.houseName) {
     redirect("/new_house");
   }
 
@@ -122,11 +122,11 @@ async function DataLoader() {
                 <span className="relative inline-block pr-4">
                   <Leaf
                     aria-hidden="true"
-                    className="pointer-events-none absolute -top-3 right-0 z-20 h-8 w-8 rotate-18 text-emerald-300 drop-shadow-[0_4px_10px_rgba(52,211,153,0.35)] sm:-top-4 sm:right-1 sm:h-10 sm:w-10"
+                    className="pointer-events-none absolute -top-3 right-0 z-20 h-8 w-8 rotate-18 text-emerald-300 drop-shadow(0_4px_10px_color-mix(in_oklch,var(--color-secondary-accent)_45%,transparent)) sm:-top-4 sm:right-1 sm:h-10 sm:w-10"
                     strokeWidth={2.25}
                   />
-                  <span className="text-white">Welcome to Your </span>
-                  <span className="relative z-10 bg-linear-to-r from-amber-400 to-pink-300 bg-clip-text text-transparent">
+                  <span className="text-mute">Welcome to Your </span>
+                  <span className="relative z-10 bg-linear-to-r from-highlight-300 to-[color-mix(in_oklch,var(--color-primary-accent),white_25%)] bg-clip-text text-transparent">
                     {summary.houseName}
                   </span>
                 </span>
@@ -153,7 +153,7 @@ async function DataLoader() {
                   <span className="text-2xl font-extrabold text-mute">
                     {summary.totalRooms}
                   </span>
-                  <span className="text-foreground-secondary">Rooms</span>
+                  <span>Rooms</span>
                 </span>
               </div>
               <div className="hidden text-mute/60 sm:block">|</div>
@@ -163,7 +163,7 @@ async function DataLoader() {
                   <span className="text-2xl font-extrabold text-mute">
                     {summary.totalLocations}
                   </span>
-                  <span className="text-foreground-secondary">Containers</span>
+                  <span>Containers</span>
                 </span>
               </div>
               <div className="hidden text-mute/60 sm:block">|</div>
@@ -173,7 +173,7 @@ async function DataLoader() {
                   <span className="text-2xl font-extrabold text-mute">
                     {summary.totalItems}
                   </span>
-                  <span className="text-foreground-secondary">Items</span>
+                  <span>Items</span>
                 </span>
               </div>
             </div>
@@ -182,11 +182,11 @@ async function DataLoader() {
 
         <section className="space-y-4">
           <div className="space-y-1">
-            <h2 className="text-2xl font-extrabold text-foreground">
+            <h2 className="text-2xl font-extrabold">
               Choose Your Next Move
             </h2>
-            <p className="text-base text-foreground-secondary">
-              The main tools you’ll likely want most while organizing.
+            <p className="text-base">
+              These are the key tools you’ll probably rely on most while organizing.
             </p>
           </div>
 
@@ -196,7 +196,7 @@ async function DataLoader() {
               iconKey="home"
               title="View House"
               description="Browse rooms, locations, and items on the map so you can understand the whole layout at a glance."
-              accentClassName="bg-linear-to-r from-card-secondary-300 via-sky-200 to-white/60"
+              accentClassName="bg-linear-to-r from-card-secondary-300 via-[color-mix(in_oklch,var(--color-background),white_45%)] to-mute/60"
             />
             <ActionCard
               href="/phaserui"

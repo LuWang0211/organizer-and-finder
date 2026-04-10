@@ -7,12 +7,9 @@ import { fetchHouseForFamily } from "@/services/roomService";
 
 export interface HomeSummary {
   houseName: string | null;
-  hasHouse: boolean;
   totalRooms: number;
   totalLocations: number;
   totalItems: number;
-  hasAnyLocation: boolean;
-  hasAnyItem: boolean;
 }
 
 export async function getHomeSummaryForFamily(
@@ -27,11 +24,8 @@ export async function getHomeSummaryForFamily(
 
   return {
     houseName: house?.name ?? null,
-    hasHouse: Boolean(house),
     totalRooms,
     totalLocations,
     totalItems,
-    hasAnyLocation: totalLocations > 0,
-    hasAnyItem: totalItems > 0,
   };
 }
