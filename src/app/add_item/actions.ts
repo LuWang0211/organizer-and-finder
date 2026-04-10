@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { getSession } from "@/auth";
 import { createItem } from "@/services/itemService";
+import { HOUSEHOLD_ICON_KEYS } from "@/ui/iconPresets";
 
 // Validation schema
 const addItemSchema = z.object({
@@ -11,7 +12,7 @@ const addItemSchema = z.object({
     .min(1, "Name is required")
     .max(100, "Name must be less than 100 characters"),
   locationId: z.string().min(1, "Location is required"), // Required field
-  icon: z.string().optional(),
+  icon: z.enum(HOUSEHOLD_ICON_KEYS).optional(),
   quantity: z
     .number()
     .int()
@@ -58,7 +59,7 @@ export async function addItem(
   try {
     await createItem(name, {
       locationId, // Now guaranteed to be a non-empty string
-      icon: (icon as any) || undefined,
+      icon,
       quantity,
     });
     return { ok: true as const };

@@ -9,7 +9,7 @@ export type { HouseholdIconKey };
 
 // Base styles shared by all icons
 const baseIconStyles = [
-  "relative inline-flex items-center justify-center transition-all duration-200",
+  "relative flex items-center justify-center transition-all duration-200",
   "hover:scale-[1.05] will-change-transform",
 ];
 
@@ -87,9 +87,9 @@ const IconV2 = ({
   const defaultRatio = size === "tiny" ? 0.6 : 0.8;
 
   return (
-    <div className="relative group">
+    <div className="relative icon-v2-group">
       {/* Floating shadow effect */}
-      <div className="absolute inset-0 -z-10 bg-shadow/60 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom group-hover:translate-y-2 group-hover:scale-x-110 group-hover:blur-[6px] group-hover:opacity-80 transition-all duration-200 ease-out" />
+      <div className="absolute inset-0 top-2 -z-10 bg-shadow/60 opacity-80 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom icon-v2-group-hover:translate-y-2 icon-v2-group-hover:scale-x-110 icon-v2-group-hover:blur-[6px] transition-all duration-200 ease-out" />
       {/* Main Icon Frame */}
       <div
         className={cn(

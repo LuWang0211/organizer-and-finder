@@ -1,19 +1,19 @@
 import { getSession } from "@/auth";
 import prisma from "@/services/db";
-import type { IconKey } from "@/ui/iconPresets";
+import type { HouseholdIconKey, IconKey } from "@/ui/iconPresets";
 
 export async function fetchItems() {
   try {
     const items = await prisma.item.findMany();
     return items;
-  } catch (error) {
+  } catch {
     throw new Error("Error fetching items");
   }
 }
 
 type CreateItemOptions = {
   locationId: string; // Required - every item must have a location
-  icon?: IconKey;
+  icon?: IconKey | HouseholdIconKey;
   quantity?: number;
 };
 
@@ -94,7 +94,7 @@ export async function fetchItemsByLocation(
       ...otherProps,
     }));
     return resultTyped;
-  } catch (error) {
+  } catch {
     throw new Error("Error fetching items");
   }
 }

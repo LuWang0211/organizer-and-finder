@@ -27,6 +27,7 @@ export default function IconsShowcase() {
             <div className="flex gap-4 items-center justify-center">
               <Icon variant="primary" size="tiny" iconKey="home" />
               <Icon variant="primary" size="sm" iconKey="settings" />
+              <Icon variant="primary" size="medium" iconKey="search" />
               <Icon variant="primary" size="default" iconKey="user" />
               <Icon variant="primary" size="lg" iconKey="bell" />
             </div>

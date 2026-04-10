@@ -38,6 +38,7 @@ const iconVariants = cva(
       size: {
         tiny: "w-6 h-6",
         sm: "w-10 h-10",
+        medium: "w-13 h-13",
         default: "w-[64px] h-[64px]",
         lg: "w-[88px] h-[88px]",
       },
@@ -53,9 +54,22 @@ const iconVariants = cva(
         class: "border-2",
       },
       {
-        size: ["sm", "default", "lg"],
+        size: ["default", "lg"],
         border: "default",
         class: "border-4",
+      },
+      {
+        size: ["sm", "medium"],
+        border: "default",
+        class: "border-[2.5px]",
+      },
+      {
+        size: ["tiny"],
+        variant: "primary",
+        class: [
+          "shadow-[-2px_2px_1px_0.5px_color-mix(in_oklch,var(--color-highlight)_30%,transparent)_inset",
+          "hover:shadow-[-3px_3px_2px_1px_color-mix(in_oklch,var(--color-highlight)_35%,transparent)_inset,2px_-2px_1px_0px_color-mix(in_oklch,var(--color-primary-accent),black_30%)_inset]",
+        ],
       },
     ],
     defaultVariants: {
@@ -69,6 +83,7 @@ const iconVariants = cva(
 const iconSizeConfig = {
   tiny: { iconSize: 14, strokeWidth: 1.5 },
   sm: { iconSize: 20, strokeWidth: 2 },
+  medium: { iconSize: 28, strokeWidth: 2.5 },
   default: { iconSize: 36, strokeWidth: 2.5 },
   lg: { iconSize: 50, strokeWidth: 3 },
 };
