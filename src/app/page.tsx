@@ -122,7 +122,7 @@ async function DataLoader() {
                 <span className="relative inline-block pr-4">
                   <Leaf
                     aria-hidden="true"
-                    className="pointer-events-none absolute -top-3 right-0 z-20 h-8 w-8 rotate-18 text-emerald-300 drop-shadow(0_4px_10px_color-mix(in_oklch,var(--color-secondary-accent)_45%,transparent)) sm:-top-4 sm:right-1 sm:h-10 sm:w-10"
+                    className="pointer-events-none absolute -top-3 right-0 z-20 h-8 w-8 rotate-18 text-[hsl(from_var(--color-secondary-accent)_h_s_l)] drop-shadow(0_4px_10px_color-mix(in_oklch,var(--color-secondary-accent)_45%,transparent)) sm:-top-4 sm:right-1 sm:h-10 sm:w-10"
                     strokeWidth={2.25}
                   />
                   <span className="text-mute">Welcome to Your </span>
@@ -202,14 +202,14 @@ async function DataLoader() {
               iconKey="search"
               title="Search Items"
               description="Quickly find where something is stored when you need an answer instead of another scavenger hunt."
-              accentClassName="bg-linear-to-r from-amber-200 via-highlight-100 to-primary-accent/35"
+              accentClassName="bg-linear-to-r from-[color-mix(in_oklch,color-mix(in_oklch,var(--color-highlight)_60%,var(--color-secondary-accent)_40%),var(--color-mute)_40%)] via-highlight-100 to-primary-accent/35"
             />
             <ActionCard
               href="/add_item"
               iconKey="package"
               title="Manage Inventory"
               description="Add items now and keep building a searchable inventory that can grow with the rest of your house."
-              accentClassName="bg-linear-to-r from-primary-accent/75 via-[hsl(from_var(--color-primary-accent)_h_s_calc(l_+_12))] to-yellow-100"
+              accentClassName="bg-linear-to-r from-primary-accent/75 via-[hsl(from_var(--color-primary-accent)_h_s_calc(l_+_12))] to-[color-mix(in_oklch,color-mix(in_oklch,var(--color-highlight)_65%,var(--color-secondary-accent)_35%),var(--color-mute)_65%)]"
             />
           </div>
         </section>
