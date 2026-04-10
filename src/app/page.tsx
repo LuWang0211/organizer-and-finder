@@ -182,11 +182,10 @@ async function DataLoader() {
 
         <section className="space-y-4">
           <div className="space-y-1">
-            <h2 className="text-2xl font-extrabold">
-              Choose Your Next Move
-            </h2>
+            <h2 className="text-2xl font-extrabold">Choose Your Next Move</h2>
             <p className="text-base">
-              These are the key tools you’ll probably rely on most while organizing.
+              These are the key tools you’ll probably rely on most while
+              organizing.
             </p>
           </div>
 
