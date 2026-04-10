@@ -2,9 +2,7 @@
 
 import { useCallback, useId, useRef } from "react";
 import { Icon } from "@/ui/components/Icon";
-import IconPicker, {
-  type IconPickerHandle,
-} from "@/ui/components/IconPicker/IconPicker";
+import IconPicker, { type IconPickerHandle } from "@/ui/components/IconPicker";
 import { type HouseholdIconKey, IconV2 } from "@/ui/components/IconV2";
 
 type IconSelectorProps = {

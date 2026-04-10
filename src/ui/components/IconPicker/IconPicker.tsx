@@ -1,23 +1,18 @@
 "use client";
 
-import { useImperativeHandle, useMemo, useRef, useState } from "react";
+import { useImperativeHandle, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/ui/components/Dialog";
-import { cn } from "@/utils/tailwind";
-import { Icon } from "../Icon";
-import {
-  HOUSEHOLD_ICON_IMAGES,
-  type HouseholdIconKey,
-  IconV2,
-} from "../IconV2";
+import type { HouseholdIconKey } from "../IconV2";
 import {
   IconPickerCloseButton,
   IconPickerDecorations,
   IconPickerHeaderDivider,
 } from "./IconPickerElements";
-import { DIALOG_PADDING, GRID_GAP, GRID_ICON_SIZE } from "./iconPickerLayout";
+import { IconPickerGrid } from "./IconPickerGrid";
+import { IconPickerPager } from "./IconPickerPager";
+import { ICONS_LIBRARY } from "./iconPickerIcons";
 import {
   type DialogBounds,
-  type IconGridLayout,
   resolveMaxDialogLayout,
   useIconPickerCapacity,
 } from "./useIconPickerCapacity";
@@ -49,178 +44,9 @@ function getDialogLayout(): DialogBounds {
     aspectRatio: getClosestAspectRatio(window.innerWidth / window.innerHeight),
   };
 }
-
-const ICONS_LIBRARY = Object.keys(HOUSEHOLD_ICON_IMAGES) as HouseholdIconKey[];
-
 export type IconPickerHandle = {
   open: () => Promise<HouseholdIconKey | null>;
 };
-
-function IconPickerPager({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}) {
-  const isFirstPage = currentPage === 0;
-  const isLastPage = currentPage === totalPages - 1;
-
-  return (
-    <div
-      className={cn("flex items-center justify-center gap-3", {
-        hidden: totalPages <= 1,
-      })}
-    >
-      <button
-        type="button"
-        onClick={() => onPageChange(Math.max(0, currentPage - 1))}
-        disabled={isFirstPage}
-        className={cn(
-          "relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300",
-          {
-            "cursor-not-allowed": isFirstPage,
-          },
-        )}
-      >
-        <Icon
-          iconKey="arrow-left"
-          size="sm"
-          variant={isFirstPage ? "default" : "highlight"}
-        />
-      </button>
-
-      <div className="flex gap-2">
-        {Array.from({ length: totalPages }).map((_, i) => {
-          const isCurrentPage = i === currentPage;
-
-          return (
-            <button
-              key={`page-${i + 1}`}
-              type="button"
-              onClick={() => onPageChange(i)}
-              className={cn(
-                "h-3 rounded-full transition-all duration-300 icon-grad-highlight",
-                isCurrentPage
-                  ? "w-8 border border-highlight"
-                  : "w-3 hover:icon-grad-primary-accent cursor-pointer",
-              )}
-              aria-label={`Page ${i + 1}`}
-            />
-          );
-        })}
-      </div>
-
-      <button
-        type="button"
-        onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
-        disabled={isLastPage}
-        className={cn(
-          "relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 group",
-          {
-            "cursor-not-allowed": isLastPage,
-          },
-        )}
-      >
-        <Icon
-          iconKey="arrow-right"
-          size="sm"
-          variant={isLastPage ? "default" : "highlight"}
-        />
-      </button>
-    </div>
-  );
-}
-
-function IconPickerGridLoader({
-  layout,
-  currentPage,
-  totalPages,
-  onSelectIcon,
-}: {
-  layout: IconGridLayout | null;
-  currentPage: number;
-  totalPages: number;
-  onSelectIcon: (iconKey: HouseholdIconKey) => void;
-}) {
-  if (!layout) {
-    return null;
-  }
-
-  return (
-    <IconPickerGrid
-      layout={layout}
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onSelectIcon={onSelectIcon}
-    />
-  );
-}
-
-function IconPickerGrid({
-  layout,
-  currentPage,
-  totalPages,
-  onSelectIcon,
-}: {
-  layout: IconGridLayout;
-  currentPage: number;
-  totalPages: number;
-  onSelectIcon: (iconKey: HouseholdIconKey) => void;
-}) {
-  const pageStartIndex = currentPage * layout.iconsPerPage;
-  const visibleIcons = ICONS_LIBRARY.slice(
-    pageStartIndex,
-    pageStartIndex + layout.iconsPerPage,
-  );
-  const visibleColumnCount = Math.max(
-    1,
-    Math.min(layout.columns, visibleIcons.length),
-  );
-
-  // If there are multiple pages, we fix the grid container's width and height to prevent layout shifts during page transitions
-  const fixedWidthHeight = useMemo(() => {
-    if (totalPages > 1) {
-      return {
-        width: `${layout.availableWidth}px`,
-        height: `${layout.availableHeight}px`,
-      };
-    }
-    return {};
-  }, [totalPages, layout.availableWidth, layout.availableHeight]);
-
-  return (
-    <div
-      className="relative flex flex-col justify-start items-start"
-      style={fixedWidthHeight}
-    >
-      <div
-        className="relative z-10 grid place-content-center bg-linear-to-br from-mute/40 to-transparent rounded-2xl"
-        style={{
-          gridTemplateColumns: `repeat(${visibleColumnCount}, ${GRID_ICON_SIZE}px)`,
-          gridAutoRows: `${GRID_ICON_SIZE}px`,
-          columnGap: `${GRID_GAP}px`,
-          rowGap: `${GRID_GAP}px`,
-          padding: `${DIALOG_PADDING / 2}px`,
-        }}
-      >
-        {visibleIcons.map((iconKey, i) => (
-          <button
-            key={`iconKey-${i.toString()}`}
-            type="button"
-            aria-label={iconKey}
-            onClick={() => onSelectIcon(iconKey)}
-            className="flex h-[50px] w-[50px] items-center justify-center"
-          >
-            <IconV2 iconKey={iconKey} />
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function IconPicker({
   onClose,
@@ -322,12 +148,14 @@ export default function IconPicker({
           </div>
         </div>
 
-        <IconPickerGridLoader
-          layout={maxGridLayout}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onSelectIcon={handleSelectIcon}
-        />
+        {maxGridLayout ? (
+          <IconPickerGrid
+            layout={maxGridLayout}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onSelectIcon={handleSelectIcon}
+          />
+        ) : null}
 
         <div ref={pagerRef} className="mt-6 flex justify-center">
           {maxGridLayout ? (
