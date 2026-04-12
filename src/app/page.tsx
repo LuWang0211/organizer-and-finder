@@ -122,7 +122,7 @@ async function DataLoader() {
                 <span className="relative inline-block pr-4">
                   <Leaf
                     aria-hidden="true"
-                    className="pointer-events-none absolute -top-3 right-0 z-20 h-8 w-8 rotate-18 text-secondary-accent drop-shadow(0_4px_10px_color-mix(in_oklch,var(--color-secondary-accent)_45%,transparent)) sm:-top-4 sm:right-1 sm:h-10 sm:w-10"
+                    className="pointer-events-none absolute -top-3 right-0 z-20 h-8 w-8 rotate-18 text-secondary-accent drop-shadow-[0_4px_10px_color-mix(in_oklch,var(--color-secondary-accent)_45%,transparent)] sm:-top-4 sm:right-1 sm:h-10 sm:w-10"
                     strokeWidth={2.25}
                   />
                   <span className="text-mute">Welcome to Your </span>
