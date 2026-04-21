@@ -41,9 +41,8 @@ const IconImage = ({
       alt={alt}
       width={actualSize}
       height={actualSize}
-      className="object-contain"
+      className="object-contain focus-visible:outline-none"
       unoptimized
-      // style={{ minWidth: actualSize, minHeight: actualSize }}
     />
   );
 };

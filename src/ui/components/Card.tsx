@@ -38,16 +38,43 @@ const cardVariants = cva(
   },
 );
 
-export { cardVariants };
+const floatingShadowVariants = cva(
+  "absolute inset-y-0 -inset-x-2 z-[1] rounded-3xl origin-bottom transition-all duration-200 ease-out pointer-events-none",
+  {
+    variants: {
+      intensity: {
+        default:
+          "bg-shadow/60 blur-[6px] translate-y-2 group-hover:translate-y-3 group-hover:-inset-x-4 group-hover:blur-[10px] group-hover:opacity-80",
+        weakened:
+          "bg-shadow/30 blur-[4px] translate-y-1 group-hover:translate-y-1.5 group-hover:-inset-x-3 group-hover:blur-[5px] group-hover:opacity-65",
+      },
+    },
+    defaultVariants: {
+      intensity: "default",
+    },
+  },
+);
+
+export { cardVariants, floatingShadowVariants };
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {
   noInnerShadow?: boolean;
+  shadowIntensity?: VariantProps<typeof floatingShadowVariants>["intensity"];
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, noInnerShadow, ...props }, ref) => (
+  (
+    {
+      className,
+      variant,
+      noInnerShadow,
+      shadowIntensity = "default",
+      ...props
+    },
+    ref,
+  ) => (
     <div className={"relative group"}>
       {/* Main Card */}
       <div
@@ -62,7 +89,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       />
       {/* Floating shadow */}
-      <div className="absolute inset-y-0 -inset-x-2 z-[1] bg-shadow/60 rounded-3xl blur-[6px] translate-y-2 origin-bottom group-hover:translate-y-3 group-hover:-inset-x-4 group-hover:blur-[10px] group-hover:opacity-80 transition-all duration-200 ease-out pointer-events-none" />
+      <div className={floatingShadowVariants({ intensity: shadowIntensity })} />
     </div>
   ),
 );

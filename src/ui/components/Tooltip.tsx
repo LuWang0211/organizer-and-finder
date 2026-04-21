@@ -34,15 +34,6 @@ type TooltipProps = {
   closeDelay?: number;
 } & Partial<Omit<React.ComponentProps<typeof HoverCard.Content>, "content">>;
 
-const TriggerWrapper = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
->((props, forwardedRef) => {
-  return <button {...props} ref={forwardedRef} className="w-full" />;
-});
-
-TriggerWrapper.displayName = "TriggerWrapper";
-
 export default function Tooltip({
   children,
   content,
@@ -74,7 +65,11 @@ export default function Tooltip({
     }
     // card (default) variant - use default Card styling as container
     return (
-      <Card noInnerShadow className={cn("w-auto p-4 peer", contentClassName)}>
+      <Card
+        noInnerShadow
+        className={cn("w-auto p-4 peer border-3", contentClassName)}
+        shadowIntensity="weakened"
+      >
         <div className="text-sm">{content}</div>
       </Card>
     );
@@ -86,7 +81,7 @@ export default function Tooltip({
     <HoverCard.Root openDelay={openDelay} closeDelay={closeDelay}>
       <span className={cn("relative inline-block", className)}>
         <HoverCard.Trigger asChild>
-          <TriggerWrapper>{children}</TriggerWrapper>
+          {children}
         </HoverCard.Trigger>
       </span>
 
