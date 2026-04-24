@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { type HouseholdIconKey, IconV2 } from "../IconV2";
+import Tooltip from "../Tooltip";
 import { ICONS_LIBRARY } from "./iconPickerIcons";
 import { DIALOG_PADDING, GRID_GAP, GRID_ICON_SIZE } from "./iconPickerLayout";
 import type { IconGridLayout } from "./useIconPickerCapacity";
@@ -53,15 +54,21 @@ export function IconPickerGrid({
         }}
       >
         {visibleIcons.map((iconKey, i) => (
-          <button
+          <Tooltip
             key={`iconKey-${i.toString()}`}
-            type="button"
-            aria-label={iconKey}
-            onClick={() => onSelectIcon(iconKey)}
-            className="flex h-[50px] w-[50px] items-center justify-center"
+            content={iconKey}
+            variant="card"
+            position="top"
           >
-            <IconV2 iconKey={iconKey} />
-          </button>
+            <button
+              tabIndex={-1}
+              type="button"
+              onClick={() => onSelectIcon(iconKey)}
+              className="flex h-[50px] w-[50px] cursor-pointer items-center justify-center focus-visible:outline-none"
+            >
+              <IconV2 iconKey={iconKey} />
+            </button>
+          </Tooltip>
         ))}
       </div>
     </div>

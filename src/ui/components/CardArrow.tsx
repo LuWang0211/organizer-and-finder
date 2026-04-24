@@ -53,21 +53,21 @@ export const CardArrow = React.forwardRef<SVGSVGElement, CardArrowProps>(
         {/* slanted borders only */}
         <line
           x1="0"
-          y1="11"
-          x2="15"
+          y1="12"
+          x2="16.5"
           y2="22"
           stroke="var(--color-border)"
-          strokeWidth="5"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <line
           x1="30"
-          y1="11"
-          x2="15"
+          y1="12"
+          x2="13.5"
           y2="22"
           stroke="var(--color-border)"
-          strokeWidth="5"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
