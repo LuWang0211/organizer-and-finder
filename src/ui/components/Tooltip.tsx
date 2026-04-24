@@ -80,9 +80,7 @@ export default function Tooltip({
   return (
     <HoverCard.Root openDelay={openDelay} closeDelay={closeDelay}>
       <span className={cn("relative inline-block", className)}>
-        <HoverCard.Trigger asChild>
-          {children}
-        </HoverCard.Trigger>
+        <HoverCard.Trigger asChild>{children}</HoverCard.Trigger>
       </span>
 
       <HoverCard.Portal>

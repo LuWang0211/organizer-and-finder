@@ -61,7 +61,7 @@ export function IconPickerGrid({
             position="top"
           >
             <button
-              tabIndex={-1} 
+              tabIndex={-1}
               type="button"
               onClick={() => onSelectIcon(iconKey)}
               className="flex h-[50px] w-[50px] cursor-pointer items-center justify-center focus-visible:outline-none"
