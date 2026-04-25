@@ -176,12 +176,11 @@ function BottomNavigationContent({
       >
         <div
           className={cn(
-            "relative inline-flex flex-col items-stretch justify-center rounded-full overflow-hidden",
-            "border-4 border-border bg-card-default px-1.5 py-1 gap-0",
-            "glass-shadow",
+            "relative inline-flex flex-col items-stretch justify-center rounded-full overflow-visible",
+            "border-4 border-border bg-card-default px-1.5 py-1 gap-0"
           )}
         >
-          <div className="flex items-center justify-center pt-1">
+          <div className="absolute left-1/2 top-0 z-2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
             <button
               type="button"
               aria-label={
@@ -200,17 +199,18 @@ function BottomNavigationContent({
                   setIsExpanded(true);
                   return;
                 }
-
                 setIsExpanded((current) => !current);
               }}
               className={cn(
-                "flex h-5 w-14 items-center justify-center rounded-full",
-                "bg-foreground/10 hover:bg-foreground/15",
+                "relative flex h-6 w-16 items-center justify-center rounded-full overflow-hidden",
                 "transition-colors duration-200",
-                "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border",
               )}
             >
-              <span className="h-1.5 w-8 rounded-full bg-foreground/45" />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-full border-4 border-border border-b-0 bg-card-default"
+              />
+              <span className="h-1 w-10 rounded-full bg-foreground/70 absolute" />
             </button>
           </div>
           <div className="relative px-0.5 pb-0.5">
