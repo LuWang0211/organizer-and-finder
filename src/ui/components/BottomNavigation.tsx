@@ -177,7 +177,7 @@ function BottomNavigationContent({
         <div
           className={cn(
             "relative inline-flex flex-col items-stretch justify-center rounded-full overflow-visible",
-            "border-4 border-border bg-card-default px-1.5 py-1 gap-0"
+            "border-4 border-border bg-card-default px-1.5 py-1 gap-0",
           )}
         >
           <div className="absolute left-1/2 top-0 z-2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
