@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
+import { Tabs, TabsList, TabsTrigger } from "@/ui/components/Tabs";
 import { cn } from "@/utils/tailwind";
 
 export interface NavItem {
@@ -55,16 +56,14 @@ function BottomNavigationContent({
 }) {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [panelHeight, setPanelHeight] = React.useState(0);
-  const [indicatorStyle, setIndicatorStyle] = React.useState({
-    left: 0,
-    width: 0,
-  });
   const collapseTimerRef = React.useRef<number | null>(null);
   const interactionTypeRef = React.useRef<
     "mouse" | "touch" | "pen" | "keyboard" | null
   >(null);
   const panelRef = React.useRef<HTMLDivElement>(null);
-  const listRef = React.useRef<HTMLDivElement>(null);
+
+  const activeItem = items.find((item) => isItemActive(item.href, pathname));
+  const activeValue = activeItem?.href ?? items[0]?.href ?? "";
 
   React.useEffect(() => {
     const panel = panelRef.current;
@@ -108,36 +107,6 @@ function BottomNavigationContent({
 
   const collapseOffset = Math.max(panelHeight - PEEK_HEIGHT, 0);
 
-  React.useEffect(() => {
-    const updateIndicator = () => {
-      if (!listRef.current) return;
-      const activeButton = listRef.current.querySelector(
-        '[data-active="true"]',
-      ) as HTMLElement;
-      if (activeButton) {
-        const listRect = listRef.current.getBoundingClientRect();
-        const buttonRect = activeButton.getBoundingClientRect();
-        setIndicatorStyle({
-          left: buttonRect.left - listRect.left,
-          width: buttonRect.width,
-        });
-      }
-    };
-
-    updateIndicator();
-
-    const observer = new MutationObserver(updateIndicator);
-    if (listRef.current) {
-      observer.observe(listRef.current, {
-        attributes: true,
-        attributeFilter: ["data-active"],
-        subtree: true,
-      });
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   const expand = () => {
     if (collapseTimerRef.current) {
       window.clearTimeout(collapseTimerRef.current);
@@ -177,10 +146,10 @@ function BottomNavigationContent({
         <div
           className={cn(
             "relative inline-flex flex-col items-stretch justify-center rounded-full overflow-visible",
-            "border-4 border-border bg-card-default px-1.5 py-1 gap-0",
+            "border-4 border-border bg-card-default px-1.5 py-0.5 gap-0",
           )}
         >
-          <div className="absolute left-1/2 top-0 z-2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+          <div className="absolute left-1/2 top-[0.5px] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
             <button
               type="button"
               aria-label={
@@ -213,62 +182,30 @@ function BottomNavigationContent({
               <span className="h-1 w-10 rounded-full bg-foreground/70 absolute" />
             </button>
           </div>
-          <div className="relative px-0.5 pb-0.5">
-            <motion.div
-              className="absolute rounded-full pointer-events-none z-20"
-              style={{
-                background: "var(--color-primary-accent)",
-                outline: "3px solid var(--color-border)",
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
-                top: "4px",
-                height: "calc(100% - 8px)",
-              }}
-              animate={{
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
-              }}
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            />
-            <div
-              ref={listRef}
-              className="flex items-stretch justify-center gap-0.5 relative z-30"
-            >
-              {items.map((item) => {
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/" && pathname?.startsWith(item.href));
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    data-active={isActive}
-                    className={cn(
-                      "relative inline-flex h-full flex-1 min-w-0 items-center justify-center",
-                      "gap-1.5 whitespace-nowrap rounded-full px-4 py-2.5 sm:px-6 sm:py-3",
-                      "transition-all duration-200",
-                      "text-xs sm:text-base font-extrabold",
-                      isActive
-                        ? "text-white"
-                        : "text-foreground/70 hover:text-foreground",
-                      "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
-                      isActive && "drop-shadow-sm",
-                    )}
-                  >
-                    <item.icon
-                      size={20}
-                      strokeWidth={2.5}
-                      className="shrink-0"
-                    />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
+          <Tabs value={activeValue} className="relative">
+            <TabsList className="border-0 bg-transparent shadow-none rounded-none">
+              {items.map((item) => (
+                <BottomNavigationItem key={item.href} item={item} />
+              ))}
+            </TabsList>
+          </Tabs>
         </div>
       </motion.div>
     </nav>
+  );
+}
+
+function isItemActive(href: string, pathname: string) {
+  return pathname === href || (href !== "/" && pathname.startsWith(href));
+}
+
+function BottomNavigationItem({ item }: { item: NavItem }) {
+  return (
+    <TabsTrigger value={item.href} className="min-w-0" asChild>
+      <Link href={item.href}>
+        <item.icon size={20} strokeWidth={2.5} className="shrink-0" />
+        <span>{item.label}</span>
+      </Link>
+    </TabsTrigger>
   );
 }
