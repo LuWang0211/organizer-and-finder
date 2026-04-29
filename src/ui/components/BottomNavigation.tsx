@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/ui/components/Tabs";
-import { cn } from "@/utils/tailwind";
 
 export interface NavItem {
   href: string;
@@ -127,10 +126,7 @@ function BottomNavigationContent({
 
   return (
     <nav
-      className={cn(
-        "fixed bottom-0 left-1/2 -translate-x-1/2 z-50",
-        "flex items-center justify-center",
-      )}
+      className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center"
       aria-label="Main navigation"
     >
       <motion.div
@@ -143,12 +139,7 @@ function BottomNavigationContent({
         onPointerEnter={expand}
         onPointerLeave={collapse}
       >
-        <div
-          className={cn(
-            "relative inline-flex flex-col items-stretch justify-center rounded-full overflow-visible",
-            "border-4 border-border bg-card-default px-1.5 py-0.5 gap-0",
-          )}
-        >
+        <div className="relative inline-flex flex-col items-stretch justify-center rounded-full overflow-visible border-4 border-border bg-card-default px-1.5 py-0.5 gap-0">
           <div className="absolute left-1/2 top-[0.5px] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
             <button
               type="button"
@@ -170,10 +161,7 @@ function BottomNavigationContent({
                 }
                 setIsExpanded((current) => !current);
               }}
-              className={cn(
-                "relative flex h-6 w-16 items-center justify-center rounded-full overflow-hidden",
-                "transition-colors duration-200",
-              )}
+              className="relative flex h-6 w-16 items-center justify-center overflow-hidden rounded-full transition-colors duration-200"
             >
               <span
                 aria-hidden="true"
