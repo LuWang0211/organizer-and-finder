@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { BottomNavigation } from "@/ui/components/BottomNavigation";
 import { PreloadResources } from "./PreloadResources";
 import { ProfileWrapper } from "./ProfileWrapper";
 import "iconify-icon";
@@ -35,6 +36,7 @@ export default function RootLayout({
         >
           <ProfileWrapper />
           {children}
+          <BottomNavigation />
         </div>
       </body>
     </html>
