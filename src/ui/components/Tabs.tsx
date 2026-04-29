@@ -1,12 +1,21 @@
 "use client";
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { motion } from "motion/react";
 import * as React from "react";
 
-import { SlidingPillShell } from "@/ui/components/SlidingPillShell";
 import { cn } from "@/utils/tailwind";
 
 const Tabs = TabsPrimitive.Root;
+
+const defaultIndicatorStyle: React.CSSProperties = {
+  background: "var(--color-primary-accent)",
+  outline: "3px solid var(--color-border)",
+  left: 0,
+  width: 0,
+  top: "4px",
+  height: "calc(100% - 8px)",
+};
 
 function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
   if (typeof ref === "function") {
@@ -73,14 +82,23 @@ function TabsList({ className, ref, ...props }: TabsListProps) {
   }, []);
 
   return (
-    <SlidingPillShell
-      className="relative"
-      indicatorStyle={indicatorStyle}
-      indicatorStyleOverrides={{
-        boxShadow:
-          "-2px 2px 1px 0.5px color-mix(in oklch, var(--color-highlight) 30%, transparent) inset, 2px -2px 1px 0.5px color-mix(in oklch, var(--color-primary-accent), black 25%) inset",
-      }}
-    >
+    <div className="relative">
+      <motion.div
+        aria-hidden="true"
+        className={cn("absolute rounded-full pointer-events-none z-20")}
+        style={{
+          ...defaultIndicatorStyle,
+          boxShadow:
+            "-2px 2px 1px 0.5px color-mix(in oklch, var(--color-highlight) 30%, transparent) inset, 2px -2px 1px 0.5px color-mix(in oklch, var(--color-primary-accent), black 25%) inset",
+          left: indicatorStyle.left,
+          width: indicatorStyle.width,
+        }}
+        animate={{
+          left: indicatorStyle.left,
+          width: indicatorStyle.width,
+        }}
+        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+      />
       <TabsPrimitive.List
         ref={(node) => {
           listRef.current = node;
@@ -93,9 +111,10 @@ function TabsList({ className, ref, ...props }: TabsListProps) {
         )}
         {...props}
       />
-    </SlidingPillShell>
+    </div>
   );
 }
+
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 type TabsTriggerProps = React.ComponentPropsWithoutRef<
