@@ -8,15 +8,6 @@ import { cn } from "@/utils/tailwind";
 
 const Tabs = TabsPrimitive.Root;
 
-const defaultIndicatorStyle: React.CSSProperties = {
-  background: "var(--color-primary-accent)",
-  outline: "3px solid var(--color-border)",
-  left: 0,
-  width: 0,
-  top: "4px",
-  height: "calc(100% - 8px)",
-};
-
 type TabsListProps = React.ComponentPropsWithoutRef<
   typeof TabsPrimitive.List
 > & {
@@ -91,7 +82,10 @@ function TabsList({ className, ref, ...props }: TabsListProps) {
         aria-hidden="true"
         className="absolute rounded-full pointer-events-none z-20"
         style={{
-          ...defaultIndicatorStyle,
+          background: "var(--color-primary-accent)",
+          outline: "3px solid var(--color-border)",
+          top: "4px",
+          height: "calc(100% - 8px)",
           boxShadow:
             "-2px 2px 1px 0.5px color-mix(in oklch, var(--color-highlight) 30%, transparent) inset, 2px -2px 1px 0.5px color-mix(in oklch, var(--color-primary-accent), black 25%) inset",
           left: indicatorStyle.left,
