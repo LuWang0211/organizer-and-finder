@@ -8,10 +8,13 @@ import { cn } from "@/utils/tailwind";
 
 const Tabs = TabsPrimitive.Root;
 
-const TabsList = React.forwardRef<
-  React.ComponentRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => {
+type TabsListProps = React.ComponentPropsWithoutRef<
+  typeof TabsPrimitive.List
+> & {
+  ref?: React.Ref<React.ComponentRef<typeof TabsPrimitive.List>>;
+};
+
+function TabsList({ className, ref, ...props }: TabsListProps) {
   // Track position and width of the sliding indicator
   const [indicatorStyle, setIndicatorStyle] = React.useState({
     left: 0,
@@ -76,16 +79,17 @@ const TabsList = React.forwardRef<
       />
       {/* Sliding indicator that follows the active tab */}
       <motion.div
+        aria-hidden="true"
         className="absolute rounded-full pointer-events-none z-20"
         style={{
           background: "var(--color-primary-accent)",
           outline: "3px solid var(--color-border)",
+          top: "4px",
+          height: "calc(100% - 8px)",
           boxShadow:
             "-2px 2px 1px 0.5px color-mix(in oklch, var(--color-highlight) 30%, transparent) inset, 2px -2px 1px 0.5px color-mix(in oklch, var(--color-primary-accent), black 25%) inset",
           left: indicatorStyle.left,
           width: indicatorStyle.width,
-          top: "4px", // Offset to stay within container borders
-          height: "calc(100% - 8px)", // Reduced height to fit container
         }}
         animate={{
           left: indicatorStyle.left,
@@ -95,42 +99,53 @@ const TabsList = React.forwardRef<
       />
     </div>
   );
-});
+}
+
 TabsList.displayName = TabsPrimitive.List.displayName;
 
-const TabsTrigger = React.forwardRef<
-  React.ComponentRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap px-6 py-3 text-base font-extrabold transition-all duration-200 flex-1 h-full relative z-30",
-      "text-foreground/70 hover:text-foreground rounded-full",
-      "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
-      "disabled:pointer-events-none disabled:opacity-60",
-      "data-[state=active]:text-white",
-      "data-[state=active]:[text-shadow:0.5px_0.5px_0_rgba(0,0,0,0.3),-0.5px_0.5px_0_rgba(0,0,0,0.3),0.5px_-0.5px_0_rgba(0,0,0,0.2),-0.5px_-0.5px_0_rgba(0,0,0,0.2)]",
-      className,
-    )}
-    {...props}
-  />
-));
+type TabsTriggerProps = React.ComponentPropsWithoutRef<
+  typeof TabsPrimitive.Trigger
+> & {
+  ref?: React.Ref<React.ComponentRef<typeof TabsPrimitive.Trigger>>;
+};
+
+function TabsTrigger({ className, ref, ...props }: TabsTriggerProps) {
+  return (
+    <TabsPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "inline-flex items-center justify-center whitespace-nowrap px-6 py-3 text-base font-extrabold transition-all duration-200 flex-1 h-full relative z-30",
+        "text-foreground/70 hover:text-foreground rounded-full",
+        "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
+        "disabled:pointer-events-none disabled:opacity-60",
+        "data-[state=active]:text-white",
+        "data-[state=active]:[text-shadow:0.5px_0.5px_0_rgba(0,0,0,0.3),-0.5px_0.5px_0_rgba(0,0,0,0.3),0.5px_-0.5px_0_rgba(0,0,0,0.2),-0.5px_-0.5px_0_rgba(0,0,0,0.2)]",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
-const TabsContent = React.forwardRef<
-  React.ComponentRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn(
-      "mt-6 ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
-      className,
-    )}
-    {...props}
-  />
-));
+type TabsContentProps = React.ComponentPropsWithoutRef<
+  typeof TabsPrimitive.Content
+> & {
+  ref?: React.Ref<React.ComponentRef<typeof TabsPrimitive.Content>>;
+};
+
+function TabsContent({ className, ref, ...props }: TabsContentProps) {
+  return (
+    <TabsPrimitive.Content
+      ref={ref}
+      className={cn(
+        "mt-6 ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border focus-visible:ring-offset-2",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };
