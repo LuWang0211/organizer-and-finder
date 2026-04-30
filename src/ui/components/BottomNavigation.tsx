@@ -1,10 +1,12 @@
 "use client";
 
+import debounce from "lodash/debounce";
 import { Grid3x3, Home, Package } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
+import { useMeasure } from "react-use";
 import { Tabs, TabsList, TabsTrigger } from "@/ui/components/Tabs";
 
 export interface NavItem {
@@ -23,9 +25,8 @@ const defaultItems: NavItem[] = [
   { href: "/add_item", icon: Package, label: "Inventory" },
 ];
 
-const visibleRoutes = ["/", "/house_layout", "/add_item"];
+const visibleRoutes = defaultItems.map((item) => item.href);
 const PEEK_HEIGHT = 14;
-const EDGE_TRIGGER = 24;
 const COLLAPSE_DELAY_MS = 180;
 
 export function BottomNavigation({
@@ -54,74 +55,33 @@ function BottomNavigationContent({
   pathname: string;
 }) {
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [panelHeight, setPanelHeight] = React.useState(0);
-  const collapseTimerRef = React.useRef<number | null>(null);
+  const [panelMeasure, { height: panelHeight }] = useMeasure<HTMLDivElement>();
   const interactionTypeRef = React.useRef<
     "mouse" | "touch" | "pen" | "keyboard" | null
   >(null);
-  const panelRef = React.useRef<HTMLDivElement>(null);
 
   const activeItem = items.find((item) => isItemActive(item.href, pathname));
   const activeValue = activeItem?.href ?? items[0]?.href ?? "";
 
-  React.useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel) return;
-
-    const updateHeight = () => {
-      setPanelHeight(panel.getBoundingClientRect().height);
-    };
-
-    updateHeight();
-
-    if (typeof ResizeObserver === "undefined") {
-      return;
-    }
-
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(panel);
-
-    return () => observer.disconnect();
-  }, []);
-
-  React.useEffect(() => {
-    const onPointerMove = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") return;
-      if (window.innerHeight - event.clientY <= EDGE_TRIGGER) {
-        setIsExpanded(true);
-      }
-    };
-
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onPointerMove);
-  }, []);
+  const collapse = React.useMemo(
+    () =>
+      debounce(() => {
+        setIsExpanded(false);
+      }, COLLAPSE_DELAY_MS),
+    [],
+  );
 
   React.useEffect(() => {
     return () => {
-      if (collapseTimerRef.current) {
-        window.clearTimeout(collapseTimerRef.current);
-      }
+      collapse.cancel();
     };
-  }, []);
+  }, [collapse]);
 
   const collapseOffset = Math.max(panelHeight - PEEK_HEIGHT, 0);
 
   const expand = () => {
-    if (collapseTimerRef.current) {
-      window.clearTimeout(collapseTimerRef.current);
-      collapseTimerRef.current = null;
-    }
+    collapse.cancel();
     setIsExpanded(true);
-  };
-
-  const collapse = () => {
-    if (collapseTimerRef.current) {
-      window.clearTimeout(collapseTimerRef.current);
-    }
-    collapseTimerRef.current = window.setTimeout(() => {
-      setIsExpanded(false);
-      collapseTimerRef.current = null;
-    }, COLLAPSE_DELAY_MS);
   };
 
   return (
@@ -130,7 +90,7 @@ function BottomNavigationContent({
       aria-label="Main navigation"
     >
       <motion.div
-        ref={panelRef}
+        ref={panelMeasure}
         className="relative"
         animate={{
           y: isExpanded ? 0 : collapseOffset,
