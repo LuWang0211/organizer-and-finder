@@ -8,11 +8,7 @@ import { cn } from "@/utils/tailwind";
 
 const Tabs = TabsPrimitive.Root;
 
-type TabsListProps = React.ComponentPropsWithoutRef<
-  typeof TabsPrimitive.List
-> & {
-  ref?: React.Ref<React.ComponentRef<typeof TabsPrimitive.List>>;
-};
+type TabsListProps = React.ComponentPropsWithRef<typeof TabsPrimitive.List>;
 
 function TabsList({ className, ref, ...props }: TabsListProps) {
   // Track position and width of the sliding indicator
@@ -103,11 +99,9 @@ function TabsList({ className, ref, ...props }: TabsListProps) {
 
 TabsList.displayName = TabsPrimitive.List.displayName;
 
-type TabsTriggerProps = React.ComponentPropsWithoutRef<
+type TabsTriggerProps = React.ComponentPropsWithRef<
   typeof TabsPrimitive.Trigger
-> & {
-  ref?: React.Ref<React.ComponentRef<typeof TabsPrimitive.Trigger>>;
-};
+>;
 
 function TabsTrigger({ className, ref, ...props }: TabsTriggerProps) {
   return (
@@ -128,11 +122,9 @@ function TabsTrigger({ className, ref, ...props }: TabsTriggerProps) {
 }
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
-type TabsContentProps = React.ComponentPropsWithoutRef<
+type TabsContentProps = React.ComponentPropsWithRef<
   typeof TabsPrimitive.Content
-> & {
-  ref?: React.Ref<React.ComponentRef<typeof TabsPrimitive.Content>>;
-};
+>;
 
 function TabsContent({ className, ref, ...props }: TabsContentProps) {
   return (
