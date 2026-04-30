@@ -17,17 +17,6 @@ const defaultIndicatorStyle: React.CSSProperties = {
   height: "calc(100% - 8px)",
 };
 
-function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
-  if (typeof ref === "function") {
-    ref(value);
-    return;
-  }
-
-  if (ref) {
-    (ref as React.MutableRefObject<T | null>).current = value;
-  }
-}
-
 type TabsListProps = React.ComponentPropsWithoutRef<
   typeof TabsPrimitive.List
 > & {
@@ -83,9 +72,24 @@ function TabsList({ className, ref, ...props }: TabsListProps) {
 
   return (
     <div className="relative">
+      {/* Main tab list container */}
+      <TabsPrimitive.List
+        ref={(node) => {
+          listRef.current = node;
+          if (typeof ref === "function") ref(node);
+          else if (ref) ref.current = node;
+        }}
+        className={cn(
+          "inline-flex h-14 items-stretch justify-center rounded-full border-4 border-border bg-card-default p-0 gap-0 relative",
+          "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-card-default),black_8%)_inset]",
+          className,
+        )}
+        {...props}
+      />
+      {/* Sliding indicator that follows the active tab */}
       <motion.div
         aria-hidden="true"
-        className={cn("absolute rounded-full pointer-events-none z-20")}
+        className="absolute rounded-full pointer-events-none z-20"
         style={{
           ...defaultIndicatorStyle,
           boxShadow:
@@ -98,18 +102,6 @@ function TabsList({ className, ref, ...props }: TabsListProps) {
           width: indicatorStyle.width,
         }}
         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-      />
-      <TabsPrimitive.List
-        ref={(node) => {
-          listRef.current = node;
-          assignRef(ref, node);
-        }}
-        className={cn(
-          "inline-flex h-14 items-stretch justify-center rounded-full border-4 border-border bg-card-default p-0 gap-0 relative",
-          "shadow-[0_2px_6px_0_rgba(0,0,0,0.1)_inset,2px_-2px_6px_0_color-mix(in_oklch,var(--color-card-default),black_8%)_inset]",
-          className,
-        )}
-        {...props}
       />
     </div>
   );
