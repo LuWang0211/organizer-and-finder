@@ -2,12 +2,39 @@ import { getSession } from "@/auth";
 import prisma from "@/services/db";
 import type { HouseholdIconKey, IconKey } from "@/ui/iconPresets";
 
-export async function fetchItems() {
+export type SearchItem = {
+  id: number;
+  name: string;
+  iconKey: string | null;
+  locationName: string | null;
+};
+
+export async function fetchItems(): Promise<SearchItem[]> {
   try {
-    const items = await prisma.item.findMany();
-    return items;
-  } catch {
-    throw new Error("Error fetching items");
+    const items = await prisma.item.findMany({
+      select: {
+        id: true,
+        name: true,
+        iconKey: true,
+        location: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      iconKey: item.iconKey,
+      locationName: item.location?.name ?? null,
+    }));
+  } catch (error) {
+    console.error("Database fetch error:", error);
+    throw new Error(
+      `Error fetching items: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
   }
 }
 
