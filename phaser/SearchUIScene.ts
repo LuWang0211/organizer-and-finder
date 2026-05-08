@@ -3,31 +3,14 @@ import { DecoBackground1 } from "@/app/search/components/DecoBackground1";
 import { MarqueeSearch } from "@/app/search/components/MarqueeSearch";
 import { SketchBackground } from "@/app/search/components/SketchBackground";
 import { createLetterFall } from "@/app/search/Letterfall";
-
-interface Item {
-  id: number;
-  name: string;
-  iconKey?: string | null;
-  locationName?: string | null;
-}
-
-/** Fetch items from API (client-side) */
-async function fetchItemsFromAPI(): Promise<Item[]> {
-  try {
-    const response = await fetch("/api/items");
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-    const items = await response.json();
-    return items;
-  } catch (error) {
-    return [];
-  }
-}
+import type { SearchItem } from "@/services/itemService";
 
 export /* START OF COMPILED CODE */
 
 class UIScene extends Phaser.Scene {
+  private marqueeSearch?: MarqueeSearch;
+  private pendingMarqueeItems: SearchItem[] | null = null;
+
   constructor() {
     super("UIScene");
 
@@ -90,17 +73,11 @@ class UIScene extends Phaser.Scene {
 
     new DecoBackground1(this, this.deco1);
 
-    const marqueeSearch = new MarqueeSearch(this);
-
-    // Try to fetch real items from API and update marquee
-    // Continue with default items if fetch fails (e.g., no database connection)
-    fetchItemsFromAPI()
-      .then((items: Item[]) => {
-        if (items && items.length > 0) {
-          marqueeSearch.updateItems(items);
-        }
-      })
-      .catch(() => undefined);
+    this.marqueeSearch = new MarqueeSearch(this);
+    if (this.pendingMarqueeItems && this.pendingMarqueeItems.length > 0) {
+      this.marqueeSearch.updateItems(this.pendingMarqueeItems);
+      this.pendingMarqueeItems = null;
+    }
 
     const inputText = this.add
       .rexInputText(0, -12, 200, 20, {
@@ -148,6 +125,15 @@ class UIScene extends Phaser.Scene {
     sizer.layout();
   }
 
+  public setMarqueeItems(items: SearchItem[]) {
+    this.pendingMarqueeItems = items;
+
+    if (this.marqueeSearch && items.length > 0) {
+      this.marqueeSearch.updateItems(items);
+      this.pendingMarqueeItems = null;
+    }
+  }
+
   preload() {
     this.load.pack("all", "assets/asset-pack.json");
 
@@ -161,6 +147,7 @@ class UIScene extends Phaser.Scene {
       "icon-nightstand.png",
       "icon-pajamas.png",
       "icon-remote.png",
+      "icon-unknown.png",
     ];
 
     icons.forEach((icon) => {

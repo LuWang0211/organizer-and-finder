@@ -1,39 +1,20 @@
 import type { UIScene } from "@phaser/SearchUIScene";
 import { debounce, last, sample } from "lodash";
-
-export interface MarqueeItem {
-  textureKey: string;
-  label: string;
-  locationName?: string | null;
-}
-
-interface MarqueeEntry {
-  textureKey: string;
-  label: string;
-  locationName: string | null;
-  x: number;
-  width: number;
-  height: number;
-  scale: number;
-  image: Phaser.GameObjects.Image | null;
-  frame: Phaser.GameObjects.Image | null;
-  isHovered: boolean;
-}
-
-const MIN_MARQUEE_SPEED = -25;
-const MAX_MARQUEE_SPEED = -250;
-const GAP = 55;
-const MARQUEE_TOOLTIP_EVENT = "search-marquee-tooltip";
-const MARQUEE_TOOLTIP_CLEAR_EVENT = "search-marquee-tooltip-clear";
-
-type MarqueeTooltipDetail = {
-  label: string;
-  locationName: string | null;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
+import {
+  GAP,
+  HOVER_STOP_RATIO,
+  MARQUEE_TOOLTIP_CLEAR_EVENT,
+  MARQUEE_TOOLTIP_EVENT,
+  MAX_MARQUEE_SPEED,
+  type MarqueeEntry,
+  type MarqueeTooltipDetail,
+  MIN_MARQUEE_SPEED,
+} from "./marqueeSearch.types";
+import {
+  createMarqueeEntries,
+  getScaledDimensions,
+  mapDatabaseItemsToMarqueeItems,
+} from "./marqueeSearch.utils";
 
 export class MarqueeSearch {
   private scene: UIScene;
@@ -71,26 +52,21 @@ export class MarqueeSearch {
 
   private activeHoveredEntry: MarqueeEntry | null = null;
 
+  private readonly pointerMoveHandler = debounce(
+    (pointer: Phaser.Input.Pointer) => this.onPointerMove(pointer),
+    25,
+    { leading: true },
+  );
+
   constructor(scene: UIScene) {
     this.scene = scene;
     this.textureKeys = [...this.defaultTextureKeys];
     this.create();
   }
 
-  private getScaledDimensions(width: number, height: number) {
-    const scale = Math.min(
-      this.maxIconWidth / width,
-      this.maxIconHeight / height,
-      1,
-    );
-    return {
-      scaledWidth: width * scale,
-      scaledHeight: height * scale,
-      scale,
-    };
-  }
-
   create() {
+    this.clearTooltipState();
+
     // Clear existing marquee entries and their images/frames
     this.marqueeEntries.forEach((entry) => {
       if (entry.image) entry.image.destroy();
@@ -98,42 +74,26 @@ export class MarqueeSearch {
     });
     this.marqueeEntries = [];
 
+    this.scene.events.off("update", this.update, this);
+    this.scene.input.off("pointermove", this.pointerMoveHandler, this);
+    this.scene.scale.off("resize", this.onResize, this);
+
     // Initialize marquee entries with individual icons and their scaled sizes
-    let currentX = 0;
-    this.marqueeEntries = this.textureKeys.map(
-      ({ textureKey, label, locationName }) => {
-        const texture = this.scene.textures.get(textureKey);
-        const { width, height } = texture.getSourceImage();
-        const { scaledWidth, scaledHeight, scale } = this.getScaledDimensions(
-          width,
-          height,
-        );
-
-        const entry: MarqueeEntry = {
-          textureKey,
-          label,
-          locationName: locationName ?? null,
-          x: currentX,
-          width: scaledWidth,
-          height: scaledHeight,
-          scale,
-          image: null,
-          frame: null,
-          isHovered: false,
-        };
-
-        currentX += scaledWidth + GAP;
-        return entry;
-      },
+    this.marqueeEntries = createMarqueeEntries(
+      this.textureKeys,
+      (textureKey) =>
+        this.scene.textures.get(textureKey).getSourceImage() as {
+          width: number;
+          height: number;
+        },
+      this.maxIconWidth,
+      this.maxIconHeight,
+      GAP,
     );
 
     this.scene.events.on("update", this.update, this);
 
-    this.scene.input.on(
-      "pointermove",
-      debounce(this.onPointerMove, 25, { leading: true }),
-      this,
-    );
+    this.scene.input.on("pointermove", this.pointerMoveHandler);
 
     this.scene.scale.on("resize", this.onResize, this);
     this.onResize(this.scene.scale.gameSize);
@@ -142,7 +102,8 @@ export class MarqueeSearch {
   update(time: number, delta: number) {
     // Check if pointer is in the marquee area (bottom half of screen)
     const pointer = this.scene.input.activePointer;
-    const inMarqueeArea = pointer.y > this.scene.scale.height * 0.5;
+    const inMarqueeArea =
+      pointer.y > this.scene.scale.height * HOVER_STOP_RATIO;
 
     // Update hover state and speed based on pointer position
     if (inMarqueeArea && !this.isHovering) {
@@ -161,12 +122,12 @@ export class MarqueeSearch {
 
     // Move the marquee left by the speed
     this.marqueeEntries.forEach((entry) => {
-      const { x, textureKey, label, width, scale } = entry;
+      const { x, textureKey, label, width } = entry;
       if (entry.image === null) {
         entry.frame = this.scene.add.image(x, 650, "scrollframe.png");
         entry.frame.setScale(0.4);
         entry.image = this.scene.add.image(x, 650, textureKey);
-        entry.image.setScale(scale);
+        entry.image.setScale(entry.scale);
         entry.image.setInteractive({ useHandCursor: true });
 
         // Add hover effects
@@ -174,7 +135,7 @@ export class MarqueeSearch {
           if (!entry.isHovered) {
             entry.isHovered = true;
             entry.frame!.setScale(0.45);
-            entry.image!.setScale(scale * 1.1);
+            entry.image!.setScale(entry.scale * 1.1);
             this.activeHoveredEntry = entry;
             this.emitTooltipState(entry);
           }
@@ -184,7 +145,7 @@ export class MarqueeSearch {
           if (entry.isHovered) {
             entry.isHovered = false;
             entry.frame!.setScale(0.4);
-            entry.image!.setScale(scale);
+            entry.image!.setScale(entry.scale);
             this.clearTooltipState(entry);
           }
         });
@@ -244,9 +205,11 @@ export class MarqueeSearch {
   }) {
     const texture = this.scene.textures.get(item.textureKey);
     const { width, height } = texture.getSourceImage();
-    const { scaledWidth, scaledHeight, scale } = this.getScaledDimensions(
+    const { scaledWidth, scaledHeight, scale } = getScaledDimensions(
       width,
       height,
+      this.maxIconWidth,
+      this.maxIconHeight,
     );
 
     const lastEntry = last(this.marqueeEntries);
@@ -287,36 +250,6 @@ export class MarqueeSearch {
     }
   }
 
-  /** Convert database items to marquee items format */
-  private mapDatabaseItemsToMarqueeItems(
-    items: Array<{
-      name: string;
-      iconKey?: string | null;
-      locationName?: string | null;
-    }>,
-  ): MarqueeItem[] {
-    const iconKeyToTextureKey: Record<string, string> = {
-      book: "icon-book.png",
-      bookshelf: "icon-bookshelf.png",
-      glasses: "icon-glasses.png",
-      laptop: "icon-laptop.png",
-      mug: "icon-mug.png",
-      nightstand: "icon-nightstand.png",
-      pajamas: "icon-pajamas.png",
-      remote: "icon-remote.png",
-    };
-
-    const mappedItems = items
-      .filter((item) => item.iconKey && iconKeyToTextureKey[item.iconKey])
-      .map((item) => ({
-        textureKey: iconKeyToTextureKey[item.iconKey!],
-        label: item.name,
-        locationName: item.locationName ?? null,
-      }));
-
-    return mappedItems;
-  }
-
   /** Update marquee items from database */
   public updateItems(
     items: Array<{
@@ -325,11 +258,12 @@ export class MarqueeSearch {
       locationName?: string | null;
     }>,
   ) {
-    const mappedItems = this.mapDatabaseItemsToMarqueeItems(items);
+    const mappedItems = mapDatabaseItemsToMarqueeItems(items, (textureKey) =>
+      this.scene.textures.exists(textureKey),
+    );
     if (mappedItems.length > 0) {
-      // Swap the source list only. Existing visible entries keep scrolling out,
-      // and new entries will start using the real database items naturally.
       this.textureKeys = mappedItems;
+      this.create();
     }
   }
 
@@ -355,8 +289,8 @@ export class MarqueeSearch {
     );
   }
 
-  private clearTooltipState(entry: MarqueeEntry) {
-    if (this.activeHoveredEntry !== entry) {
+  private clearTooltipState(entry?: MarqueeEntry | null) {
+    if (entry && this.activeHoveredEntry !== entry) {
       return;
     }
 

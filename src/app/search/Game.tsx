@@ -5,15 +5,18 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useMeasure } from "react-use";
 import { MarqueeTooltipOverlay } from "@/app/search/components/MarqueeTooltipOverlay";
 import { config } from "@/app/search/gameConfig";
+import type { SearchItem } from "@/services/itemService";
 
 interface PhaserGameProps {
   secondSceneOverride?: Phaser.Scene;
+  initialItems?: SearchItem[];
 }
 
 export default function PhaserGame(props: PhaserGameProps) {
-  const { secondSceneOverride } = props;
+  const { secondSceneOverride, initialItems = [] } = props;
 
   const game = useRef<Game | null>(null);
+  const initialItemsRef = useRef<SearchItem[]>(initialItems);
 
   const container = useRef<HTMLDivElement | null>(null);
 
@@ -29,6 +32,25 @@ export default function PhaserGame(props: PhaserGameProps) {
     },
     [containerMeasure],
   );
+
+  const applyInitialItems = useCallback((items: SearchItem[]) => {
+    if (!game.current || items.length === 0) {
+      return;
+    }
+
+    const scene = game.current.scene.getScene("UIScene") as
+      | (Phaser.Scene & { setMarqueeItems?: (items: SearchItem[]) => void })
+      | undefined;
+
+    scene?.setMarqueeItems?.(items);
+  }, []);
+
+  useEffect(() => {
+    initialItemsRef.current = initialItems;
+    if (game.current) {
+      applyInitialItems(initialItems);
+    }
+  }, [initialItems, applyInitialItems]);
 
   const configWithOverride = useMemo(() => {
     if (!secondSceneOverride) {
@@ -59,6 +81,10 @@ export default function PhaserGame(props: PhaserGameProps) {
       },
     });
 
+    game.current.events.once("ready", () => {
+      applyInitialItems(initialItemsRef.current);
+    });
+
     return () => {
       if (game.current) {
         game.current.plugins?.removeGlobalPlugin("rexInputTextPlugin");
@@ -66,7 +92,7 @@ export default function PhaserGame(props: PhaserGameProps) {
         game.current = null;
       }
     };
-  }, [configWithOverride]);
+  }, [configWithOverride, applyInitialItems]);
 
   useEffect(() => {
     // Resize the game to fit the container,

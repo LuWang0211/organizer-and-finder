@@ -1,11 +1,10 @@
-"use client";
+import SearchGame from "@/app/search/SearchGame";
+import { fetchItems } from "@/services/itemService";
 
-import dynamic from "next/dynamic";
+export const dynamic = "force-dynamic";
 
-const DynamicComponentWithNoSSR = dynamic(() => import("./Game"), {
-  ssr: false,
-});
+export default async function Page() {
+  const initialItems = await fetchItems();
 
-export default function Page() {
-  return <DynamicComponentWithNoSSR />;
+  return <SearchGame initialItems={initialItems} />;
 }
