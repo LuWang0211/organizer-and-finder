@@ -42,7 +42,8 @@ const IconImage = ({
       width={actualSize}
       height={actualSize}
       className="object-contain focus-visible:outline-none"
-      unoptimized
+      sizes={`${actualSize}px`}
+      quality="100"
     />
   );
 };
