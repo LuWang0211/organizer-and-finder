@@ -198,7 +198,7 @@ async function DataLoader() {
               accentClassName="bg-linear-to-r from-card-secondary-300 via-[color-mix(in_oklch,var(--color-background),white_45%)] to-mute/60"
             />
             <ActionCard
-              href="/phaserui"
+              href="/search"
               iconKey="search"
               title="Search Items"
               description="Quickly find where something is stored when you need an answer instead of another scavenger hunt."

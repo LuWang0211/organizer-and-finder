@@ -1,5 +1,5 @@
+import type { FloorPlanScene } from "@phaser/scenes/FloorPlanScene";
 import { includes } from "lodash";
-import type { FloorPlanScene } from "@/app/phaserui/scenes/FloorPlanScene";
 
 const DEBUG = false;
 
