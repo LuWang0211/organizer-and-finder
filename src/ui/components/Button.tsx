@@ -49,6 +49,9 @@ const buttonVariants = cva(buttonBaseStyles, {
         "disabled:text-white/40 disabled:cursor-not-allowed disabled:opacity-40",
         "disabled:hover:bg-transparent disabled:hover:scale-100 disabled:hover:border-transparent disabled:active:translate-y-0",
       ],
+      control: [
+        "text-foreground bg-card-default hover:bg-card-default/90 border-3 hover:border-card-secondary/30 transition-none",
+      ],
     },
     size: {
       default: "px-8 py-3 text-xl",
@@ -56,17 +59,22 @@ const buttonVariants = cva(buttonBaseStyles, {
       lg: "px-10 py-4 text-2xl",
       icon: "p-3",
     },
+    border: {
+      false: "border-transparent",
+      true: "",
+    },
   },
   defaultVariants: {
     variant: "primary",
     size: "default",
+    border: false,
   },
 });
 
 // Shadow variants using cva
 const shadowVariants = cva(
   [
-    "absolute inset-0 z-10 bg-shadow/60 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom",
+    "absolute inset-0 z-10 rounded-full blur-xs translate-y-1.5 scale-x-105 origin-bottom",
     "group-hover/button:translate-y-2 group-hover/button:scale-x-110 group-hover/button:blur-[6px] group-hover/button:opacity-80",
     "group-disabled/button:opacity-20 group-disabled/button:translate-y-0.5 group-disabled/button:scale-x-100 group-disabled/button:blur-none",
     "transition-all duration-200 ease-out",
@@ -78,6 +86,7 @@ const shadowVariants = cva(
         secondary: "bg-shadow/50",
         outline: "bg-foreground/10",
         ghost: "bg-foreground/5",
+        control: "bg-transparent",
       },
     },
     defaultVariants: {
@@ -98,6 +107,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant = "primary",
       size,
+      border = true,
       asChild = false,
       children,
       disabled,
@@ -118,7 +128,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Comp
           ref={ref}
           disabled={disabled}
-          className={cn(buttonVariants({ variant, size }), className)}
+          className={cn(buttonVariants({ variant, size, border }), className)}
           {...props}
         >
           {children}
