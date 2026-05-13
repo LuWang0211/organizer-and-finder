@@ -1,7 +1,8 @@
 "use client";
 
-import { FloorPlanScene } from "@phaser/scenes/FloorPlanScene";
-import PhaserGame from "../search/Game";
+import PhaserGame from "@phaser/Game";
+
+import { FloorPlanScene } from "@/app/floorplan/scenes/FloorPlanScene";
 
 export default function FloorplanPage() {
   return <PhaserGame secondSceneOverride={FloorPlanScene as any} />;

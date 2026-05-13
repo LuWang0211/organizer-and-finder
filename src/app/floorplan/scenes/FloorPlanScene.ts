@@ -1,10 +1,10 @@
-import Phaser from "phaser";
 import { bind, flatten, pick } from "lodash";
-import { Button } from "@/app/search/components/Button";
-import { Hallway, Room } from "@/app/search/components/Room";
+import Phaser from "phaser";
 import { mergeLines } from "@/utils/geometry";
-import { DoorplacementManager } from "@/app/search/components/DoorplacementManager";
-import { OnFloorPlanContourChanged } from "@/app/search/components/events";
+import { Button } from "./Button";
+import { DoorplacementManager } from "./DoorplacementManager";
+import { OnFloorPlanContourChanged } from "./events";
+import { Hallway, Room } from "./Room";
 
 export class FloorPlanScene extends Phaser.Scene {
   constructor() {
@@ -64,6 +64,7 @@ export class FloorPlanScene extends Phaser.Scene {
 
     this._doorplacementManager = new DoorplacementManager(this);
 
+    // Listen to room resize events
     this.events.on(
       OnFloorPlanContourChanged,
       this._doorplacementManager.onFloorPlanContourChanged,
@@ -109,18 +110,23 @@ export class FloorPlanScene extends Phaser.Scene {
     );
     const blob = new Blob([fileContent], { type: "application/json" });
 
+    // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
 
+    // Create a download link and set the filename
     let a: HTMLAnchorElement | null = document.createElement("a");
     a.href = url;
     a.download = "floorplan.json";
 
+    // Trigger the download by clicking the link
     a.click();
 
+    // Clean up by revoking the object URL
     URL.revokeObjectURL(url);
 
-    a.remove();
-    a = null;
+    // Recycle the <a> element (optional but good practice)
+    a.remove(); // Since the element was not added to the DOM, this is optional
+    a = null; // Explicitly set to null to ensure garbage collection
   }
 
   preload() {}

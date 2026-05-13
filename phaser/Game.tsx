@@ -8,9 +8,9 @@ import {
   useMemo,
   useRef,
 } from "react";
-
 import { useMeasure } from "react-use";
-import { createConfig } from "@/app/search/gameConfig";
+
+import { createConfig } from "@phaser/gameConfig";
 
 interface PhaserGameProps {
   secondSceneOverride?: Phaser.Scene;

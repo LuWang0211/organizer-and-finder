@@ -1,4 +1,4 @@
-import type { UIScene } from "@phaser/UIScene";
+import type { UIScene } from "@/app/search/scenes/UIScene";
 import { startCoroutine } from "@/utils/coroutine";
 
 type Rectangle = {

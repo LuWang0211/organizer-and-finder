@@ -1,8 +1,8 @@
 // You can write more code here
 import { DecoBackground1 } from "@/app/search/components/DecoBackground1";
+import { createLetterFall } from "@/app/search/components/Letterfall";
 import { MarqueeSearch } from "@/app/search/components/MarqueeSearch";
 import { SketchBackground } from "@/app/search/components/SketchBackground";
-import { createLetterFall } from "@/app/search/Letterfall";
 
 /* START OF COMPILED CODE */
 

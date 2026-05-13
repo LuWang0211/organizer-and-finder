@@ -1,5 +1,5 @@
 import { getSharedLoadingScene } from "@phaser/loadingScene";
-import { UIScene } from "@phaser/UIScene";
+import { UIScene } from "@/app/search/scenes/UIScene";
 import AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 import InputTextPlugin from "phaser3-rex-plugins/plugins/inputtext-plugin";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
