@@ -1,5 +1,14 @@
 "use client";
-import React, { useId } from "react";
+
+import { useId } from "react";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  useComboboxAnchor,
+} from "@/ui/components/Combobox";
 import { cn } from "@/utils/tailwind";
 
 type Item = { value: string; label: string };
@@ -29,100 +38,55 @@ export default function MenuSelect({
   disabled,
   maxListHeight = 256,
 }: MenuSelectProps) {
-  const [open, setOpen] = React.useState(false);
-  const btnRef = React.useRef<HTMLButtonElement | null>(null);
-  const menuRef = React.useRef<HTMLDivElement | null>(null);
-  const current = items.find((i) => i.value === value);
   const menuSelectId = useId();
-
-  React.useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (!open) return;
-      const t = e.target as Node;
-      if (btnRef.current?.contains(t)) return;
-      if (menuRef.current?.contains(t)) return;
-      setOpen(false);
-    }
-    document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
-  }, [open]);
-
-  function choose(v: string) {
-    onChange?.(v);
-    setOpen(false);
-  }
+  const anchorRef = useComboboxAnchor();
+  const current = items.find((i) => i.value === value);
 
   return (
     <div className={cn("w-full", className)}>
-      {label ? (
+      {label && (
         <label
           htmlFor={menuSelectId}
           className="block mb-1 font-semibold select-none"
         >
           {label}
         </label>
-      ) : null}
-      <div className="relative">
-        <button
-          id={menuSelectId}
-          ref={btnRef}
-          type="button"
-          disabled={disabled}
-          onClick={() => setOpen((o) => !o)}
-          aria-expanded={open}
-          className={cn(
-            "w-full text-left p-3 rounded-xl border-4 border-border bg-card-default text-foreground outline-none",
-            disabled && "opacity-60 cursor-not-allowed",
+      )}
+      <Combobox
+        items={items}
+        value={current ?? null}
+        onValueChange={(item: Item | null) => {
+          if (item) onChange?.(item.value);
+        }}
+        isItemEqualToValue={(a: Item, b: Item) => a.value === b.value}
+        disabled={disabled}
+      >
+        <div ref={anchorRef}>
+          <ComboboxInput
+            id={menuSelectId}
+            placeholder={placeholder}
+            disabled={disabled}
+          />
+        </div>
+        <ComboboxContent anchor={anchorRef} className={cn(menuClassName)}>
+          <ComboboxList style={{ maxHeight: maxListHeight }}>
+            {(item: Item, index: number) => (
+              <ComboboxItem key={item.value} value={item} index={index}>
+                {item.label}
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+          {footerAction && (
+            <button
+              type="button"
+              onClick={footerAction.onClick}
+              className="w-full text-left px-3 py-2 hover:bg-[color-mix(in_oklch,var(--color-card-default),black_6%)] text-primary-accent font-semibold"
+            >
+              {footerAction.label}
+            </button>
           )}
-        >
-          <span className={cn(!current && "text-muted-foreground")}>
-            {current?.label ?? placeholder}
-          </span>
-          <span className="float-right opacity-60">▾</span>
-        </button>
-
-        {open && (
-          <div
-            ref={menuRef}
-            className={cn(
-              "absolute left-0 right-0 mt-2 z-50 rounded-xl border-4 border-border bg-card-default shadow-lg overflow-hidden",
-              menuClassName,
-            )}
-            role="listbox"
-          >
-            <div className="overflow-auto" style={{ maxHeight: maxListHeight }}>
-              {items.map((it) => (
-                <button
-                  key={it.value || "__empty__"}
-                  type="button"
-                  onClick={() => choose(it.value)}
-                  className={cn(
-                    "w-full text-left px-3 py-2 hover:bg-[color-mix(in_oklch,var(--color-card-default),black_6%)]",
-                    it.value === value &&
-                      "bg-[color-mix(in_oklch,var(--color-card-default),black_8%)] font-semibold",
-                  )}
-                  role="option"
-                  aria-selected={it.value === value}
-                >
-                  {it.label}
-                </button>
-              ))}
-            </div>
-            {footerAction && (
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  footerAction.onClick();
-                }}
-                className="w-full text-left px-3 py-2 hover:bg-[color-mix(in_oklch,var(--color-card-default),black_6%)] text-primary-accent font-semibold"
-              >
-                {footerAction.label}
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+        </ComboboxContent>
+      </Combobox>
     </div>
   );
 }
