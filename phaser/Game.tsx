@@ -11,19 +11,22 @@ import {
 import { useMeasure } from "react-use";
 
 import { createConfig } from "@phaser/gameConfig";
+import type { ItemType } from "@/services/itemService";
 
 interface PhaserGameProps {
   secondSceneOverride?: Phaser.Scene;
+  initialItems?: ItemType[];
 }
 
 export default function PhaserGame(props: PhaserGameProps) {
-  const { secondSceneOverride } = props;
+  const { secondSceneOverride, initialItems = [] } = props;
 
   const game = useRef<Game>(undefined);
 
   const container = useRef<HTMLDivElement>(undefined);
 
-  // useMeasure is a 3rd party hook that measures the size of a DOM element
+  const initialItemsRef = useRef<ItemType[]>(initialItems);
+
   const [containerMeasure, { width: containerWidth, height: containerHeight }] =
     useMeasure<HTMLDivElement>();
 
@@ -40,6 +43,25 @@ export default function PhaserGame(props: PhaserGameProps) {
     return createConfig(secondSceneOverride);
   }, [secondSceneOverride]);
 
+  const applyInitialItems = useCallback((items: ItemType[]) => {
+    if (!game.current || items.length === 0) {
+      return;
+    }
+
+    const scene = game.current.scene.getScene("UIScene") as
+      | (Phaser.Scene & { setMarqueeItems?: (items: ItemType[]) => void })
+      | undefined;
+
+    scene?.setMarqueeItems?.(items);
+  }, []);
+
+  useEffect(() => {
+    initialItemsRef.current = initialItems;
+    if (game.current) {
+      applyInitialItems(initialItems);
+    }
+  }, [initialItems, applyInitialItems]);
+
   useLayoutEffect(() => {
     if (game.current === undefined) {
       game.current = new Game({
@@ -54,6 +76,10 @@ export default function PhaserGame(props: PhaserGameProps) {
           },
         },
       });
+
+      game.current.events.once("ready", () => {
+        applyInitialItems(initialItemsRef.current);
+      });
     }
 
     return () => {
@@ -63,7 +89,7 @@ export default function PhaserGame(props: PhaserGameProps) {
         game.current = undefined;
       }
     };
-  }, [configWithOverride]);
+  }, [configWithOverride, applyInitialItems]);
 
   useEffect(() => {
     // Resize the game to fit the container,
