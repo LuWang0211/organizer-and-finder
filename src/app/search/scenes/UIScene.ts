@@ -1,12 +1,12 @@
 // You can write more code here
-import { DecoBackground1 } from "@/app/phaserui/components/DecoBackground1";
-import { MarqueeSearch } from "@/app/phaserui/components/MarqueeSearch";
-import { SketchBackground } from "@/app/phaserui/components/SketchBackground";
-import { createLetterFall } from "@/app/phaserui/Letterfall";
+import { DecoBackground1 } from "@/app/search/components/DecoBackground1";
+import { createLetterFall } from "@/app/search/components/Letterfall";
+import { MarqueeSearch } from "@/app/search/components/MarqueeSearch";
+import { SketchBackground } from "@/app/search/components/SketchBackground";
 
-export /* START OF COMPILED CODE */
+/* START OF COMPILED CODE */
 
-class UIScene extends Phaser.Scene {
+export class UIScene extends Phaser.Scene {
   constructor() {
     super("UIScene");
 
@@ -15,50 +15,9 @@ class UIScene extends Phaser.Scene {
     /* END-USER-CTR-CODE */
   }
 
-  editorCreate(): void {
-    // InputBoxBg
-    const inputBoxBg = this.add.nineslice(
-      0,
-      0,
-      "search_bar",
-      undefined,
-      596,
-      0,
-      72,
-      111,
-      0,
-      0,
-    );
+  create() {}
 
-    // deco1
-    const deco1 = this.add.nineslice(
-      0,
-      0,
-      "Decoration1",
-      undefined,
-      1379,
-      0,
-      736,
-      559,
-      0,
-      0,
-    );
-    deco1.alpha = 0;
-
-    this.inputBoxBg = inputBoxBg;
-    this.deco1 = deco1;
-
-    this.events.emit("scene-awake");
-  }
-
-  private inputBoxBg!: Phaser.GameObjects.NineSlice;
-  private deco1!: Phaser.GameObjects.NineSlice;
-
-  /* START-USER-CODE */
-
-  // Write your code here
-
-  public start() {
+  start() {
     new SketchBackground(this);
 
     this.editorCreate();
@@ -114,13 +73,52 @@ class UIScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.pack("all", "assets/asset-pack.json");
+    this.load.pack("all", "/assets/asset-pack.json");
     this.load.atlas(
       "items",
-      "assets/texture/items.png",
-      "assets/texture/items.json",
+      "/assets/texture/items.png",
+      "/assets/texture/items.json",
     );
   }
+
+  editorCreate(): void {
+    // InputBoxBg
+    const inputBoxBg = this.add.nineslice(
+      0,
+      0,
+      "search_bar",
+      undefined,
+      596,
+      0,
+      72,
+      111,
+      0,
+      0,
+    );
+
+    // deco1
+    const deco1 = this.add.nineslice(
+      0,
+      0,
+      "Decoration1",
+      undefined,
+      1379,
+      0,
+      736,
+      559,
+      0,
+      0,
+    );
+    deco1.alpha = 0;
+
+    this.inputBoxBg = inputBoxBg;
+    this.deco1 = deco1;
+
+    this.events.emit("scene-awake");
+  }
+
+  private inputBoxBg!: Phaser.GameObjects.NineSlice;
+  private deco1!: Phaser.GameObjects.NineSlice;
 
   /* END-USER-CODE */
 }

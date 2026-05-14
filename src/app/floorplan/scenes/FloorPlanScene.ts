@@ -1,9 +1,10 @@
 import { bind, flatten, pick } from "lodash";
-import { Button } from "@/app/phaserui/components/Button";
-import { Hallway, Room } from "@/app/phaserui/components/Room";
+import Phaser from "phaser";
 import { mergeLines } from "@/utils/geometry";
-import { DoorplacementManager } from "../components/DoorplacementManager";
-import { OnFloorPlanContourChanged } from "../components/events";
+import { Button } from "./Button";
+import { DoorplacementManager } from "./DoorplacementManager";
+import { OnFloorPlanContourChanged } from "./events";
+import { Hallway, Room } from "./Room";
 
 export class FloorPlanScene extends Phaser.Scene {
   constructor() {
@@ -18,6 +19,8 @@ export class FloorPlanScene extends Phaser.Scene {
   public get doors() {
     return this._doors;
   }
+
+  create() {}
 
   start() {
     const sizer = this.rexUI.add.sizer({

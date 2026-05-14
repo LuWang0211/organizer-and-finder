@@ -1,10 +1,16 @@
 "use client";
 
 import { Game } from "phaser";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
-
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useMeasure } from "react-use";
-import { config } from "@/app/phaserui/gameConfig";
+
+import { createConfig } from "@phaser/gameConfig";
 
 interface PhaserGameProps {
   secondSceneOverride?: Phaser.Scene;
@@ -30,19 +36,12 @@ export default function PhaserGame(props: PhaserGameProps) {
     [containerMeasure],
   );
 
-  let configWithOverride = config;
-
-  if (secondSceneOverride) {
-    configWithOverride = {
-      ...config,
-      scene: [config.scene[0], secondSceneOverride] as any,
-    };
-  }
+  const configWithOverride = useMemo(() => {
+    return createConfig(secondSceneOverride);
+  }, [secondSceneOverride]);
 
   useLayoutEffect(() => {
     if (game.current === undefined) {
-      console.log("Creating game");
-
       game.current = new Game({
         ...configWithOverride,
         parent: container.current,

@@ -1,5 +1,5 @@
-import type { UIScene } from "@phaser/UIScene";
 import { debounce, last, sample } from "lodash";
+import type { UIScene } from "@/app/search/scenes/UIScene";
 
 interface MarqueeEntry {
   frameName: string;

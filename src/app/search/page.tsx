@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const DynamicComponentWithNoSSR = dynamic(() => import("@/app/phaserui/Game"), {
+const DynamicComponentWithNoSSR = dynamic(() => import("@phaser/Game"), {
   ssr: false,
 });
 
