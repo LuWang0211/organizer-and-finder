@@ -112,6 +112,9 @@ export class UIScene extends Phaser.Scene {
     icons.forEach((icon) => {
       this.load.image(icon, `/icons/household_items/${icon}`);
     });
+
+    // Load scrollframe for icon backgrounds
+    this.load.image("scrollframe.png", "/textures/scrollframe.png");
   }
 
   editorCreate(): void {

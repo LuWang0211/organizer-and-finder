@@ -11,21 +11,18 @@ import {
 import { useMeasure } from "react-use";
 
 import { createConfig } from "@phaser/gameConfig";
-import type { ItemType } from "@/services/itemService";
 
 interface PhaserGameProps {
   secondSceneOverride?: Phaser.Scene;
-  initialItems?: ItemType[];
+  onGameReady?: (game: Game) => void;
 }
 
 export default function PhaserGame(props: PhaserGameProps) {
-  const { secondSceneOverride, initialItems = [] } = props;
+  const { secondSceneOverride, onGameReady } = props;
 
   const game = useRef<Game>(undefined);
 
   const container = useRef<HTMLDivElement>(undefined);
-
-  const initialItemsRef = useRef<ItemType[]>(initialItems);
 
   const [containerMeasure, { width: containerWidth, height: containerHeight }] =
     useMeasure<HTMLDivElement>();
@@ -43,24 +40,10 @@ export default function PhaserGame(props: PhaserGameProps) {
     return createConfig(secondSceneOverride);
   }, [secondSceneOverride]);
 
-  const applyInitialItems = useCallback((items: ItemType[]) => {
-    if (!game.current || items.length === 0) {
-      return;
-    }
-
-    const scene = game.current.scene.getScene("UIScene") as
-      | (Phaser.Scene & { setMarqueeItems?: (items: ItemType[]) => void })
-      | undefined;
-
-    scene?.setMarqueeItems?.(items);
-  }, []);
-
+  const onGameReadyRef = useRef(onGameReady);
   useEffect(() => {
-    initialItemsRef.current = initialItems;
-    if (game.current) {
-      applyInitialItems(initialItems);
-    }
-  }, [initialItems, applyInitialItems]);
+    onGameReadyRef.current = onGameReady;
+  }, [onGameReady]);
 
   useLayoutEffect(() => {
     if (game.current === undefined) {
@@ -78,7 +61,7 @@ export default function PhaserGame(props: PhaserGameProps) {
       });
 
       game.current.events.once("ready", () => {
-        applyInitialItems(initialItemsRef.current);
+        onGameReadyRef.current?.(game.current!);
       });
     }
 
@@ -89,7 +72,7 @@ export default function PhaserGame(props: PhaserGameProps) {
         game.current = undefined;
       }
     };
-  }, [configWithOverride, applyInitialItems]);
+  }, [configWithOverride]);
 
   useEffect(() => {
     // Resize the game to fit the container,
