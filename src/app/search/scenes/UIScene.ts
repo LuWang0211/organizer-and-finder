@@ -19,7 +19,13 @@ export class UIScene extends Phaser.Scene {
     /* END-USER-CTR-CODE */
   }
 
-  create() {}
+  init() {
+    const initialItems = this.game.registry.get("initialData")?.initialItems;
+
+    if (initialItems) {
+      this.setMarqueeItems(initialItems);
+    }
+  }
 
   start() {
     new SketchBackground(this);
@@ -82,11 +88,6 @@ export class UIScene extends Phaser.Scene {
 
   public setMarqueeItems(items: ItemType[]) {
     this.pendingMarqueeItems = items;
-
-    if (this.marqueeSearch && items.length > 0) {
-      this.marqueeSearch.updateItems(items);
-      this.pendingMarqueeItems = null;
-    }
   }
 
   preload() {

@@ -1,4 +1,4 @@
-import SearchGame from "@/app/search/SearchGame";
+import Client from "@/app/search/Client";
 import { fetchItems } from "@/services/itemService";
 
 export const dynamic = "force-dynamic";
@@ -11,5 +11,5 @@ export default async function Page() {
     locationName: item.location?.name ?? null,
   }));
 
-  return <SearchGame initialItems={initialItems} />;
+  return <Client initialItems={initialItems} />;
 }

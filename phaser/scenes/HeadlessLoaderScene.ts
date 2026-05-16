@@ -1,3 +1,5 @@
+import * as Phaser from "phaser";
+
 export class HeadlessLoaderScene extends Phaser.Scene {
   constructor() {
     super("HeadlessLoaderScene");
@@ -7,7 +9,7 @@ export class HeadlessLoaderScene extends Phaser.Scene {
     // Find the second scene and start it
     const secondScene = this.scene.manager.scenes[1];
 
-    secondScene.load.on("complete", () => {
+    secondScene?.load.on("complete", () => {
       (secondScene as any).start?.();
     });
 
