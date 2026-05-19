@@ -1,16 +1,21 @@
 import { getSharedLoadingScene } from "@phaser/loadingScene";
-import { UIScene } from "@/app/search/scenes/UIScene";
 import AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 import InputTextPlugin from "phaser3-rex-plugins/plugins/inputtext-plugin";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 
-export function createConfig(secondSceneOverride?: Phaser.Scene) {
+export function createConfig(secondScene?: Phaser.Types.Scenes.SceneType) {
+  const scene: Phaser.Types.Scenes.SceneType[] = [getSharedLoadingScene()];
+
+  if (secondScene) {
+    scene.push(secondScene);
+  }
+  
   return {
     type: Phaser.AUTO,
     width: 1024,
     height: 768,
     transparent: true,
-    scene: [getSharedLoadingScene(), secondSceneOverride ?? UIScene],
+    scene,
     dom: {
       createContainer: true,
     },

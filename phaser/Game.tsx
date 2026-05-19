@@ -1,5 +1,6 @@
 "use client";
 
+import { createConfig } from "@phaser/gameConfig";
 import { Game } from "phaser";
 import {
   useCallback,
@@ -10,20 +11,17 @@ import {
 } from "react";
 import { useMeasure } from "react-use";
 
-import { createConfig } from "@phaser/gameConfig";
-
 interface PhaserGameProps {
-  secondSceneOverride?: Phaser.Scene;
+  secondScene?: Phaser.Types.Scenes.SceneType;
+  onGameCreated?: (game: Game) => void;
 }
 
-export default function PhaserGame(props: PhaserGameProps) {
-  const { secondSceneOverride } = props;
+export default function PhaserGame({ secondScene, onGameCreated }: PhaserGameProps) {
 
   const game = useRef<Game>(undefined);
 
   const container = useRef<HTMLDivElement>(undefined);
 
-  // useMeasure is a 3rd party hook that measures the size of a DOM element
   const [containerMeasure, { width: containerWidth, height: containerHeight }] =
     useMeasure<HTMLDivElement>();
 
@@ -37,8 +35,8 @@ export default function PhaserGame(props: PhaserGameProps) {
   );
 
   const configWithOverride = useMemo(() => {
-    return createConfig(secondSceneOverride);
-  }, [secondSceneOverride]);
+    return createConfig(secondScene);
+  }, [secondScene]);
 
   useLayoutEffect(() => {
     if (game.current === undefined) {
@@ -53,7 +51,9 @@ export default function PhaserGame(props: PhaserGameProps) {
             target: container.current,
           },
         },
-      });
+      } as any);
+
+      onGameCreated?.(game.current);
     }
 
     return () => {
@@ -63,7 +63,7 @@ export default function PhaserGame(props: PhaserGameProps) {
         game.current = undefined;
       }
     };
-  }, [configWithOverride]);
+  }, [configWithOverride, onGameCreated]);
 
   useEffect(() => {
     // Resize the game to fit the container,

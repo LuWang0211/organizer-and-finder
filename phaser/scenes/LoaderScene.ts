@@ -1,7 +1,7 @@
-import { sortBy } from "lodash";
-import Phaser from "phaser";
-import type AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 import { markSharedLoaderSeen } from "@phaser/sharedLoaderSession";
+import { sortBy } from "lodash";
+import * as Phaser from "phaser";
+import type AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 
 export class LoaderScene extends Phaser.Scene {
   private sprite!: Phaser.GameObjects.Sprite;

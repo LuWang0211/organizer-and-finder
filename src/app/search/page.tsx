@@ -1,11 +1,15 @@
-"use client";
+import Client from "@/app/search/Client";
+import { fetchItems } from "@/services/itemService";
 
-import dynamic from "next/dynamic";
+export const dynamic = "force-dynamic";
 
-const DynamicComponentWithNoSSR = dynamic(() => import("@phaser/Game"), {
-  ssr: false,
-});
+export default async function Page() {
+  const items = await fetchItems();
 
-export default function Page() {
-  return <DynamicComponentWithNoSSR />;
+  const initialItems = items.map((item) => ({
+    ...item,
+    locationName: item.location?.name ?? null,
+  }));
+
+  return <Client initialItems={initialItems} />;
 }

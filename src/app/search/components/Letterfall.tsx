@@ -16,8 +16,10 @@ type TextWithPhysicsBody = Phaser.GameObjects.Text & {
 
 class LetterFallControl {
   private text: TextWithPhysicsBody;
+  private scene: Phaser.Scene;
 
   public constructor(scene: Phaser.Scene, x: number, y: number, text: string) {
+    this.scene = scene;
     this.text = scene.add.text(x, y, text, {
       fontSize: "32px",
       stroke: "#000",
@@ -36,7 +38,12 @@ class LetterFallControl {
 
   update() {
     if (this.text.y > 800) {
-      this.text.destroy();
+      this.destroy();
     }
+  }
+
+  private destroy() {
+    this.scene.events.off("update", this.update, this);
+    this.text.destroy();
   }
 }

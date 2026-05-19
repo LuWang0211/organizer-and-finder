@@ -4,8 +4,20 @@ import type { HouseholdIconKey, IconKey } from "@/ui/iconPresets";
 
 export async function fetchItems() {
   try {
-    const items = await prisma.item.findMany();
-    return items;
+    const items = await prisma.item.findMany({
+      include: {
+        location: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    const resultTyped = (items ?? []).map(({ iconKey, ...otherProps }) => ({
+      iconKey: iconKey as IconKey | null,
+      ...otherProps,
+    }));
+    return resultTyped;
   } catch {
     throw new Error("Error fetching items");
   }

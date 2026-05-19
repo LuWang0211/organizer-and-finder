@@ -3,10 +3,14 @@ import { DecoBackground1 } from "@/app/search/components/DecoBackground1";
 import { createLetterFall } from "@/app/search/components/Letterfall";
 import { MarqueeSearch } from "@/app/search/components/MarqueeSearch";
 import { SketchBackground } from "@/app/search/components/SketchBackground";
+import type { ItemType } from "@/services/itemService";
 
 /* START OF COMPILED CODE */
 
 export class UIScene extends Phaser.Scene {
+  private marqueeSearch?: MarqueeSearch;
+  private pendingMarqueeItems: ItemType[] | null = null;
+
   constructor() {
     super("UIScene");
 
@@ -15,7 +19,13 @@ export class UIScene extends Phaser.Scene {
     /* END-USER-CTR-CODE */
   }
 
-  create() {}
+  init() {
+    const initialItems = this.game.registry.get("initialData")?.initialItems;
+
+    if (initialItems) {
+      this.setMarqueeItems(initialItems);
+    }
+  }
 
   start() {
     new SketchBackground(this);
@@ -24,7 +34,11 @@ export class UIScene extends Phaser.Scene {
 
     new DecoBackground1(this, this.deco1);
 
-    new MarqueeSearch(this);
+    this.marqueeSearch = new MarqueeSearch(this);
+    if (this.pendingMarqueeItems && this.pendingMarqueeItems.length > 0) {
+      this.marqueeSearch.updateItems(this.pendingMarqueeItems);
+      this.pendingMarqueeItems = null;
+    }
 
     const inputText = this.add
       .rexInputText(0, -12, 200, 20, {
@@ -72,6 +86,10 @@ export class UIScene extends Phaser.Scene {
     sizer.layout();
   }
 
+  public setMarqueeItems(items: ItemType[]) {
+    this.pendingMarqueeItems = items;
+  }
+
   preload() {
     this.load.pack("all", "/assets/asset-pack.json");
     this.load.atlas(
@@ -79,6 +97,25 @@ export class UIScene extends Phaser.Scene {
       "/assets/texture/items.png",
       "/assets/texture/items.json",
     );
+
+    const icons = [
+      "icon-book.png",
+      "icon-bookshelf.png",
+      "icon-glasses.png",
+      "icon-laptop.png",
+      "icon-mug.png",
+      "icon-nightstand.png",
+      "icon-pajamas.png",
+      "icon-remote.png",
+      "icon-unknown.png",
+    ];
+
+    icons.forEach((icon) => {
+      this.load.image(icon, `/icons/household_items/${icon}`);
+    });
+
+    // Load scrollframe for icon backgrounds
+    this.load.image("scrollframe.png", "/textures/scrollframe.png");
   }
 
   editorCreate(): void {
