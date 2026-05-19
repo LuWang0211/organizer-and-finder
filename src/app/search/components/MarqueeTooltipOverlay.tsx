@@ -1,7 +1,8 @@
 "use client";
 
-import tooltipTop from "@phaser/assets/texture/tooltip-top.png";
 import { useEffect, useState } from "react";
+import { Card } from "@/ui/components/Card";
+import { CardArrow } from "@/ui/components/CardArrow";
 
 type MarqueeTooltipDetail = {
   label: string;
@@ -58,23 +59,32 @@ export function MarqueeTooltipOverlay({ zoom }: MarqueeTooltipOverlayProps) {
       style={{ overflow: "visible" }}
     >
       <div
-        className="absolute pointer-events-none flex items-center justify-center bg-no-repeat bg-center bg-[length:100%_100%] text-foreground"
+        className="absolute pointer-events-none"
         style={{
           left: `${detail.x * zoom}px`,
           top: `${detail.y * zoom}px`,
           transform: "translate(-50%, calc(-100% - 25px))",
-          width: "280px",
-          height: "80px",
-          backgroundImage: `url(${tooltipTop.src})`,
         }}
       >
-        <div className="flex h-full w-full flex-col justify-center px-8 text-left">
-          <p className="font-hand text-base font-bold leading-tight text-foreground">
-            {detail.label}
-          </p>
-          <p className="font-hand text-sm leading-tight text-foreground-secondary">
-            {locationLabel}
-          </p>
+        <div className="relative group tooltip-card-content">
+          <Card
+            noInnerShadow
+            className="p-4 peer border-3 shadow-intensity-weakened card-content"
+            shadowIntensity="weakened"
+          >
+            <div className="flex flex-col gap-1">
+              <p className="font-hand text-base font-bold leading-tight text-foreground">
+                {detail.label}
+              </p>
+              <p className="font-hand text-sm leading-tight text-foreground-secondary">
+                {locationLabel}
+              </p>
+            </div>
+          </Card>
+          <CardArrow
+            className="absolute left-1/2 top-full z-20 -translate-x-1/2 -translate-y-[10px]"
+            fillColor="var(--color-card-default)"
+          />
         </div>
       </div>
     </div>

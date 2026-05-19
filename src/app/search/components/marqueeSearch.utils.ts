@@ -1,5 +1,16 @@
 import type { MarqueeEntry, MarqueeItem } from "./marqueeSearch.types";
 
+type MarqueeSearchTextures = {
+  exists: (key: string) => boolean;
+  get: (key: string) => {
+    getSourceImage: () => { width: number; height: number };
+  };
+};
+
+export type MarqueeSearchSceneLike = {
+  textures: MarqueeSearchTextures;
+};
+
 export function getScaledDimensions(
   width: number,
   height: number,
@@ -15,7 +26,7 @@ export function getScaledDimensions(
 }
 
 export function resolveTextureKey(
-  textureExists: (key: string) => boolean,
+  scene: MarqueeSearchSceneLike,
   iconKey?: string | null,
 ) {
   const fallbackTextureKey = "icon-unknown.png";
@@ -24,29 +35,21 @@ export function resolveTextureKey(
     return fallbackTextureKey;
   }
 
-  const candidates = [
-    iconKey,
-    `icon-${iconKey}`,
-    `icon-${iconKey}.png`,
-    `${iconKey}.png`,
-  ];
+  const textureKey = `icon-${iconKey}.png`;
 
-  return (
-    candidates.find((candidate) => textureExists(candidate)) ??
-    fallbackTextureKey
-  );
+  return scene.textures.exists(textureKey) ? textureKey : fallbackTextureKey;
 }
 
 export function mapDatabaseItemsToMarqueeItems(
+  scene: MarqueeSearchSceneLike,
   items: Array<{
     name: string;
     iconKey?: string | null;
     locationName?: string | null;
   }>,
-  textureExists: (key: string) => boolean,
 ): MarqueeItem[] {
   const mappedItems = items.map((item) => ({
-    textureKey: resolveTextureKey(textureExists, item.iconKey),
+    textureKey: resolveTextureKey(scene, item.iconKey),
     label: item.name,
     locationName: item.locationName ?? null,
   }));
@@ -62,8 +65,8 @@ export function mapDatabaseItemsToMarqueeItems(
 }
 
 export function createMarqueeEntries(
+  scene: MarqueeSearchSceneLike,
   textureKeys: MarqueeItem[],
-  getTextureSize: (textureKey: string) => { width: number; height: number },
   maxIconWidth: number,
   maxIconHeight: number,
   gap: number,
@@ -71,7 +74,7 @@ export function createMarqueeEntries(
   let currentX = 0;
 
   return textureKeys.map(({ textureKey, label, locationName }) => {
-    const { width, height } = getTextureSize(textureKey);
+    const { width, height } = scene.textures.get(textureKey).getSourceImage();
     const { scaledWidth, scaledHeight, scale } = getScaledDimensions(
       width,
       height,

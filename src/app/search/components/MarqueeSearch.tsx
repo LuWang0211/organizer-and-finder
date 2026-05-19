@@ -26,6 +26,7 @@ export class MarqueeSearch {
   }> = [];
 
   private marqueeEntries: MarqueeEntry[] = [];
+  private marqueeHoverArea = new Phaser.Geom.Rectangle(0, 0, 0, 0);
 
   private maxIconWidth = 120;
   private maxIconHeight = 120;
@@ -58,6 +59,9 @@ export class MarqueeSearch {
 
   private activeHoveredEntry: MarqueeEntry | null = null;
 
+  private readonly frameBaseScale = 1;
+  private readonly frameHoverScale = 1.125;
+
   private readonly pointerMoveHandler = debounce(
     () => this.onPointerMove(),
     25,
@@ -84,12 +88,8 @@ export class MarqueeSearch {
     this.scene.scale.off("resize", this.onResize, this);
 
     this.marqueeEntries = createMarqueeEntries(
+      this.scene,
       this.textureKeys,
-      (textureKey) =>
-        this.scene.textures.get(textureKey).getSourceImage() as {
-          width: number;
-          height: number;
-        },
       this.maxIconWidth,
       this.maxIconHeight,
       GAP,
@@ -105,8 +105,7 @@ export class MarqueeSearch {
 
   update(time: number, delta: number) {
     const pointer = this.scene.input.activePointer;
-    const inMarqueeArea =
-      pointer.y > this.scene.scale.height * HOVER_STOP_RATIO;
+    const inMarqueeArea = this.marqueeHoverArea.contains(pointer.x, pointer.y);
     let elementsToRemove = 0;
 
     if (inMarqueeArea && !this.isHovering) {
@@ -139,7 +138,7 @@ export class MarqueeSearch {
       const { x, textureKey } = entry;
       if (entry.image === null) {
         entry.frame = this.scene.add.image(x, 650, "scrollframe.png");
-        entry.frame.setScale(0.4);
+        entry.frame.setScale(this.frameBaseScale);
         entry.image = this.scene.add.image(x, 650, textureKey);
         entry.image.setScale(entry.scale);
         entry.image.setInteractive({ useHandCursor: true });
@@ -147,7 +146,7 @@ export class MarqueeSearch {
         entry.image.on("pointerover", () => {
           if (!entry.isHovered) {
             entry.isHovered = true;
-            entry.frame!.setScale(0.45);
+            entry.frame!.setScale(this.frameHoverScale);
             entry.image!.setScale(entry.scale * 1.1);
             this.activeHoveredEntry = entry;
             this.emitTooltipState(entry);
@@ -157,7 +156,7 @@ export class MarqueeSearch {
         entry.image.on("pointerout", () => {
           if (entry.isHovered) {
             entry.isHovered = false;
-            entry.frame!.setScale(0.4);
+            entry.frame!.setScale(this.frameBaseScale);
             entry.image!.setScale(entry.scale);
             this.clearTooltipState(entry);
           }
@@ -223,6 +222,14 @@ export class MarqueeSearch {
 
   onResize(gameSize: Phaser.Structs.Size) {
     const minWidth = Math.ceil(gameSize.width / 100) + 1;
+    const thresholdY = Math.floor(gameSize.height * HOVER_STOP_RATIO);
+    this.marqueeHoverArea.setTo(
+      0,
+      thresholdY,
+      gameSize.width,
+      gameSize.height - thresholdY,
+    );
+
     const currentCount = this.marqueeEntries.length;
     if (currentCount < minWidth) {
       this.addRandomItems(minWidth - currentCount);
@@ -271,9 +278,7 @@ export class MarqueeSearch {
       locationName?: string | null;
     }>,
   ) {
-    const mappedItems = mapDatabaseItemsToMarqueeItems(items, (textureKey) =>
-      this.scene.textures.exists(textureKey),
-    );
+    const mappedItems = mapDatabaseItemsToMarqueeItems(this.scene, items);
     if (mappedItems.length > 0) {
       this.textureKeys = mappedItems;
       this.create();
