@@ -9,7 +9,7 @@ export function createConfig(secondScene?: Phaser.Types.Scenes.SceneType) {
   if (secondScene) {
     scene.push(secondScene);
   }
-  
+
   return {
     type: Phaser.AUTO,
     width: 1024,
