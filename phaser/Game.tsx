@@ -16,8 +16,10 @@ interface PhaserGameProps {
   onGameCreated?: (game: Game) => void;
 }
 
-export default function PhaserGame({ secondScene, onGameCreated }: PhaserGameProps) {
-
+export default function PhaserGame({
+  secondScene,
+  onGameCreated,
+}: PhaserGameProps) {
   const game = useRef<Game>(undefined);
 
   const container = useRef<HTMLDivElement>(undefined);
