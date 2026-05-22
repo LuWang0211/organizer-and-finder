@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { Card } from "@/ui/components/Card";
-import { CardArrow } from "@/ui/components/CardArrow";
+import { FloatingCardWithArrow } from "@/ui/components/FloatingCardWithArrow";
 import { SearchBar } from "@/ui/components/SearchBar";
+import { cn } from "@/utils/tailwind";
 
 type SearchKind = "default" | "compact";
 
@@ -22,43 +22,31 @@ function SearchHintTooltip({ popup }: { popup: PopupState }) {
       aria-live="polite"
       aria-atomic="true"
     >
-      <div className="relative group tooltip-card-content">
-        <Card
-          variant={popup.kind === "success" ? "default" : "primary"}
-          noInnerShadow
-          shadowIntensity="weakened"
-          className="p-4 peer border-3 card-content w-auto min-w-[220px] max-w-sm"
-        >
-          <div className="flex flex-col gap-1">
-            <p
-              className={
-                popup.kind === "success"
-                  ? "font-bold leading-tight text-foreground"
-                  : "font-bold leading-tight text-white"
-              }
-            >
-              {popup.kind === "success" ? "Search Ready" : "Search Needed"}
-            </p>
-            <p
-              className={
-                popup.kind === "success"
-                  ? "leading-tight text-foreground-secondary"
-                  : "leading-tight text-white/80"
-              }
-            >
-              {popup.message}
-            </p>
-          </div>
-        </Card>
-        <CardArrow
-          className="absolute left-1/2 top-full z-20 -translate-x-1/2 -translate-y-[10px]"
-          fillColor={
-            popup.kind === "success"
-              ? "var(--color-card-default)"
-              : "var(--color-primary-accent)"
-          }
-        />
-      </div>
+      <FloatingCardWithArrow
+        variant={popup.kind === "success" ? "default" : "primary"}
+        cardClassName="w-auto min-w-[220px] max-w-sm"
+      >
+        <div className="flex flex-col gap-1">
+          <p
+            className={cn(
+              "font-bold leading-tight",
+              popup.kind === "success" ? "text-foreground" : "text-white",
+            )}
+          >
+            {popup.kind === "success" ? "Search Ready" : "Search Needed"}
+          </p>
+          <p
+            className={cn(
+              "leading-tight",
+              popup.kind === "success"
+                ? "text-foreground-secondary"
+                : "text-white/80",
+            )}
+          >
+            {popup.message}
+          </p>
+        </div>
+      </FloatingCardWithArrow>
     </output>
   );
 }
@@ -134,7 +122,7 @@ export default function SearchBarShowcaseClient() {
               popup={popup?.searchKind === "default" ? popup : null}
             />
             <SearchBar
-              id={defaultSearchId}
+              inputId={defaultSearchId}
               placeholder="Default search bar..."
               onSearch={(value) =>
                 handleSearch("default", "Default search", value)
@@ -155,7 +143,7 @@ export default function SearchBarShowcaseClient() {
               popup={popup?.searchKind === "compact" ? popup : null}
             />
             <SearchBar
-              id={compactSearchId}
+              inputId={compactSearchId}
               variant="compact"
               placeholder="Compact search bar..."
               onSearch={(value) =>
