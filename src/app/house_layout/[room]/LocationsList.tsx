@@ -20,11 +20,11 @@ function ItemsPreview({ items }: { items?: LocationItem[] }) {
           return (
             <div
               key={item.id}
-              className="grid grid-cols-[auto_1fr_auto] items-center gap-x-2 gap-y-1 text-base leading-snug text-gray-800"
+              className="flex items-start gap-2 text-base leading-snug text-gray-800"
             >
-              <span className="min-w-0 break-words">{item.name}</span>
+              <span className="min-w-0 flex-1 break-words">{item.name}</span>
               {item.quantity && (
-                <span className="justify-self-end bg-gray-200/60 px-1 rounded text-base whitespace-nowrap flex-shrink-0">
+                <span className="ml-auto inline-flex min-w-6 flex-shrink-0 items-center justify-center whitespace-nowrap rounded bg-gray-200/60 px-1.5 text-base tabular-nums leading-none text-right">
                   {item.quantity}
                 </span>
               )}
@@ -102,25 +102,10 @@ export default function LocationsList({
               position="bottom"
               variant="bubble"
               content={
-                <div className="flex w-full min-w-[260px] max-w-[640px] whitespace-normal break-words">
-                  {/* Left side - Location info */}
-                  <div className="w-1/2 pr-2 min-w-0">
-                    <h4 className="font-bold text-lg mb-1 break-words leading-snug text-gray-900">
-                      {location.name}
-                    </h4>
-                    <p className="text-base text-gray-700 break-words leading-snug">
-                      Total: {location.items?.length || 0} items
-                    </p>
-                  </div>
-                  {/* Right side - Items list */}
-                  <div className="w-1/2 pl-2 border-l border-gray-300/60 min-w-0">
-                    <p className="font-medium text-base mb-1 text-gray-900">
-                      Items:
-                    </p>
-                    <ItemsPreview
-                      items={location.items as LocationItem[] | undefined}
-                    />
-                  </div>
+                <div className="min-w-[220px] max-w-[360px] whitespace-normal break-words">
+                  <ItemsPreview
+                    items={location.items as LocationItem[] | undefined}
+                  />
                 </div>
               }
               className="block"
