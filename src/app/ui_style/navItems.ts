@@ -48,6 +48,10 @@ export const navItems = [
     "href": "/ui_style/overlay-showcase"
   },
   {
+    "title": "Search Bar",
+    "href": "/ui_style/search-bar"
+  },
+  {
     "title": "Tabs",
     "href": "/ui_style/tabs"
   },

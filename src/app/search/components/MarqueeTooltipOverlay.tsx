@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/ui/components/Card";
-import { CardArrow } from "@/ui/components/CardArrow";
+import { FloatingCardWithArrow } from "@/ui/components/FloatingCardWithArrow";
 
 type MarqueeTooltipDetail = {
   label: string;
@@ -66,26 +65,16 @@ export function MarqueeTooltipOverlay({ zoom }: MarqueeTooltipOverlayProps) {
           transform: "translate(-50%, calc(-100% - 25px))",
         }}
       >
-        <div className="relative group tooltip-card-content">
-          <Card
-            noInnerShadow
-            className="p-4 peer border-3 shadow-intensity-weakened card-content"
-            shadowIntensity="weakened"
-          >
-            <div className="flex flex-col gap-1">
-              <p className="font-hand text-base font-bold leading-tight text-foreground">
-                {detail.label}
-              </p>
-              <p className="font-hand text-sm leading-tight text-foreground-secondary">
-                {locationLabel}
-              </p>
-            </div>
-          </Card>
-          <CardArrow
-            className="absolute left-1/2 top-full z-20 -translate-x-1/2 -translate-y-[10px]"
-            fillColor="var(--color-card-default)"
-          />
-        </div>
+        <FloatingCardWithArrow>
+          <div className="flex flex-col gap-1">
+            <p className="font-hand text-base font-bold leading-tight text-foreground">
+              {detail.label}
+            </p>
+            <p className="font-hand text-sm leading-tight text-foreground-secondary">
+              {locationLabel}
+            </p>
+          </div>
+        </FloatingCardWithArrow>
       </div>
     </div>
   );
