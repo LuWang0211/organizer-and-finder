@@ -1,4 +1,4 @@
-import type AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
+import { applyAnchor, DoubleTap, ScrollablePanel } from "@phaser/utils";
 import { getHexNumberByName } from "@/ui/colors";
 import type { FloorplanV2Scene } from "./FloorplanV2Scene";
 import type { StagingPolygon } from "./StagingPolygon";
@@ -202,17 +202,13 @@ class PolygonThumbnail {
       this.mainScene.selectPolygon(this.polygon);
     });
 
-    // Add double-tap detection using RexUI tap plugin
-    this.tapPlugin = (this.scene as any).rexGestures.add
-      .tap(this.thumbnailGraphics, { taps: 2 })
-      .on("tap", () => {
-        // Handle double-tap - ensure polygon is selected and emit event to React layer
-        this.mainScene.selectPolygon(this.polygon);
-        this.mainScene.events.emit(
-          "polygonThumbnailDoubleClicked",
-          this.polygon,
-        );
-      });
+    // Add double-tap detection using DoubleTap
+    this.tapPlugin = new DoubleTap(this.scene, this.thumbnailGraphics, {
+      taps: 2,
+    }).on("tap", () => {
+      this.mainScene.selectPolygon(this.polygon);
+      this.mainScene.events.emit("polygonThumbnailDoubleClicked", this.polygon);
+    });
   }
 
   public updateColor(): void {
@@ -276,10 +272,8 @@ export class UIScene extends Phaser.Scene {
 class ShapesList {
   private uiScene: UIScene;
   private mainScene: FloorplanV2Scene;
-  private container: any; // ScrollablePanel from rexUI
-  private sizer: any; // Vertical sizer inside the scrollable panel
+  private container: ScrollablePanel;
   private thumbnails: PolygonThumbnail[] = [];
-  private isVisible: boolean = false;
   private lastPolygonCount: number = 0;
 
   // Panel configuration
@@ -290,47 +284,37 @@ class ShapesList {
     this.uiScene = uiScene;
     this.mainScene = mainScene;
 
-    // Create vertical sizer for thumbnails
-    this.sizer = uiScene.rexUI.add.sizer({
-      orientation: "y",
-      space: { item: this.THUMBNAIL_MARGIN },
-    });
-
-    // Create scrollable panel using rexUI
-    this.container = uiScene.rexUI.add.scrollablePanel({
+    // Create scrollable panel with internal sizer
+    this.container = new ScrollablePanel(uiScene, {
       x: 0,
       y: 0,
       width: this.PANEL_WIDTH,
-      height: 200, // Will be adjusted dynamically
-      panel: {
-        child: this.sizer,
-      },
+      height: 200,
+      space: { item: this.THUMBNAIL_MARGIN },
     });
 
-    // Add background using rexUI's addBackground method (this will auto-resize)
-    const background = uiScene.rexUI.add
-      .roundRectangle(0, 0, 20, 20, 10, 0x000000, 0.3)
-      .setStrokeStyle(2, 0x333333);
-    this.container.addBackground(background);
-
+    // Add background
     this.container.setOrigin(1.0, 0);
-    // Use anchor plugin to position on right side, 200 units from top
-    (uiScene.plugins.get("rexAnchor")! as AnchorPlugin).add(this.container, {
-      right: "right-10",
-      top: "top+100",
+    this.container.addBackground({
+      fillColor: 0x000000,
+      fillAlpha: 0.3,
+      cornerRadius: 10,
+      strokeColor: 0x333333,
+      strokeWidth: 2,
+    });
+
+    // Position on right side, 200 units from top
+    applyAnchor(this.container, uiScene, {
+      right: 10,
+      top: 100,
+      width: this.PANEL_WIDTH,
+      height: { value: 85, type: "percent" },
     });
 
     // Layout after adding background
     this.container.layout();
 
     this.container.setDepth(1000); // High depth to stay on top
-
-    // Hide initially - positioning will be done when shown
-    this.container.setVisible(false);
-  }
-
-  private updatePosition(): void {
-    // Position is handled by rex anchor plugin, no manual positioning needed
   }
 
   public update(): void {
@@ -338,39 +322,13 @@ class ShapesList {
     const polygons = this.mainScene.getStagingPolygons();
     const totalShapes = polygons.length;
 
-    if (totalShapes === 0 && this.isVisible) {
-      this.hide();
-      this.lastPolygonCount = 0;
-    } else if (totalShapes > 0 && !this.isVisible) {
-      this.show();
-      this.updateShapesList(polygons);
-      this.lastPolygonCount = totalShapes;
-    } else if (
-      totalShapes > 0 &&
-      this.isVisible &&
-      totalShapes !== this.lastPolygonCount
-    ) {
-      // Only update if count changed
+    if (totalShapes !== this.lastPolygonCount) {
       this.updateShapesList(polygons);
       this.lastPolygonCount = totalShapes;
     }
   }
 
-  private show(): void {
-    this.isVisible = true;
-    // Update position when showing since background height is now properly set
-    this.updatePosition();
-    this.container.setVisible(true);
-  }
-
-  private hide(): void {
-    this.isVisible = false;
-    this.container.setVisible(false);
-  }
-
   private updateShapesList(polygons: StagingPolygon[]): void {
-    // Clear existing thumbnails from sizer
-    this.sizer.clear(true);
     // Destroy old thumbnails
     this.thumbnails.forEach((thumbnail) => thumbnail.destroy());
     this.thumbnails = [];
@@ -391,31 +349,11 @@ class ShapesList {
 
       if (thumbnailContainer) {
         this.thumbnails.push(thumbnail);
-        this.sizer.add(thumbnailContainer);
+        this.container.add(thumbnailContainer);
       }
     });
 
-    // Measure actual content height by summing thumbnail container heights and gaps
-    let contentHeight = 0;
-    this.thumbnails.forEach((thumbnail, index) => {
-      const container = thumbnail.getContainer();
-      if (container) {
-        const bounds = container.getBounds();
-        contentHeight += bounds.height;
-
-        // Add margin between thumbnails (but not after the last one)
-        if (index < this.thumbnails.length - 1) {
-          contentHeight += this.THUMBNAIL_MARGIN;
-        }
-      }
-    });
-    const maxViewportHeight = this.uiScene.cameras.main.height - 200; // Leave 200px margin (100px top + 100px bottom)
-    const panelHeight = Math.min(contentHeight, maxViewportHeight);
-
-    // Resize container to fit content but not exceed viewport
-    this.container.setMinSize(this.PANEL_WIDTH, panelHeight);
-
-    // Force layout update for background to resize properly
+    // Update scroll range and content layout without changing the viewport size.
     this.container.layout();
 
     // Set higher depth for thumbnail containers so they're interactive above background

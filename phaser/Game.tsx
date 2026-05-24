@@ -60,7 +60,6 @@ export default function PhaserGame({
 
     return () => {
       if (game.current) {
-        game.current.plugins.removeGlobalPlugin("rexInputTextPlugin");
         game.current.destroy(true);
         game.current = undefined;
       }
