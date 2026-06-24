@@ -27,6 +27,7 @@ export class DecoBackground1 {
       centerX: true,
       centerY: true,
       width: { value: 100, type: "percent" },
+      height: { value: 100, type: "pixel" },
     });
 
     sizer.addChild(this.deco1, {
