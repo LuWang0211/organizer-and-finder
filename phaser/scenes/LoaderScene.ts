@@ -1,7 +1,7 @@
 import { markSharedLoaderSeen } from "@phaser/sharedLoaderSession";
+import { applyAnchor } from "@phaser/utils";
 import { sortBy } from "lodash";
 import * as Phaser from "phaser";
-import type AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
 
 export class LoaderScene extends Phaser.Scene {
   private sprite!: Phaser.GameObjects.Sprite;
@@ -29,9 +29,10 @@ export class LoaderScene extends Phaser.Scene {
 
     this.sprite = this.add.sprite(0, 0, "loader", frameNames[0]);
 
-    (this.plugins.get("rexAnchor") as AnchorPlugin)!.add(this.sprite, {
-      centerX: "center",
-      centerY: "center-100",
+    applyAnchor(this.sprite, this, {
+      centerX: true,
+      centerY: true,
+      offsetY: -100,
     });
 
     this.sprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {

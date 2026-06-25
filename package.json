@@ -41,7 +41,6 @@
     "number-to-words": "^1.2.4",
     "openai": "^6.16.0",
     "phaser": "^3.80.1",
-    "phaser3-rex-plugins": "^1.80.17",
     "pluralize": "^8.0.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",

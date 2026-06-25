@@ -2,9 +2,6 @@
 
 import { ChevronDown, Download, Upload } from "lucide-react";
 import { Game } from "phaser";
-import AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
-import GesturesPlugin from "phaser3-rex-plugins/plugins/gestures-plugin";
-import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import {
   useCallback,
   useEffect,
@@ -57,27 +54,6 @@ export default function FloorplanV2Game() {
         gravity: { x: 0, y: 0 },
         debug: false,
       },
-    },
-    plugins: {
-      scene: [
-        {
-          key: "rexUI",
-          plugin: UIPlugin,
-          mapping: "rexUI",
-        },
-        {
-          key: "rexGestures",
-          plugin: GesturesPlugin,
-          mapping: "rexGestures",
-        },
-      ],
-      global: [
-        {
-          key: "rexAnchor",
-          plugin: AnchorPlugin,
-          start: true,
-        },
-      ],
     },
   }).current;
 

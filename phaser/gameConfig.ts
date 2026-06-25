@@ -1,7 +1,4 @@
 import { getSharedLoadingScene } from "@phaser/loadingScene";
-import AnchorPlugin from "phaser3-rex-plugins/plugins/anchor-plugin";
-import InputTextPlugin from "phaser3-rex-plugins/plugins/inputtext-plugin";
-import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 
 export function createConfig(secondScene?: Phaser.Types.Scenes.SceneType) {
   const scene: Phaser.Types.Scenes.SceneType[] = [getSharedLoadingScene()];
@@ -28,29 +25,6 @@ export function createConfig(secondScene?: Phaser.Types.Scenes.SceneType) {
         gravity: { x: 0, y: 300 },
         debug: false,
       },
-    },
-    // ...
-    plugins: {
-      scene: [
-        {
-          key: "rexUI",
-          plugin: UIPlugin,
-          mapping: "rexUI",
-        },
-      ],
-
-      global: [
-        {
-          key: "rexInputTextPlugin",
-          plugin: InputTextPlugin,
-          start: true,
-        },
-        {
-          key: "rexAnchor",
-          plugin: AnchorPlugin,
-          start: true,
-        },
-      ],
     },
   };
 }

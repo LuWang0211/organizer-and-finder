@@ -1,3 +1,5 @@
+import { OverlapSizer } from "@phaser/utils";
+import type * as Phaser from "phaser";
 import type { UIScene } from "@/app/search/scenes/UIScene";
 
 export class DecoBackground1 {
@@ -20,24 +22,19 @@ export class DecoBackground1 {
   }
 
   createBackgroundForDesktop() {
-    // Add decroative elements
-    const sizer = this.scene.rexUI.add.overlapSizer({
-      x: 0,
-      y: 0,
-      anchor: {
-        top: `top+${768 / 2 - this.deco1.height / 2}`,
-        centerX: "center",
-        width: "100%",
-      },
+    const sizer = new OverlapSizer(this.scene, {
+      top: 0,
+      centerX: true,
+      centerY: true,
+      width: { value: 100, type: "percent" },
+      height: { value: 100, type: "pixel" },
     });
 
-    sizer.add(this.deco1, {
+    sizer.addChild(this.deco1, {
       minWidth: this.deco1.width,
       minHeight: this.deco1.height,
-      align: "center",
-      key: "deco1",
+      align: "center-center",
       expand: { width: true },
-      aspectRatio: 0,
     });
 
     sizer.layout();

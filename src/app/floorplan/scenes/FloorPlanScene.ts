@@ -1,5 +1,7 @@
+import { Sizer } from "@phaser/utils";
+import { Orientation } from "@phaser/utils/Sizer";
 import { bind, flatten, pick } from "lodash";
-import Phaser from "phaser";
+import * as Phaser from "phaser";
 import { mergeLines } from "@/utils/geometry";
 import { Button } from "./Button";
 import { DoorplacementManager } from "./DoorplacementManager";
@@ -20,20 +22,17 @@ export class FloorPlanScene extends Phaser.Scene {
     return this._doors;
   }
 
-  create() {}
-
-  start() {
-    const sizer = this.rexUI.add.sizer({
-      orientation: 0,
-      x: 0,
-      y: 0,
-      anchor: {
-        top: "top+20",
-        centerX: "center",
-        width: "90%",
-      },
+  create() {
+    const sizer = new Sizer(this, {
+      orientation: Orientation.Horizontal,
       space: {
         item: 20,
+      },
+      anchor: {
+        top: 20,
+        centerX: true,
+        width: { value: 90, type: "percent" },
+        height: { value: 100, type: "percent" },
       },
     });
 
