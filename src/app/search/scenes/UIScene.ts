@@ -1,5 +1,6 @@
 // You can write more code here
 
+import Phaser from "phaser";
 import { DecoBackground1 } from "@/app/search/components/DecoBackground1";
 import { createLetterFall } from "@/app/search/components/Letterfall";
 import { MarqueeSearch } from "@/app/search/components/MarqueeSearch";

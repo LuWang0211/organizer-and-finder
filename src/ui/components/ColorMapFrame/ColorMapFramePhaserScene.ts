@@ -24,47 +24,6 @@ const NINE_SLICE_INSETS = {
   bottomHeight: 103,
 };
 
-const COLOR_MAP_SHADER = new Phaser.Display.BaseShader(
-  COLOR_MAP_SHADER_KEY,
-  COLOR_MAP_9_SLICE_FRAGMENT_SHADER,
-  undefined,
-  {
-    sourceSize: {
-      type: "2f",
-      value: { x: FRAME_WIDTH, y: FRAME_HEIGHT },
-    },
-    sliceInsets: {
-      type: "4f",
-      value: {
-        x: NINE_SLICE_INSETS.leftWidth,
-        y: NINE_SLICE_INSETS.topHeight,
-        z: NINE_SLICE_INSETS.rightWidth,
-        w: NINE_SLICE_INSETS.bottomHeight,
-      },
-    },
-    outerColor: {
-      type: "3f",
-      value: { x: 0.1216, y: 0.6471, z: 1.0 },
-    },
-    panelTint: {
-      type: "3f",
-      value: { x: 0.9373, y: 0.2667, z: 0.2667 },
-    },
-    panelSourceBounds: {
-      type: "4f",
-      value: { x: 0, y: 0, z: 0, w: 0 },
-    },
-    panelScreenBounds: {
-      type: "4f",
-      value: { x: 0, y: 0, z: 0, w: 0 },
-    },
-    tileTextureSize: {
-      type: "2f",
-      value: { x: 64, y: 64 },
-    },
-  },
-);
-
 export type ColorMapFramePhaserSceneConfig = {
   frameColorHex: string;
   panelTintHex: string;
@@ -74,6 +33,7 @@ export type ColorMapFramePhaserSceneConfig = {
 
 type PanelBounds = {
   x: number;
+  /** Bottom-origin normalized Y coordinate. */
   y: number;
   width: number;
   height: number;
@@ -116,7 +76,6 @@ export class ColorMapFramePhaserScene extends Phaser.Scene {
     this.createCanvasTexture(PANEL_TEXTURE_KEY, PANEL_CANVAS_TEXTURE_KEY);
     this.createCanvasTexture(TILE_TEXTURE_KEY, TILE_CANVAS_TEXTURE_KEY);
     this.createShaderOutput();
-    this.applyShaderUniforms();
     this.applyLayout();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -195,7 +154,7 @@ export class ColorMapFramePhaserScene extends Phaser.Scene {
     if (maxX >= minX && maxY >= minY) {
       this.panelBounds = {
         x: minX / FRAME_WIDTH,
-        y: minY / FRAME_HEIGHT,
+        y: (FRAME_HEIGHT - maxY - 1) / FRAME_HEIGHT,
         width: (maxX - minX + 1) / FRAME_WIDTH,
         height: (maxY - minY + 1) / FRAME_HEIGHT,
       };
@@ -206,39 +165,33 @@ export class ColorMapFramePhaserScene extends Phaser.Scene {
   }
 
   private createShaderOutput() {
+    const shaderConfig: Phaser.Types.GameObjects.Shader.ShaderQuadConfig = {
+      name: COLOR_MAP_SHADER_KEY,
+      shaderName: COLOR_MAP_SHADER_KEY,
+      fragmentSource: COLOR_MAP_9_SLICE_FRAGMENT_SHADER,
+      setupUniforms: (setUniform: (name: string, value: unknown) => void) => {
+        const uniforms = this.getShaderUniforms();
+        for (const [name, value] of Object.entries(uniforms)) {
+          setUniform(name, value);
+        }
+      },
+    };
+
     this.shaderOutput = this.add.shader(
-      COLOR_MAP_SHADER,
+      shaderConfig,
       0,
       0,
       FRAME_WIDTH,
       FRAME_HEIGHT,
+      [
+        FRAME_CANVAS_TEXTURE_KEY,
+        MASK_CANVAS_TEXTURE_KEY,
+        PANEL_CANVAS_TEXTURE_KEY,
+        TILE_CANVAS_TEXTURE_KEY,
+      ],
     );
 
     this.shaderOutput.setOrigin(0, 0);
-    this.shaderOutput.setSampler2D("iChannel0", FRAME_CANVAS_TEXTURE_KEY, 0, {
-      wrapS: "clamp_to_edge",
-      wrapT: "clamp_to_edge",
-      minFilter: "linear",
-      magFilter: "linear",
-    });
-    this.shaderOutput.setSampler2D("iChannel1", MASK_CANVAS_TEXTURE_KEY, 1, {
-      wrapS: "clamp_to_edge",
-      wrapT: "clamp_to_edge",
-      minFilter: "linear",
-      magFilter: "linear",
-    });
-    this.shaderOutput.setSampler2D("iChannel2", PANEL_CANVAS_TEXTURE_KEY, 2, {
-      wrapS: "clamp_to_edge",
-      wrapT: "clamp_to_edge",
-      minFilter: "linear",
-      magFilter: "linear",
-    });
-    this.shaderOutput.setSampler2D("iChannel3", TILE_CANVAS_TEXTURE_KEY, 3, {
-      wrapS: "clamp_to_edge",
-      wrapT: "clamp_to_edge",
-      minFilter: "linear",
-      magFilter: "linear",
-    });
   }
 
   private sourceAxisToScreenAxis(
@@ -266,10 +219,10 @@ export class ColorMapFramePhaserScene extends Phaser.Scene {
 
   private getStretchedPanelBounds(): PanelBounds {
     const sourceLeft = this.panelBounds.x * FRAME_WIDTH;
-    const sourceTop = this.panelBounds.y * FRAME_HEIGHT;
+    const sourceBottom = this.panelBounds.y * FRAME_HEIGHT;
     const sourceRight =
       (this.panelBounds.x + this.panelBounds.width) * FRAME_WIDTH;
-    const sourceBottom =
+    const sourceTop =
       (this.panelBounds.y + this.panelBounds.height) * FRAME_HEIGHT;
 
     const screenLeft = this.sourceAxisToScreenAxis(
@@ -278,13 +231,6 @@ export class ColorMapFramePhaserScene extends Phaser.Scene {
       FRAME_WIDTH,
       NINE_SLICE_INSETS.leftWidth,
       NINE_SLICE_INSETS.rightWidth,
-    );
-    const screenTop = this.sourceAxisToScreenAxis(
-      sourceTop,
-      this.previewHeight,
-      FRAME_HEIGHT,
-      NINE_SLICE_INSETS.topHeight,
-      NINE_SLICE_INSETS.bottomHeight,
     );
     const screenRight = this.sourceAxisToScreenAxis(
       sourceRight,
@@ -297,85 +243,67 @@ export class ColorMapFramePhaserScene extends Phaser.Scene {
       sourceBottom,
       this.previewHeight,
       FRAME_HEIGHT,
-      NINE_SLICE_INSETS.topHeight,
       NINE_SLICE_INSETS.bottomHeight,
+      NINE_SLICE_INSETS.topHeight,
+    );
+    const screenTop = this.sourceAxisToScreenAxis(
+      sourceTop,
+      this.previewHeight,
+      FRAME_HEIGHT,
+      NINE_SLICE_INSETS.bottomHeight,
+      NINE_SLICE_INSETS.topHeight,
     );
 
     return {
       x: screenLeft / this.previewWidth,
-      y: screenTop / this.previewHeight,
+      y: screenBottom / this.previewHeight,
       width: Math.max(screenRight - screenLeft, 0) / this.previewWidth,
-      height: Math.max(screenBottom - screenTop, 0) / this.previewHeight,
+      height: Math.max(screenTop - screenBottom, 0) / this.previewHeight,
     };
   }
 
-  private applyShaderUniforms() {
-    if (!this.shaderOutput) {
-      return;
-    }
-
+  private getShaderUniforms(): Record<string, number | number[]> {
     const stretchedPanelBounds = this.getStretchedPanelBounds();
 
-    this.shaderOutput.setUniform(
-      "outerColor.value.x",
-      this.frameColor.red / 255,
-    );
-    this.shaderOutput.setUniform(
-      "outerColor.value.y",
-      this.frameColor.green / 255,
-    );
-    this.shaderOutput.setUniform(
-      "outerColor.value.z",
-      this.frameColor.blue / 255,
-    );
-    this.shaderOutput.setUniform("panelTint.value.x", this.panelTint.red / 255);
-    this.shaderOutput.setUniform(
-      "panelTint.value.y",
-      this.panelTint.green / 255,
-    );
-    this.shaderOutput.setUniform(
-      "panelTint.value.z",
-      this.panelTint.blue / 255,
-    );
-
     const tileFrame = this.textures.getFrame(TILE_CANVAS_TEXTURE_KEY);
-    if (tileFrame) {
-      this.shaderOutput.setUniform("tileTextureSize.value.x", tileFrame.width);
-      this.shaderOutput.setUniform("tileTextureSize.value.y", tileFrame.height);
-    }
 
-    this.shaderOutput.setUniform(
-      "panelSourceBounds.value.x",
-      this.panelBounds.x,
-    );
-    this.shaderOutput.setUniform(
-      "panelSourceBounds.value.y",
-      this.panelBounds.y,
-    );
-    this.shaderOutput.setUniform(
-      "panelSourceBounds.value.z",
-      this.panelBounds.width,
-    );
-    this.shaderOutput.setUniform(
-      "panelSourceBounds.value.w",
-      this.panelBounds.height,
-    );
-    this.shaderOutput.setUniform(
-      "panelScreenBounds.value.x",
-      stretchedPanelBounds.x,
-    );
-    this.shaderOutput.setUniform(
-      "panelScreenBounds.value.y",
-      stretchedPanelBounds.y,
-    );
-    this.shaderOutput.setUniform(
-      "panelScreenBounds.value.z",
-      stretchedPanelBounds.width,
-    );
-    this.shaderOutput.setUniform(
-      "panelScreenBounds.value.w",
-      stretchedPanelBounds.height,
-    );
+    return {
+      iChannel0: 0,
+      iChannel1: 1,
+      iChannel2: 2,
+      iChannel3: 3,
+      resolution: [this.previewWidth, this.previewHeight],
+      sourceSize: [FRAME_WIDTH, FRAME_HEIGHT],
+      sliceInsets: [
+        NINE_SLICE_INSETS.leftWidth,
+        NINE_SLICE_INSETS.bottomHeight,
+        NINE_SLICE_INSETS.rightWidth,
+        NINE_SLICE_INSETS.topHeight,
+      ],
+      outerColor: [
+        this.frameColor.red / 255,
+        this.frameColor.green / 255,
+        this.frameColor.blue / 255,
+      ],
+      panelTint: [
+        this.panelTint.red / 255,
+        this.panelTint.green / 255,
+        this.panelTint.blue / 255,
+      ],
+      panelSourceBounds: [
+        this.panelBounds.x,
+        this.panelBounds.y,
+        this.panelBounds.width,
+        this.panelBounds.height,
+      ],
+      panelScreenBounds: [
+        stretchedPanelBounds.x,
+        stretchedPanelBounds.y,
+        stretchedPanelBounds.width,
+        stretchedPanelBounds.height,
+      ],
+      tileTextureSize: [tileFrame?.width ?? 64, tileFrame?.height ?? 64],
+    };
   }
 
   private applyLayout() {

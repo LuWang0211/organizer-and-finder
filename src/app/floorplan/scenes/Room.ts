@@ -1,4 +1,5 @@
 import { noop, throttle } from "lodash";
+import Phaser from "phaser";
 import { getRectangleEdges } from "@/utils/geometry";
 
 type Rect = Phaser.GameObjects.Rectangle;

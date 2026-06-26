@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import { type FloorPlanColor, getHexNumberByName } from "@/ui/colors";
 import { type HouseDef, type RoomDef, ViewerMode } from "./common";
 
@@ -243,28 +244,22 @@ export class FloorplanViewerScene extends Phaser.Scene {
       // Determine color from room metadata (Tailwind-like name) or default gray
       const colorName = (room.color || "gray-500") as FloorPlanColor as any;
       const hexNumber = getHexNumberByName(colorName);
+      const phaserPoints = room.vertices.map(
+        (v) => new Phaser.Math.Vector2(v.x, v.y),
+      );
 
       // Helper to render with optional highlight
       const render = (highlight: boolean) => {
         g.clear();
         g.fillStyle(hexNumber, highlight ? 0.35 : 0.2);
         g.lineStyle(highlight ? 3 : 2, hexNumber, 1);
-        g.fillPoints(
-          room.vertices as unknown as Phaser.Types.Math.Vector2Like[],
-          true,
-        );
-        g.strokePoints(
-          room.vertices as unknown as Phaser.Types.Math.Vector2Like[],
-          true,
-        );
+        g.fillPoints(phaserPoints, true);
+        g.strokePoints(phaserPoints, true);
       };
 
       render(false);
 
       // Make the polygon interactive for potential future interactions
-      const phaserPoints = room.vertices.map(
-        (v) => new Phaser.Geom.Point(v.x, v.y),
-      );
       const poly = new Phaser.Geom.Polygon(phaserPoints);
       g.setInteractive(poly, Phaser.Geom.Polygon.Contains);
 

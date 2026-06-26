@@ -32,7 +32,6 @@ export class ScrollablePanel extends Phaser.GameObjects.Container {
   private scrollbar: Phaser.GameObjects.Graphics;
   private scrollbarBg: Phaser.GameObjects.Graphics;
   private viewportMaskGraphics: Phaser.GameObjects.Graphics;
-  private viewportMask: Phaser.Display.Masks.GeometryMask;
   private background: Phaser.GameObjects.Graphics | null = null;
   private backgroundConfig: ScrollablePanelBackgroundConfig | null = null;
   private _prevWidth: number;
@@ -70,10 +69,13 @@ export class ScrollablePanel extends Phaser.GameObjects.Container {
     super.add(this.sizer);
 
     this.viewportMaskGraphics = new Phaser.GameObjects.Graphics(scene);
-    this.viewportMask = this.sizer.createGeometryMask(
+    this.sizer.enableFilters();
+    this.sizer.filters?.external.addMask(
       this.viewportMaskGraphics,
+      false,
+      scene.cameras.main,
+      "world",
     );
-    this.sizer.setMask(this.viewportMask);
 
     // Scrollbar background
     this.scrollbarBg = scene.add.graphics();
@@ -330,8 +332,7 @@ export class ScrollablePanel extends Phaser.GameObjects.Container {
       this.scene.input.off("wheel", this.onWheel, this);
       this.scene.events.off("shutdown", this.destroy, this);
     }
-    this.sizer.clearMask();
-    this.viewportMask.destroy();
+    this.sizer.filters?.external.clear();
     this.viewportMaskGraphics.destroy();
     super.destroy(fromScene);
   }

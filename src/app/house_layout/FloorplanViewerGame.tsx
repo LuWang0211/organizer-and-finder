@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Game } from "phaser";
+import Phaser, { Game } from "phaser";
 import {
   useCallback,
   useEffect,

@@ -1,4 +1,5 @@
 import PolyBool, { type Polygon, type Vec2 } from "@velipso/polybool";
+import Phaser from "phaser";
 import type { FloorPlanColor } from "@/ui/colors";
 import {
   type OriginalRectangle,

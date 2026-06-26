@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import { type FloorPlanColor, getHexNumberByName } from "@/ui/colors";
 import type { FloorplanV2Scene } from "./FloorplanV2Scene";
 
@@ -107,14 +108,18 @@ export class StagingPolygon extends Phaser.Events.EventEmitter {
       this.phaserGraphics.lineStyle(2, hexColorNumber); // Color border
     }
 
+    const phaserPoints = this.vertices.map(
+      (v) => new Phaser.Math.Vector2(v.x, v.y),
+    );
+
     // Fill and stroke the polygon
-    this.phaserGraphics.fillPoints(this.vertices, true);
-    this.phaserGraphics.strokePoints(this.vertices, true);
+    this.phaserGraphics.fillPoints(phaserPoints, true);
+    this.phaserGraphics.strokePoints(phaserPoints, true);
   }
 
   private updateInteractiveArea(): void {
     const phaserPoints = this.vertices.map(
-      (v) => new Phaser.Geom.Point(v.x, v.y),
+      (v) => new Phaser.Math.Vector2(v.x, v.y),
     );
     const polygon = new Phaser.Geom.Polygon(phaserPoints);
 
