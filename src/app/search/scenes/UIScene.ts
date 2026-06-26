@@ -1,11 +1,12 @@
 // You can write more code here
 
-import { HTMLInputText, OverlapSizer } from "@phaser/utils";
 import { DecoBackground1 } from "@/app/search/components/DecoBackground1";
 import { createLetterFall } from "@/app/search/components/Letterfall";
 import { MarqueeSearch } from "@/app/search/components/MarqueeSearch";
 import { SketchBackground } from "@/app/search/components/SketchBackground";
 import type { ItemType } from "@/services/itemService";
+
+export const EVENT_LETTER_FALL = "EVT_LETTER_FALL";
 
 /* START OF COMPILED CODE */
 
@@ -42,41 +43,18 @@ export class UIScene extends Phaser.Scene {
       this.pendingMarqueeItems = null;
     }
 
-    const inputText = new HTMLInputText(this, {
-      width: 200,
-      height: 20,
-      text: "hello wawa",
-      fontSize: "24px",
-      color: "#000000",
-      align: "center",
-    }).onTextChange((inputText: HTMLInputText) => {
-      createLetterFall(this, inputText.text);
-    });
+    const letterFallHandler = (text: string) => this.letterFall(text);
 
-    const sizer = new OverlapSizer(this, {
-      top: 50,
-      centerX: true,
-      width: { value: 90, type: "percent" },
-      height: 117,
-    });
+    this.game.events.on(EVENT_LETTER_FALL, letterFallHandler);
 
-    // Add inputBoxBg to sizer
-    sizer.addChild(this.inputBoxBg, {
-      minWidth: 1613.8,
-      minHeight: 117,
-      align: "center-center",
-      expand: { width: true },
-    });
-
-    sizer.addChild(inputText, {
-      minWidth: 30,
-      minHeight: 5.8,
-      align: "center-center",
-      expand: { width: true, height: true },
-      padding: { left: 65, right: 115, bottom: 15 },
-    });
-
-    sizer.layout();
+    // Register the cleanup handler for scene shutdown
+    this.events.once(
+      "shutdown",
+      () => {
+        this.game.events.off(EVENT_LETTER_FALL, letterFallHandler);
+      },
+      this,
+    );
   }
 
   public setMarqueeItems(items: ItemType[]) {
@@ -112,20 +90,6 @@ export class UIScene extends Phaser.Scene {
   }
 
   editorCreate(): void {
-    // InputBoxBg
-    const inputBoxBg = this.add.nineslice(
-      0,
-      0,
-      "search_bar",
-      undefined,
-      596,
-      6,
-      72,
-      111,
-      0,
-      0,
-    );
-
     // deco1
     const deco1 = this.add.nineslice(
       0,
@@ -141,14 +105,16 @@ export class UIScene extends Phaser.Scene {
     );
     deco1.alpha = 0;
 
-    this.inputBoxBg = inputBoxBg;
     this.deco1 = deco1;
 
     this.events.emit("scene-awake");
   }
 
-  private inputBoxBg!: Phaser.GameObjects.NineSlice;
   private deco1!: Phaser.GameObjects.NineSlice;
+
+  letterFall(text: string) {
+    createLetterFall(this, text);
+  }
 
   /* END-USER-CODE */
 }

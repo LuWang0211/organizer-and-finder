@@ -21,7 +21,7 @@ const searchBarVariants = cva(
 );
 
 interface SearchBarProps
-  extends React.ComponentPropsWithRef<"div">,
+  extends React.ComponentPropsWithRef<"input">,
     VariantProps<typeof searchBarVariants> {
   inputId?: string;
   placeholder?: string;
@@ -34,6 +34,7 @@ export function SearchBar({
   inputId,
   placeholder = "Search...",
   onSearch,
+  onChange,
   ref,
   ...props
 }: SearchBarProps) {
@@ -77,7 +78,10 @@ export function SearchBar({
         id={inputId}
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          onChange?.(e);
+        }}
         onKeyDown={(e) => {
           if (
             e.defaultPrevented ||

@@ -3,8 +3,10 @@
 import { createConfig } from "@phaser/gameConfig";
 import { Game } from "phaser";
 import {
+  type Ref,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -14,11 +16,17 @@ import { useMeasure } from "react-use";
 interface PhaserGameProps {
   secondScene?: Phaser.Types.Scenes.SceneType;
   onGameCreated?: (game: Game) => void;
+  ref?: Ref<PhaserGameRef>;
+}
+
+export interface PhaserGameRef {
+  emit: (event: string | symbol, ...args: unknown[]) => void;
 }
 
 export default function PhaserGame({
   secondScene,
   onGameCreated,
+  ref,
 }: PhaserGameProps) {
   const game = useRef<Game>(undefined);
 
@@ -77,6 +85,16 @@ export default function PhaserGame({
       game.current?.scale.setZoom(containerHeight / 768);
     }
   }, [containerWidth, containerHeight]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      emit: (event, ...args) => {
+        game.current?.events.emit(event, ...args);
+      },
+    }),
+    [],
+  );
 
   return (
     <div ref={assignRef} className="w-full h-full relative overflow-x-hidden" />

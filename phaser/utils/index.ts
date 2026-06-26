@@ -2,8 +2,6 @@ export type { AnchorConfig } from "./applyAnchor";
 export { applyAnchor } from "./applyAnchor";
 export type { DoubleTapConfig } from "./DoubleTap";
 export { DoubleTap } from "./DoubleTap";
-export type { HTMLInputTextConfig } from "./HTMLInputText";
-export { HTMLInputText } from "./HTMLInputText";
 export { OverlapSizer } from "./OverlapSizer";
 export type {
   ScrollablePanelBackgroundConfig,
