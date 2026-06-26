@@ -1,4 +1,5 @@
 import { debounce, last, sample } from "lodash";
+import Phaser from "phaser";
 import type { UIScene } from "@/app/search/scenes/UIScene";
 import {
   GAP,

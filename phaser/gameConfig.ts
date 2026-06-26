@@ -1,4 +1,5 @@
 import { getSharedLoadingScene } from "@phaser/loadingScene";
+import Phaser from "phaser";
 
 export function createConfig(secondScene?: Phaser.Types.Scenes.SceneType) {
   const scene: Phaser.Types.Scenes.SceneType[] = [getSharedLoadingScene()];

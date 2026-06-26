@@ -1,4 +1,5 @@
 import { includes } from "lodash";
+import Phaser from "phaser";
 import type { FloorPlanScene } from "@/app/floorplan/scenes/FloorPlanScene";
 
 const DEBUG = false;

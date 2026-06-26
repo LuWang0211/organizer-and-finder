@@ -1,4 +1,5 @@
 import { applyAnchor, DoubleTap, ScrollablePanel } from "@phaser/utils";
+import Phaser from "phaser";
 import { getHexNumberByName } from "@/ui/colors";
 import type { FloorplanV2Scene } from "./FloorplanV2Scene";
 import type { StagingPolygon } from "./StagingPolygon";
@@ -91,8 +92,11 @@ class PolygonThumbnail {
     this.thumbnailGraphics.clear();
     this.thumbnailGraphics.fillStyle(fillColor);
     this.thumbnailGraphics.lineStyle(2, 0xffffff);
-    this.thumbnailGraphics.fillPoints(scaledVertices, true);
-    this.thumbnailGraphics.strokePoints(scaledVertices, true);
+    const phaserPoints = scaledVertices.map(
+      (v) => new Phaser.Math.Vector2(v.x, v.y),
+    );
+    this.thumbnailGraphics.fillPoints(phaserPoints, true);
+    this.thumbnailGraphics.strokePoints(phaserPoints, true);
   }
 
   private createThumbnail(): void {
@@ -187,7 +191,7 @@ class PolygonThumbnail {
   ): void {
     // Create hit area using vertices directly (no shift needed for graphics)
     const hitAreaVertices = vertices.map(
-      (v) => new Phaser.Geom.Point(v.x, v.y),
+      (v) => new Phaser.Math.Vector2(v.x, v.y),
     );
     const polygon = new Phaser.Geom.Polygon(hitAreaVertices);
 

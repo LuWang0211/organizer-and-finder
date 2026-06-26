@@ -1,4 +1,5 @@
 import { groupBy, partition } from "lodash";
+import Phaser from "phaser";
 
 // ChatGPT genearted code
 export function getRectangleEdges(

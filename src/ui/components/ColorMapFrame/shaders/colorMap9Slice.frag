@@ -13,7 +13,7 @@ uniform vec4 panelSourceBounds;
 uniform vec4 panelScreenBounds;
 uniform vec2 tileTextureSize;
 
-varying vec2 fragCoord;
+varying vec2 outTexCoord;
 
 // Maps the current output-space coordinate back into the original source image
 // according to the 9-slice insets.
@@ -49,7 +49,8 @@ vec4 writeMaskedPixel(vec4 sourceColor, float maskAlpha, vec3 replacementColor) 
 }
 
 void main() {
-  vec2 screenUv = fragCoord / resolution.xy;
+  vec2 screenUv = outTexCoord;
+  vec2 fragCoord = screenUv * resolution.xy;
   float sourceX = screenAxisToSourceAxis(
     fragCoord.x,
     resolution.x,

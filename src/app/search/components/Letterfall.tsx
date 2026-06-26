@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 export function createLetterFall(scene: Phaser.Scene, text: string) {
   const textArray = text.split("");
   const start = Phaser.Math.Between(0, 800);

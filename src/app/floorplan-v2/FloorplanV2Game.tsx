@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown, Download, Upload } from "lucide-react";
-import { Game } from "phaser";
+import Phaser, { Game } from "phaser";
 import {
   useCallback,
   useEffect,
