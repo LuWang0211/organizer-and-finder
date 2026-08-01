@@ -15,6 +15,7 @@ export interface MarqueeEntry {
   image: Phaser.GameObjects.Image | null;
   frame: Phaser.GameObjects.Image | null;
   isHovered: boolean;
+  isSelected?: boolean;
 }
 
 export type MarqueeTooltipDetail = {

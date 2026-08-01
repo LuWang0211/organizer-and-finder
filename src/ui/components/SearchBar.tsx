@@ -26,6 +26,7 @@ interface SearchBarProps
   inputId?: string;
   placeholder?: string;
   onSearch?: (value: string) => void;
+  onInputChange?: (value: string) => void;
 }
 
 export function SearchBar({
@@ -34,6 +35,7 @@ export function SearchBar({
   inputId,
   placeholder = "Search...",
   onSearch,
+  onInputChange,
   ref,
   ...props
 }: SearchBarProps) {
@@ -77,7 +79,10 @@ export function SearchBar({
         id={inputId}
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          onInputChange?.(e.target.value);
+        }}
         onKeyDown={(e) => {
           if (
             e.defaultPrevented ||

@@ -39,55 +39,26 @@ export class UIScene extends Phaser.Scene {
       this.marqueeSearch.updateItems(this.pendingMarqueeItems);
       this.pendingMarqueeItems = null;
     }
-
-    const inputText = this.add
-      .rexInputText(0, -12, 200, 20, {
-        text: "hello wawa",
-        fontSize: "24px",
-        color: "#000000",
-        align: "center",
-      })
-      .on("textchange", (inputText: { text: string }) => {
-        createLetterFall(this, inputText.text);
-      });
-
-    const sizer = this.rexUI.add.overlapSizer({
-      x: 0,
-      y: 0,
-      height: 117,
-      anchor: {
-        top: "top+50",
-        centerX: "center",
-        width: "90%",
-      },
-    });
-
-    this.inputBoxBg.depth = 1;
-
-    sizer.add(this.inputBoxBg, {
-      minWidth: 30,
-      minHeight: 5.8,
-      align: "center",
-      key: "inputBoxBg",
-      expand: { width: true },
-      aspectRatio: 0,
-    });
-
-    sizer.add(inputText, {
-      minWidth: 30,
-      minHeight: 5.8,
-      align: "center-center",
-      key: "input",
-      expand: { width: true },
-      padding: { left: 65, right: 115, bottom: 25 },
-      aspectRatio: 0,
-    });
-
-    sizer.layout();
   }
 
   public setMarqueeItems(items: ItemType[]) {
     this.pendingMarqueeItems = items;
+  }
+
+  public triggerLetterFall(text: string) {
+    createLetterFall(this, text);
+  }
+
+  public updateMarqueeItems(items: ItemType[]) {
+    if (this.marqueeSearch) {
+      this.marqueeSearch.updateItems(items);
+    } else {
+      this.pendingMarqueeItems = items;
+    }
+  }
+
+  public clearMarqueeSearchResult() {
+    this.marqueeSearch?.clearSearchResult();
   }
 
   preload() {
@@ -119,20 +90,6 @@ export class UIScene extends Phaser.Scene {
   }
 
   editorCreate(): void {
-    // InputBoxBg
-    const inputBoxBg = this.add.nineslice(
-      0,
-      0,
-      "search_bar",
-      undefined,
-      596,
-      0,
-      72,
-      111,
-      0,
-      0,
-    );
-
     // deco1
     const deco1 = this.add.nineslice(
       0,
@@ -148,13 +105,11 @@ export class UIScene extends Phaser.Scene {
     );
     deco1.alpha = 0;
 
-    this.inputBoxBg = inputBoxBg;
     this.deco1 = deco1;
 
     this.events.emit("scene-awake");
   }
 
-  private inputBoxBg!: Phaser.GameObjects.NineSlice;
   private deco1!: Phaser.GameObjects.NineSlice;
 
   /* END-USER-CODE */
